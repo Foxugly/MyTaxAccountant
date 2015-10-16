@@ -51,7 +51,6 @@ class Trimester(models.Model):
 
     def add_categories(self):
         for c in TypeCategory.objects.filter(active=True).order_by('priority'):
-            print c
             new_cat = Category(cat=c, refer_trimester=self)
             new_cat.save()
             self.categories.add(new_cat)

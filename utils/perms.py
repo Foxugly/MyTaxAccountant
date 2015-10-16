@@ -20,5 +20,4 @@ def get_context(request):
     c = {}
     c['userprofile'] = UserProfile.objects.get(user=request.user)
     c['type_doc'] = TypeCategory.objects.filter(active=True).order_by('priority')
-    print c['type_doc']
     return c

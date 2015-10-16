@@ -19,13 +19,9 @@ def convert_pdf_to_jpg(cat, path, f, doc):
     filename = f.replace('.pdf', '.jpg') #TODO 
     new_path =  cat.get_path() + str(doc.id) + '_' + '%03d' + '_' + filename
     cmd = 'convert -density 600 ' + path + ' ' + new_path
-    print "avant convert"
     os.system(cmd)
-    print 'apres convert'
     pdf = PdfFileReader(open(path,'rb'))
     n = pdf.getNumPages()
-    print 'num of pages :'
-    print n
     for i in range(0,n) :
         path_page = cat.get_path() + str(doc.id) + '_' + "%03d" % i + '_' + filename
         im = Image.open(path_page)
@@ -35,8 +31,9 @@ def convert_pdf_to_jpg(cat, path, f, doc):
         if fu.file.path == path :
             fu.delete()
     doc.complete = True
+    doc.save()
 
-def add_files(request,category_id):
+def add_documents(request,category_id):
     if request.is_ajax():
         files = request.GET.getlist('files', False)
         cat = Category.objects.get(id=category_id)
@@ -60,8 +57,19 @@ def add_files(request,category_id):
                     if fu.file.path == path :
                         fu.delete()
                 d.complete = True
+                d.save()
             else :
                 print 'ERREUR FORMAT FICHIER'
 
     	results = ['test']
     	return HttpResponse(json.dumps(results))
+
+def list_documents(request,category_id):
+    if request.is_ajax():
+        results = {}
+        data = []
+        c = Category.objects.get(id=category_id)
+        for d in c.get_docs() :
+            data.append(d.as_json())
+        results['data'] = data
+        return HttpResponse(json.dumps(results))

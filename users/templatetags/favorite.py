@@ -64,5 +64,9 @@ def categories(trimester):
     return trimester[0].categories.filter(active=True)
 
 @register.filter()
+def documents(category):
+    return category[0].documents.all()
+
+@register.filter()
 def name(inst):
     return inst.get_name()

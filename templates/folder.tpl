@@ -62,7 +62,7 @@
 </div>
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
-        <table id="example" class="table table-striped table-bordered" width="100%" cellspacing="0">
+        <table id="datatable" class="table table-striped table-bordered" width="100%" cellspacing="0">
             <thead>
                 <tr>
                     <th>NumberID</th>
@@ -84,20 +84,23 @@
             </tfoot>
      
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>mafacture.pdf</td>
-                    <td>05/10/2015</td>
-                    <td>electricité</td>
-                    <td>validate</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>facture_restaurant.pdf</td>
-                    <td>06/10/2015</td>
-                    <td>restaurant</td>
-                    <td>treat</td>
-                </tr>
+                {% if category %}
+                    {% for c in userprofile|companies|years|trimesters|categories %}
+                        {% if c == category %}
+                            {% for d in c|documents %}
+                                <tr><td>{{d.id}}</td><td>{{d.name}}</td><td>{{d.date}}</td><td>{{d.description}}</td><td>{{d.complete}}</td></tr>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    {% for c in userprofile|companies|years|trimesters|categories %}
+                        {% if forloop.first %}
+                            {% for d in c.documents.all %}
+                                <tr><td>{{d.id}}</td><td>{{d.name}}</td><td>{{d.date}}</td><td>{{d.description}}</td><td>{{d.complete}}</td></tr>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
             </tbody>
         </table>
     </div>
@@ -155,7 +158,7 @@ $(function () {
 });
 
 $(document).ready(function() {
-    $('#example').DataTable();
+    $('#datatable').DataTable();
 } );
 
 $('#valid_files').click(function() {
@@ -169,7 +172,7 @@ $('#valid_files').click(function() {
     $("#listfile_row" ).addClass( "hide" );
     var jsonText = JSON.stringify(files);
     var id = $('ul.nav-pills li.active a').attr("id")
-    var url = '/category/' + id + '/add_files/';
+    var url = '/category/' + id + '/add_documents/';
     console.log(url);
     $.ajax({
         url: url,
@@ -185,20 +188,23 @@ $('#valid_files').click(function() {
 $('ul.nav-pills li a').click(function (e) {
   $('ul.nav-pills li.active').removeClass('active')
   $(this).parent('li').addClass('active')
-
   var id = $('ul.nav-pills li.active a').attr("id")
-  var url = '/category/' + id + '/';
+  var url = '/category/' + id + '/list_documents/';
   console.log(url);
-  /*$.ajax({
+  $.ajax({
         url: url,
-        type: 'POST',
-        data: jsonText,
+        type: 'GET',
         traditional: true,
-        dataType: 'html',
+        dataType: 'json',
         success: function(result){
-            location.reload();
+            console.log(result['data']);
+            $('#datatable tbody').empty();
+            for (i = 0; i < result['data'].length; i++) {
+                console.log(result['data'][i]['id']);
+                $('#datatable tbody').append('<tr><td>'+result['data'][i]['id']+'</td><td>'+result['data'][i]['name']+'</td><td>'+result['data'][i]['date']+'</td><td>'+result['data'][i]['description']+'</td><td>' + result['data'][i]['complete']+ '</td></tr>');
+            }
         }
-    });*/
+    });
 });
 </script>
 {% endblock %}

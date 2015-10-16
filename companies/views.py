@@ -10,9 +10,6 @@ def company_view(request, company_id):
     return render_to_response('folder.tpl', {'userprofile' : userprofile})
 
 def list_year(request, company_id):
-	print "list_years"
 	c = Company.objects.get(id=company_id)
-	print c
 	results = [y.as_json() for y in c.years.filter(active=True)]
-	print results
 	return HttpResponse(json.dumps(results))

@@ -60,3 +60,6 @@ class Document(models.Model):
 
     def __str__(self):
         return self.name
+
+    def as_json(self):
+        return dict(id=self.id, name=self.name, date=self.date.strftime('%d/%m/%Y'), description= self.description, complete=self.complete)
