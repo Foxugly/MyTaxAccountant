@@ -1,4 +1,12 @@
-# encoding: utf-8
+# -*- coding: utf-8 -*-
+#
+# Copyright 2015, Foxugly. All rights reserved.
+#
+# This program is free software: you can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or (at
+# your option) any later version.
+
 import json
 
 from django.http import HttpResponse
@@ -46,3 +54,10 @@ class FileUploadListView(ListView):
         response = JSONResponse(data, mimetype=response_mimetype(self.request))
         response['Content-Disposition'] = 'inline; filename=files.json'
         return response
+
+def remove_upload(request, fileupload_id):
+    if request.is_ajax():
+        f = FileUpload.objects.get(id=fileupload_id)
+        f.delete()
+        results['return'] = 'OK'
+        return HttpResponse(json.dumps(results))

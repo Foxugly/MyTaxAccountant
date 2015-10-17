@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright 2015, Foxugly. All rights reserved.
+#
+# This program is free software: you can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or (at
+# your option) any later version.
+
 from django.shortcuts import render
 from django.http import HttpResponse
 from categories.models import Category
@@ -60,9 +69,14 @@ def add_documents(request,category_id):
                 d.save()
             else :
                 print 'ERREUR FORMAT FICHIER'
-
-    	results = ['test']
-    	return HttpResponse(json.dumps(results))
+        cat.save()
+        results = {}
+        data = []
+        for d in cat.get_docs() :
+            data.append(d.as_json())
+        results['doc_list'] = data
+        results['n'] = cat.count_docs()
+        return HttpResponse(json.dumps(results))
 
 def list_documents(request,category_id):
     if request.is_ajax():
@@ -71,5 +85,5 @@ def list_documents(request,category_id):
         c = Category.objects.get(id=category_id)
         for d in c.get_docs() :
             data.append(d.as_json())
-        results['data'] = data
+        results['doc_list'] = data
         return HttpResponse(json.dumps(results))

@@ -52,7 +52,7 @@
             <div class="progress-bar progress-bar-success"></div>
     </div>
 </div>
-<div id="listfile_row" class="row hide">
+<div id="fileupload_list" class="row hide">
     <div class="col-md-5 col-md-offset-2">
         <ul id="files-group" class="list-group"></ul>
     </div>
@@ -114,7 +114,7 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 id='modal-title' class="modal-title"></h4>
             </div>
-            <div id='modal-body' class="modal-body"></div>
+            <div id='modal-body' class="modal-body" style="text-align:center;"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
@@ -134,6 +134,23 @@
 function csrfSafeMethod(method) {
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
+
+function close_uploadfile(e){
+    var id = e.attr('id');
+    var url = '/upload/remove/' + id + '/';
+    $.ajax({
+        url: url,
+        type: 'GET',
+        traditional: true,
+        dataType: 'json',
+        success: function(result){
+        }
+    });
+    e.parent().remove();
+    if ($("#files-group li").length == 0){
+        $("#fileupload_list" ).addClass( "hide" );
+    }
+}
 $(function () {
     'use strict';
     var url = '/upload/basic/';
@@ -148,9 +165,12 @@ $(function () {
         },
         dataType: 'json',
         done: function (e, data) {
+            $("#fileupload_list" ).removeClass( "hide" );
             $.each(data.result.files, function (index, file) {
-                $("#listfile_row" ).removeClass( "hide" );
-                $("#files-group").append('\n<li class="list-group-item list-group-item-success">' + file.name + '</li>\n'); 
+                $("#files-group").append('\n<li class="list-group-item list-group-item-success"><span>' + file.name + '</span><button id="' + file.id + '" type="button" class="close close_fileupload">&times;</button></li>\n'); 
+            });
+            $(".close_fileupload").click(function(){
+                close_uploadfile($(this));
             });
         },
         progressall: function (e, data) {
@@ -169,73 +189,29 @@ $(function () {
 });
 
 $(document).ready(function() {
-    $('#datatable').DataTable();
+    var datatable = $('#datatable').DataTable();
     console.log('READY');
-} );
 
-$('#valid_files').click(function() {
-    var files = []
-    $('#files-group').find('li').each(function(){
-        var current = $(this);
-        files.push(current.text());
-    });
-    $('#files-group').empty()
-    $("#listfile_row" ).addClass( "hide" );
-    var jsonText = JSON.stringify(files);
-    var id = $('ul.nav-pills li.active a').attr("id")
-    var url = '/category/' + id + '/add_documents/';
-    $.ajax({
-        url: url,
-        type: 'GET',
-        data: {'files':files},
-        traditional: true,
-        dataType: 'html',
-        success: function(result){
-            console.log('back from ajax');
-        }
-    });
 });
 
-function img_modal(){
-    var id = $(this).attr('id');
-    console.log(id);
+function img_modal(e){
+    var id = e.attr('id');
     var url = '/document/' + id + '/';
-    console.log(url);
     $.ajax({
         url: url,
         type: 'GET',
         traditional: true,
         dataType: 'json',
         success: function(result){
-            console.log('retour');
             $("#modal-title").text(result['name']);
             $("#modal-body").html(result['img']);
         }
     });
 }
 
-$('ul.nav-pills li a').click(function (e) {
-  $('ul.nav-pills li.active').removeClass('active')
-  $(this).parent('li').addClass('active')
-  var id = $('ul.nav-pills li.active a').attr("id")
-  var url = '/category/' + id + '/list_documents/';
-  $.ajax({
-        url: url,
-        type: 'GET',
-        traditional: true,
-        dataType: 'json',
-        success: function(result){
-            $('#datatable tbody').empty();
-            for (i = 0; i < result['data'].length; i++) {
-                $('#datatable tbody').append('<tr><td>'+result['data'][i]['id']+"</td><td><a id='" + result['data'][i]['id'] + "' class='img_modal' data-toggle='modal' data-target='#myModal'>" + result['data'][i]['name'] + '</a></td><td>'+result['data'][i]['date']+'</td><td>'+result['data'][i]['description']+'</td><td>' + result['data'][i]['complete']+ '</td></tr>');
-                $(".img_modal").click(function(){
-                    img_modal();
-                });
-            }
-            $('#datatable').DataTable();
-        }
-    });
-});
+function update_datatable(data){
+    $('#datatable').dataTable().fnAddData([ data['id'], "<a id='" + data['id'] + "' class='img_modal' data-toggle='modal' data-target='#myModal'>" + data['name'] + "</a>", data['date'], data['description'], data['description']]);
+}
 
 function update_data(){
     var t = $('#sel_trimester').val();
@@ -250,25 +226,76 @@ function update_data(){
                 var a = '<a data-target="#" data-toggle="pill" id="' + result['nav_list'][i]['id'] + '" href="#">' + result['nav_list'][i]['name'] + ' <span class="badge">'+ result['nav_list'][i]['n'] +'</span></a>';
                 $("ul.nav-pills li:eq(" + i + ") a").html(result['nav_list'][i]['name'] + ' <span class="badge">'+ result['nav_list'][i]['n'] +'</span>');
                 $("ul.nav-pills li:eq(" + i + ") a").attr("id",result['nav_list'][i]['id']);
-
             }
             $("ul.nav.nav-pills li:eq(0)").addClass("active");
-            $('#datatable tbody').empty();
+            $('#datatable').dataTable().fnClearTable();
             for (i = 0; i < result['doc_list'].length; i++) {
-                $('#datatable tbody').append("<tr><td>" + result['doc_list'][i]['id'] + "</td><td><a id='" + result['doc_list'][i]['id'] + "' class='img_modal' data-toggle='modal' data-target='#myModal'>" + result['doc_list'][i]['name'] + "</a></td><td>" + result['doc_list'][i]['date'] + "</td><td>" + result['doc_list'][i]['description'] + "</td><td>" + result['doc_list'][i]['complete'] + "</td></tr>");
+                update_datatable(result['doc_list'][i]);
                 $(".img_modal").click(function(){
-                    img_modal();
+                    img_modal($(this));
                 });
             }
-            $('#datatable').DataTable();
-
         }
     });
 }
 
+$('#valid_files').click(function() {
+    var files = []
+    $('#files-group').find('li').each(function(){
+        var current = $(this).find('span');
+        console.log(current);
+        console.log(current.text());
+        files.push(current.text());
+    });
+    $('#files-group').empty()
+    $("#fileupload_list" ).addClass( "hide" );
+    var jsonText = JSON.stringify(files);
+    var id = $('ul.nav-pills li.active a').attr("id")
+    var url = '/category/' + id + '/add_documents/';
+    $.ajax({
+        url: url,
+        type: 'GET',
+        data: {'files':files},
+        traditional: true,
+        dataType: 'html',
+        success: function(result){
+            result = JSON.parse(result);
+            $('#datatable').dataTable().fnClearTable();
+            for (i = 0; i < result['doc_list'].length; i++) {
+                update_datatable(result['doc_list'][i]);
+                $(".img_modal").click(function(){
+                    img_modal($(this));
+                });
+            }
+            $('ul.nav-pills li.active span').html(result['n']);
+        }
+    });
+});
+
+$('ul.nav-pills li a').click(function (e) {
+    $('ul.nav-pills li.active').removeClass('active')
+    $(this).parent('li').addClass('active')
+    var id = $('ul.nav-pills li.active a').attr("id")
+    var url = '/category/' + id + '/list_documents/';
+    $.ajax({
+        url: url,
+        type: 'GET',
+        traditional: true,
+        dataType: 'json',
+        success: function(result){
+            $('#datatable').dataTable().fnClearTable();
+            for (i = 0; i < result['doc_list'].length; i++) {
+                update_datatable(result['doc_list'][i]);
+                $(".img_modal").click(function(){
+                    img_modal($(this));
+                });
+            }
+        }
+    });
+});
 
 $(".img_modal").click(function(){
-    img_modal();
+    img_modal($(this));
 });
 </script>
 {% endblock %}
