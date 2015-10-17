@@ -17,15 +17,15 @@
             {% for c in userprofile|companies|years|trimesters|categories %}
                 {% if category %}
                     {%if c == category %}
-                        <li role="presentation" class="active"><a id="{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
+                        <li role="presentation" class="active"><a data-target="#" data-toggle="pill" id="{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
                     {% else %}
-                        <li role="presentation"><a id="b_{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
+                        <li role="presentation"><a data-target="#" data-toggle="pill" id="b_{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
                     {% endif %}
                 {% else %}
                     {%if forloop.first %}
-                        <li role="presentation" class="active"><a id="{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
+                        <li role="presentation" class="active"><a data-target="#" data-toggle="pill" id="{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
                     {% else %}
-                        <li role="presentation"><a id="{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
+                        <li role="presentation"><a data-target="#" data-toggle="pill" id="{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
                     {% endif %}
                 {% endif %}
             {% endfor %}
@@ -88,7 +88,7 @@
                     {% for c in userprofile|companies|years|trimesters|categories %}
                         {% if c == category %}
                             {% for d in c|documents %}
-                                <tr><td>{{d.id}}</td><td>{{d.name}}</td><td>{{d.date}}</td><td>{{d.description}}</td><td>{{d.complete}}</td></tr>
+                                <tr><td>{{d.id}}</td><td><a id={{d.id}} class='img_modal' data-toggle="modal" data-target="#myModal">{{d.name}}</a></td><td>{{d.date}}</td><td>{{d.description}}</td><td>{{d.complete}}</td></tr>
                             {% endfor %}
                         {% endif %}
                     {% endfor %}
@@ -96,13 +96,29 @@
                     {% for c in userprofile|companies|years|trimesters|categories %}
                         {% if forloop.first %}
                             {% for d in c.documents.all %}
-                                <tr><td>{{d.id}}</td><td>{{d.name}}</td><td>{{d.date}}</td><td>{{d.description}}</td><td>{{d.complete}}</td></tr>
+                                <tr><td>{{d.id}}</td><td><a id={{d.id}} class='img_modal' data-toggle="modal" data-target="#myModal">{{d.name}}</a></td><td>{{d.date}}</td><td>{{d.description}}</td><td>{{d.complete}}</td></tr>
                             {% endfor %}
                         {% endif %}
                     {% endfor %}
                 {% endif %}
             </tbody>
         </table>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 id='modal-title' class="modal-title"></h4>
+            </div>
+            <div id='modal-body' class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -115,15 +131,11 @@
 <script src=" {% static "upload/js/jquery.fileupload.js" %}"></script>
 <script src=" {% static "upload/js/jquery.cookie.js" %}"></script>
 <script>
-/*jslint unparam: true */
-/*global window, $ */
 function csrfSafeMethod(method) {
-    // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
 $(function () {
     'use strict';
-    // Change this to the location of your server-side upload handler:
     var url = '/upload/basic/';
     var csrftoken = $.cookie('csrftoken');
     $('#fileupload').fileupload({
@@ -138,8 +150,7 @@ $(function () {
         done: function (e, data) {
             $.each(data.result.files, function (index, file) {
                 $("#listfile_row" ).removeClass( "hide" );
-                $("#files-group").append('<li class="list-group-item list-group-item-success">' + file.name + '</li>');
-                  
+                $("#files-group").append('\n<li class="list-group-item list-group-item-success">' + file.name + '</li>\n'); 
             });
         },
         progressall: function (e, data) {
@@ -159,13 +170,13 @@ $(function () {
 
 $(document).ready(function() {
     $('#datatable').DataTable();
+    console.log('READY');
 } );
 
 $('#valid_files').click(function() {
     var files = []
     $('#files-group').find('li').each(function(){
         var current = $(this);
-        console.log(current.text());
         files.push(current.text());
     });
     $('#files-group').empty()
@@ -173,7 +184,6 @@ $('#valid_files').click(function() {
     var jsonText = JSON.stringify(files);
     var id = $('ul.nav-pills li.active a').attr("id")
     var url = '/category/' + id + '/add_documents/';
-    console.log(url);
     $.ajax({
         url: url,
         type: 'GET',
@@ -185,26 +195,80 @@ $('#valid_files').click(function() {
         }
     });
 });
+
+function img_modal(){
+    var id = $(this).attr('id');
+    console.log(id);
+    var url = '/document/' + id + '/';
+    console.log(url);
+    $.ajax({
+        url: url,
+        type: 'GET',
+        traditional: true,
+        dataType: 'json',
+        success: function(result){
+            console.log('retour');
+            $("#modal-title").text(result['name']);
+            $("#modal-body").html(result['img']);
+        }
+    });
+}
+
 $('ul.nav-pills li a').click(function (e) {
   $('ul.nav-pills li.active').removeClass('active')
   $(this).parent('li').addClass('active')
   var id = $('ul.nav-pills li.active a').attr("id")
   var url = '/category/' + id + '/list_documents/';
-  console.log(url);
   $.ajax({
         url: url,
         type: 'GET',
         traditional: true,
         dataType: 'json',
         success: function(result){
-            console.log(result['data']);
             $('#datatable tbody').empty();
             for (i = 0; i < result['data'].length; i++) {
-                console.log(result['data'][i]['id']);
-                $('#datatable tbody').append('<tr><td>'+result['data'][i]['id']+'</td><td>'+result['data'][i]['name']+'</td><td>'+result['data'][i]['date']+'</td><td>'+result['data'][i]['description']+'</td><td>' + result['data'][i]['complete']+ '</td></tr>');
+                $('#datatable tbody').append('<tr><td>'+result['data'][i]['id']+"</td><td><a id='" + result['data'][i]['id'] + "' class='img_modal' data-toggle='modal' data-target='#myModal'>" + result['data'][i]['name'] + '</a></td><td>'+result['data'][i]['date']+'</td><td>'+result['data'][i]['description']+'</td><td>' + result['data'][i]['complete']+ '</td></tr>');
+                $(".img_modal").click(function(){
+                    img_modal();
+                });
             }
+            $('#datatable').DataTable();
         }
     });
+});
+
+function update_data(){
+    var t = $('#sel_trimester').val();
+    var url = '/trimester/' + t + '/list_categories/';
+    $.ajax({
+        url: url,
+        type: 'GET',
+        traditional: true,
+        dataType: 'json',
+        success: function(result){
+            for (i = 0; i < result['nav_list'].length; i++) {
+                var a = '<a data-target="#" data-toggle="pill" id="' + result['nav_list'][i]['id'] + '" href="#">' + result['nav_list'][i]['name'] + ' <span class="badge">'+ result['nav_list'][i]['n'] +'</span></a>';
+                $("ul.nav-pills li:eq(" + i + ") a").html(result['nav_list'][i]['name'] + ' <span class="badge">'+ result['nav_list'][i]['n'] +'</span>');
+                $("ul.nav-pills li:eq(" + i + ") a").attr("id",result['nav_list'][i]['id']);
+
+            }
+            $("ul.nav.nav-pills li:eq(0)").addClass("active");
+            $('#datatable tbody').empty();
+            for (i = 0; i < result['doc_list'].length; i++) {
+                $('#datatable tbody').append("<tr><td>" + result['doc_list'][i]['id'] + "</td><td><a id='" + result['doc_list'][i]['id'] + "' class='img_modal' data-toggle='modal' data-target='#myModal'>" + result['doc_list'][i]['name'] + "</a></td><td>" + result['doc_list'][i]['date'] + "</td><td>" + result['doc_list'][i]['description'] + "</td><td>" + result['doc_list'][i]['complete'] + "</td></tr>");
+                $(".img_modal").click(function(){
+                    img_modal();
+                });
+            }
+            $('#datatable').DataTable();
+
+        }
+    });
+}
+
+
+$(".img_modal").click(function(){
+    img_modal();
 });
 </script>
 {% endblock %}

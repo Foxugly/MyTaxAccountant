@@ -43,4 +43,9 @@ class Category(models.Model):
         return len(self.documents.all())
 
     def get_path(self):
-        return settings.MEDIA_ROOT + '/' + settings.STOCK_DIR + '/' + str(self.refer_trimester.refer_year.refer_company.slug) + '/' + str(self.refer_trimester.refer_year.fiscal_year) + '/' + str(self.refer_trimester.number) + '/' + self.cat.name + '/'
+        path = 'media/'+ settings.STOCK_DIR + '/' + str(self.refer_trimester.refer_year.refer_company.slug) + '/' + str(self.refer_trimester.refer_year.fiscal_year) + '/' + str(self.refer_trimester.number) + '/' + self.cat.name + '/'
+        print path
+        return path
+
+    def as_json(self):
+        return dict(id=self.id, name=self.cat.name, n=str(self.count_docs()), )  

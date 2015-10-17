@@ -7,9 +7,10 @@
 
 from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import login_required
-from trimesters.views import trimester_view
+from trimesters.views import trimester_view, list_categories
 
 
 urlpatterns = patterns('trimesters.views',
+    url(r'^(?P<trimester_id>[0-9]+)/list_categories/$', login_required(list_categories), name='list_categories'),
     url(r'^(?P<trimester_id>[0-9]+)/$', login_required(trimester_view), name='trimester_view'),
 )

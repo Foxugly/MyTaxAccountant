@@ -42,15 +42,15 @@
                     {% for c in userprofile|companies %}
                       {% if company %}
                         {% if  c == company %}
-                          <option value='{{c.id}}' selected>{{ c|name }}</option>
+                          <option value='{{c.id}}' selected>{{c.id}} {{ c|name }}</option>
                         {% else %}
-                          <option value='{{c.id}}'>{{ c|name }}</option>
+                          <option value='{{c.id}}'>{{c.id}} {{ c|name }}</option>
                         {% endif %}
                       {% else %}
                         {% if  c == userprofile|favorite_company %}
-                          <option value='{{c.id}}' selected>{{ c|name }}</option>
+                          <option value='{{c.id}}' selected>{{c.id}} {{ c|name }}</option>
                         {% else %}
-                          <option value='{{c.id}}'>{{ c|name }}</option>
+                          <option value='{{c.id}}'>{{c.id}} {{ c|name }}</option>
                         {% endif %}
                       {% endif %}
                     {% endfor %}
@@ -63,15 +63,15 @@
                     {% for y in userprofile|companies|years %}
                       {% if year %}
                         {% if y == trimester %}
-                          <option value='{{y.id}}' selected>{{ y }}</option>
+                          <option value='{{y.id}}' selected>{{y.id}} {{ y }}</option>
                         {% else %}
-                          <option value='{{y.id}}'>{{ y }}</option>
+                          <option value='{{y.id}}'>{{y.id}} {{ y }}</option>
                         {% endif %}
                       {% else %}
                         {% if y == userprofile|companies|favorite_year %}
-                          <option  value='{{y.id}}' selected>{{ y }}</option>
+                          <option  value='{{y.id}}' selected>{{y.id}} {{ y }}</option>
                         {% else %}
-                          <option value='{{y.id}}'>{{ y }}</option>
+                          <option value='{{y.id}}'>{{y.id}} {{ y }}</option>
                         {% endif %}
                       {% endif %}
                     {% endfor %}
@@ -84,15 +84,15 @@
                     {% for t in userprofile|companies|years|trimesters %}
                       {% if trimister %}
                         {% if t == trimester %}
-                          <option value='{{t.id}}' selected>{{ t}}</option>
+                          <option value='{{t.id}}' selected>{{t.id}} {{ t}}</option>
                         {% else %}
-                          <option value='{{t.id}}'>{{ t}}</option>
+                          <option value='{{t.id}}'>{{t.id}} {{ t}}</option>
                         {% endif %}
                       {% else %}
                         {% if t == userprofile|companies|years|favorite_trimester %}
-                          <option value='{{t.id}}' selected>{{ t }}</option>
+                          <option value='{{t.id}}' selected>{{t.id}} {{ t }}</option>
                         {% else %}
-                          <option value='{{t.id}}'>{{ t }}</option>
+                          <option value='{{t.id}}'>{{t.id}} {{ t }}</option>
                         {% endif %}
                       {% endif %}
                     {% endfor %}
@@ -148,24 +148,6 @@
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script>
 
-      function update_years(){
-        var c = $('#sel_company').val();
-        var url = '/company/' + c + '/list/';
-        $.ajax({
-            url: url,
-            type: 'GET',
-            traditional: true,
-            dataType: 'json',
-            success: function(result){
-                $('#sel_year').empty().append('<optgroup label = "Choose a tax year">')
-                for( var i = 0, len = result.length; i < len; i++ ) {
-                    $('#sel_year').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>')
-                }
-                $('#sel_year').append('</optgroup>');
-            }
-        });
-      }
-
       function update_trimesters(){
         var y = $('#sel_company').val();
         var url = '/year/' + y + '/list/';
@@ -177,28 +159,45 @@
             success: function(result){
                 $('#sel_trimester').empty().append('<optgroup label = "Choose a trimester">')
                 for( var i = 0, len = result.length; i < len; i++ ) {
-                    $('#sel_trimester').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>')
+                    $('#sel_trimester').append('<option value="'+ result[i].id + '">'+ result[i].id + ' ' + result[i].name +'</option>')
                 }
                 $('#sel_trimester').append('</optgroup>');
+                update_data();
             }
         });
       }
 
-      function update_data(){
-        var t = $('#sel_trimester').val();
+      function update_years(){
+        var c = $('#sel_company').val();
+        var url = '/company/' + c + '/list/';
+        $.ajax({
+            url: url,
+            type: 'GET',
+            traditional: true,
+            dataType: 'json',
+            success: function(result){
+                $('#sel_year').empty().append('<optgroup label = "Choose a tax year">')
+                for( var i = 0, len = result.length; i < len; i++ ) {
+                    $('#sel_year').append('<option value="'+ result[i].id + '">'+ result[i].id + ' ' + result[i].name +'</option>')
+                }
+                $('#sel_year').append('</optgroup>');
+                update_trimesters();
+            }
+        });
       }
+
+      
 
       $('#sel_trimester').change(function() {
         update_data();
         
       });
       $('#sel_year').change(function() {
-        update_trimisters(y);
-        update_data();
+        update_trimisters();
         
       });
       $('#sel_company').change(function() {
-        $.when( update_years(), update_trimesters(),update_data() ).done();
+        update_years();
       });
       
     </script>
