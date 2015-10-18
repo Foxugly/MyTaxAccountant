@@ -12,6 +12,7 @@
 from django.db import models
 from categories.models import Category, TypeCategory
 from django.utils.translation import ugettext_lazy  as _
+import os
 
 
 class Trimester(models.Model):
@@ -55,4 +56,19 @@ class Trimester(models.Model):
             new_cat = Category(cat=c, refer_trimester=self)
             new_cat.save()
             self.categories.add(new_cat)
-            self.save()
+
+    def get_relative_path(self):
+        return os.path.join(self.refer_year.get_relative_path(), str(self.number))
+
+    def get_absolute_path(self):
+        return os.path.join(self.refer_year.get_absolute_path(), str(self.number))
+
+    def save(self, *args, **kwargs):
+        super(Trimester, self).save(*args, **kwargs)
+        os.mkdir( self.get_absolute_path(), 0711 );
+
+    def delete(self):
+        for c in self.categories.all():
+            c.delete()
+        os.rmdir(self.get_absolute_path())
+        super(Trimester, self).delete()

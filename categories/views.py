@@ -32,7 +32,7 @@ def convert_pdf_to_jpg(cat, path, f, doc):
     pdf = PdfFileReader(open(path,'rb'))
     n = pdf.getNumPages()
     for i in range(0,n) :
-        path_page = cat.get_path() + str(doc.id) + '_' + "%03d" % i + '_' + filename
+        path_page = cat.get_absolute_path() + str(doc.id) + '_' + "%03d" % i + '_' + filename
         im = Image.open(path_page)
         w, h = im.size
         doc.add_page(doc.get_npages()+1, path_page, w, h)
@@ -48,7 +48,7 @@ def add_documents(request,category_id):
         cat = Category.objects.get(id=category_id)
         for f in list(files) :
             mime = MimeTypes()
-            path = settings.MEDIA_ROOT + '/' + settings.UPLOAD_DIR + '/' + f
+            path = os.path.join(settings.MEDIA_ROOT, settings.UPLOAD_DIR, f)
             m = mime.guess_type(path)[0]
             d = Document(name=f,owner=request.user,refer_category=cat)
             d.save()
@@ -59,9 +59,10 @@ def add_documents(request,category_id):
             elif m in ['image/png', 'image/jpeg', 'image/bmp']:
                 im = Image.open(path)
                 w, h = im.size
-                new_path =  cat.get_path() + str(d.id) + '_' + f
+                new_filename = str(d.id) + '_' + f
+                new_path = os.path.join(cat.get_absolute_path(),new_filename)
                 shutil.copy2(path, new_path)
-                d.add_page(d.get_npages()+1, new_path, w, h)
+                d.add_page(d.get_npages()+1, new_filename, w, h)
                 for fu in FileUpload.objects.all():
                     if fu.file.path == path :
                         fu.delete()
@@ -69,7 +70,6 @@ def add_documents(request,category_id):
                 d.save()
             else :
                 print 'ERREUR FORMAT FICHIER'
-        cat.save()
         results = {}
         data = []
         for d in cat.get_docs() :

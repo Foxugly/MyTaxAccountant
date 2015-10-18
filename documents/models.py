@@ -13,7 +13,7 @@ from django import forms
 from django.contrib.auth.models import User
 from settings import UPLOAD_DIR
 from re import sub
-from os.path import getsize
+import os
 from PIL import Image
 
 class Page(models.Model):
@@ -22,8 +22,8 @@ class Page(models.Model):
     width = models.IntegerField()
     height = models.IntegerField()
     
-    def get_size(self):
-        s = getsize(self.filename)
+    def get_size(self,d):
+        s = os.path.getsize(os.path.join(d.refer_category.get_absolute_path(),self.filename))
         return s
 
     def __str__(self):
@@ -49,7 +49,7 @@ class Document(models.Model):
     def add_page(self, num, fname, w, h):
         p = Page(num=num, filename=fname, width=w, height=h)
         p.save()
-        self.size += p.get_size()
+        self.size += p.get_size(self)
         self.pages.add(p)
 
     def all_pages(self):
@@ -63,3 +63,8 @@ class Document(models.Model):
 
     def as_json(self):
         return dict(id=self.id, name=self.name, date=self.date.strftime('%d/%m/%Y'), description= self.description, complete=self.complete)
+
+    def delete(self):
+        for p in self.pages.all():
+            del p
+        super(Document, self).delete()

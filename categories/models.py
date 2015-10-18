@@ -11,7 +11,7 @@ from django.utils.translation import ugettext_lazy  as _
 from django.db import models
 from documents.models import Document
 from django.conf import settings
-
+import os
 
 class TypeCategory(models.Model):
     name = models.CharField(_("Type of documents"), max_length=128)
@@ -42,10 +42,21 @@ class Category(models.Model):
     def count_docs(self):
         return len(self.documents.all())
 
-    def get_path(self):
-        path = 'media/'+ settings.STOCK_DIR + '/' + str(self.refer_trimester.refer_year.refer_company.slug) + '/' + str(self.refer_trimester.refer_year.fiscal_year) + '/' + str(self.refer_trimester.number) + '/' + self.cat.name + '/'
-        print path
-        return path
-
     def as_json(self):
-        return dict(id=self.id, name=self.cat.name, n=str(self.count_docs()), )  
+        return dict(id=self.id, name=self.cat.name, n=str(self.count_docs()), ) 
+
+    def get_relative_path(self):
+        return os.path.join(self.refer_trimester.get_relative_path(), self.cat.name)
+
+    def get_absolute_path(self):
+        return os.path.join(self.refer_trimester.get_absolute_path(), self.cat.name)
+
+    def save(self, *args, **kwargs):
+        super(Category, self).save(*args, **kwargs)
+        os.mkdir( self.get_absolute_path(), 0711 );
+
+    def delete(self):
+        for t in self.trimesters.all():
+            t.delete()
+        os.rmdir(self.get_absolute_path())
+        super(Category, self).delete()
