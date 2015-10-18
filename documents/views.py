@@ -18,6 +18,6 @@ def document_view(request, document_id):
 		result = {}
 		result['name'] = d.name
 		result['img'] = ''
-		for p in d.pages.order_by('num'):
-			result['img'] += '<img style="max-width:100%;" src="' + p.get_relative_path() + '" />'
+		for p in d.pages.all().order_by('num'):
+			result['img'] += '<img style="max-width:100%;" src="' + str(p.get_relative_path()) + '" />'
 		return HttpResponse(json.dumps(result))

@@ -40,9 +40,9 @@ def convert_pdf_to_jpg(cat, path, f, doc):
         if fu.file.path == path :
             fu.delete()
     doc.complete = True
-    doc.save()
 
 def add_documents(request,category_id):
+    print 'add_documents'
     if request.is_ajax():
         files = request.GET.getlist('files', False)
         cat = Category.objects.get(id=category_id)
@@ -57,6 +57,7 @@ def add_documents(request,category_id):
                 thread = Thread(target = convert_pdf_to_jpg, args = (cat,path,f,d))
                 thread.start()
             elif m in ['image/png', 'image/jpeg', 'image/bmp']:
+                print "img"
                 im = Image.open(path)
                 w, h = im.size
                 new_filename = str(d.id) + '_' + f
@@ -67,7 +68,6 @@ def add_documents(request,category_id):
                     if fu.file.path == path :
                         fu.delete()
                 d.complete = True
-                d.save()
             else :
                 print 'ERREUR FORMAT FICHIER'
         results = {}

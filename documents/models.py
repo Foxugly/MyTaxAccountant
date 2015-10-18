@@ -27,7 +27,7 @@ class Page(models.Model):
         return os.path.join(self.refer_document.refer_category.get_absolute_path(),self.filename)
 
     def get_relative_path(self):
-        os.path.join(self.refer_document.refer_category.get_relative_path(),self.filename)
+        return os.path.join(self.refer_document.refer_category.get_relative_path(),self.filename)
 
     def get_size(self):
         s = os.path.getsize(self.get_absolute_path())
