@@ -11,7 +11,6 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from documents.models import Document
 import json
-import os
 
 def document_view(request, document_id):
 	if request.is_ajax():
@@ -20,6 +19,5 @@ def document_view(request, document_id):
 		result['name'] = d.name
 		result['img'] = ''
 		for p in d.pages.order_by('num'):
-			result['img'] += '<img style="max-width:100%;" src="' + os.path.join(d.refer_category.get_relative_path(),p.filename) + '" />'
-		print result
+			result['img'] += '<img style="max-width:100%;" src="' + p.get_relative_path() + '" />'
 		return HttpResponse(json.dumps(result))

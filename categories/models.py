@@ -56,7 +56,7 @@ class Category(models.Model):
         os.mkdir( self.get_absolute_path(), 0711 );
 
     def delete(self):
-        for t in self.trimesters.all():
-            t.delete()
+        for d in self.documents.all():
+            d.delete()
         os.rmdir(self.get_absolute_path())
         super(Category, self).delete()

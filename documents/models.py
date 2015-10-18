@@ -21,13 +21,24 @@ class Page(models.Model):
     filename = models.CharField(max_length=100, default='blank')
     width = models.IntegerField()
     height = models.IntegerField()
-    
-    def get_size(self,d):
-        s = os.path.getsize(os.path.join(d.refer_category.get_absolute_path(),self.filename))
+    refer_document = models.ForeignKey('documents.Document', related_name="back_document", null=True)
+
+    def get_absolute_path(self):
+        return os.path.join(self.refer_document.refer_category.get_absolute_path(),self.filename)
+
+    def get_relative_path(self):
+        os.path.join(self.refer_document.refer_category.get_relative_path(),self.filename)
+
+    def get_size(self):
+        s = os.path.getsize(self.get_absolute_path())
         return s
 
     def __str__(self):
         return '%s - %s' % (self.filename, self.num)
+
+    def delete(self):
+        os.remove(self.get_absolute_path())
+        super(Page, self).delete()
 
 class Document(models.Model):
     name = models.TextField()
@@ -47,9 +58,9 @@ class Document(models.Model):
         self.save()
 
     def add_page(self, num, fname, w, h):
-        p = Page(num=num, filename=fname, width=w, height=h)
+        p = Page(num=num, filename=fname, width=w, height=h,refer_document=self)
         p.save()
-        self.size += p.get_size(self)
+        self.size += p.get_size()
         self.pages.add(p)
 
     def all_pages(self):
@@ -66,5 +77,5 @@ class Document(models.Model):
 
     def delete(self):
         for p in self.pages.all():
-            del p
+            p.delete()
         super(Document, self).delete()
