@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # Copyright 2015, Foxugly. All rights reserved.
@@ -7,7 +8,6 @@
 # the Free Software Foundation, either version 3 of the License, or (at
 # your option) any later version.
 
-#!/usr/bin/env python
 import os
 import sys
 

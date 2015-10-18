@@ -48,7 +48,7 @@ class Trimester(models.Model):
         return u' %s - %s - %s' % (str(self.refer_year.refer_company.get_name()), str(self.refer_year.get_name()), self.get_name())
 
     def as_json(self):
-        return dict(id=self.id, name=str(self))# .get_name())
+        return dict(id=self.id, name=self.get_name())
 
     def add_categories(self):
         for c in TypeCategory.objects.filter(active=True).order_by('priority'):

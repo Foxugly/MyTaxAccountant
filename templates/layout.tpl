@@ -42,15 +42,15 @@
                     {% for c in userprofile|companies %}
                       {% if company %}
                         {% if  c == company %}
-                          <option value='{{c.id}}' selected>{{c.id}} {{ c|name }}</option>
+                          <option value='{{c.id}}' selected>{{ c|name }}</option>
                         {% else %}
-                          <option value='{{c.id}}'>{{c.id}} {{ c|name }}</option>
+                          <option value='{{c.id}}'>{{ c|name }}</option>
                         {% endif %}
                       {% else %}
                         {% if  c == userprofile|favorite_company %}
-                          <option value='{{c.id}}' selected>{{c.id}} {{ c|name }}</option>
+                          <option value='{{c.id}}' selected>{{ c|name }}</option>
                         {% else %}
-                          <option value='{{c.id}}'>{{c.id}} {{ c|name }}</option>
+                          <option value='{{c.id}}'>{{ c|name }}</option>
                         {% endif %}
                       {% endif %}
                     {% endfor %}
@@ -63,15 +63,15 @@
                     {% for y in userprofile|companies|years %}
                       {% if year %}
                         {% if y == trimester %}
-                          <option value='{{y.id}}' selected>{{y.id}} {{ y }}</option>
+                          <option value='{{y.id}}' selected>{{ y|name  }}</option>
                         {% else %}
-                          <option value='{{y.id}}'>{{y.id}} {{ y }}</option>
+                          <option value='{{y.id}}'>{{ y|name  }}</option>
                         {% endif %}
                       {% else %}
                         {% if y == userprofile|companies|favorite_year %}
-                          <option  value='{{y.id}}' selected>{{y.id}} {{ y }}</option>
+                          <option  value='{{y.id}}' selected>{{ y|name  }}</option>
                         {% else %}
-                          <option value='{{y.id}}'>{{y.id}} {{ y }}</option>
+                          <option value='{{y.id}}'>{{ y|name  }}</option>
                         {% endif %}
                       {% endif %}
                     {% endfor %}
@@ -84,15 +84,15 @@
                     {% for t in userprofile|companies|years|trimesters %}
                       {% if trimister %}
                         {% if t == trimester %}
-                          <option value='{{t.id}}' selected>{{t.id}} {{ t}}</option>
+                          <option value='{{t.id}}' selected>{{ t|name }}</option>
                         {% else %}
-                          <option value='{{t.id}}'>{{t.id}} {{ t}}</option>
+                          <option value='{{t.id}}'>{{ t|name }}</option>
                         {% endif %}
                       {% else %}
                         {% if t == userprofile|companies|years|favorite_trimester %}
-                          <option value='{{t.id}}' selected>{{t.id}} {{ t }}</option>
+                          <option value='{{t.id}}' selected>{{ t|name  }}</option>
                         {% else %}
-                          <option value='{{t.id}}'>{{t.id}} {{ t }}</option>
+                          <option value='{{t.id}}'>{{ t|name  }}</option>
                         {% endif %}
                       {% endif %}
                     {% endfor %}
@@ -149,7 +149,7 @@
     <script>
 
       function update_trimesters(){
-        var y = $('#sel_company').val();
+        var y = $('#sel_year').val();
         var url = '/year/' + y + '/list/';
         $.ajax({
             url: url,
@@ -159,7 +159,7 @@
             success: function(result){
                 $('#sel_trimester').empty().append('<optgroup label = "Choose a trimester">')
                 for( var i = 0, len = result.length; i < len; i++ ) {
-                    $('#sel_trimester').append('<option value="'+ result[i].id + '">'+ result[i].id + ' ' + result[i].name +'</option>')
+                    $('#sel_trimester').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>')
                 }
                 $('#sel_trimester').append('</optgroup>');
                 update_data();
@@ -178,7 +178,7 @@
             success: function(result){
                 $('#sel_year').empty().append('<optgroup label = "Choose a tax year">')
                 for( var i = 0, len = result.length; i < len; i++ ) {
-                    $('#sel_year').append('<option value="'+ result[i].id + '">'+ result[i].id + ' ' + result[i].name +'</option>')
+                    $('#sel_year').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>')
                 }
                 $('#sel_year').append('</optgroup>');
                 update_trimesters();
@@ -193,7 +193,7 @@
         
       });
       $('#sel_year').change(function() {
-        update_trimisters();
+        update_trimesters();
         
       });
       $('#sel_company').change(function() {

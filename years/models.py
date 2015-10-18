@@ -31,6 +31,8 @@ class Year(models.Model):
 	def get_trimesters(self):
 		return self.trimesters.all()
 
+	def add_trimester(self,trimester):
+		self.trimesters.add(trimester)
 
 	def __str__(self):
 		return u'%s - %s' % (self.fiscal_year, self.refer_company.name)
@@ -39,4 +41,4 @@ class Year(models.Model):
 		return u'%s' % (self.fiscal_year)
 
 	def as_json(self):
-		return dict(id=self.id, name=str(self))# .fiscal_year.name)
+		return dict(id=self.id, name=self.get_name())

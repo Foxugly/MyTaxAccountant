@@ -39,4 +39,7 @@ class UserProfile(models.Model):
     def real_name(self):
         return self.user.first_name + " " + self.user.last_name
 
+    def add_company(self, company):
+        self.companies.add(company)
+
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])

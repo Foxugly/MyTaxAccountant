@@ -243,8 +243,6 @@ $('#valid_files').click(function() {
     var files = []
     $('#files-group').find('li').each(function(){
         var current = $(this).find('span');
-        console.log(current);
-        console.log(current.text());
         files.push(current.text());
     });
     $('#files-group').empty()
