@@ -18,7 +18,7 @@ class Year(models.Model):
     fiscal_year = models.ForeignKey(FiscalYear)
     active = models.BooleanField(_('active'), default=False)
     trimesters = models.ManyToManyField(Trimester, blank=True)
-    refer_company = models.ForeignKey('companies.Company', related_name="back_company", blank=True, null=True)
+    refer_company = models.ForeignKey('companies.Company', verbose_name=_('company'), related_name="back_company", blank=True, null=True)
     favorite = models.BooleanField(_('favorite'), default=False)
 
     def get_company(self):

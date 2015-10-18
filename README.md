@@ -25,3 +25,19 @@ To add a test set:
 To run:
 
 	python manage.py runserver
+
+Translation
+===========
+
+to generate .po files : 
+
+	django-admin.py makemessages -l=en
+	django-admin.py makemessages -l=fr
+	django-admin.py makemessages -l=nl
+
+for english, french and dutch.
+
+complete translations and compile :
+	django-admin compilemessages --locale=en
+	django-admin compilemessages --locale=fr
+	django-admin compilemessages --locale=nl

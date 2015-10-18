@@ -25,8 +25,8 @@ class CreateUserForm(forms.Form):
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User)
-    companies = models.ManyToManyField(Company, blank=True)
+    user = models.OneToOneField(User, verbose_name=_('user'))
+    companies = models.ManyToManyField(Company, verbose_name=_('companies'), blank=True)
     
     def get_favorites(self):
         c = self.companies.get(active=true,favorite=true)

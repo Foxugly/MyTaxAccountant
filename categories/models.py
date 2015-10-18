@@ -23,8 +23,8 @@ class TypeCategory(models.Model):
 
 class Category(models.Model):
     cat = models.ForeignKey(TypeCategory)
-    documents = models.ManyToManyField(Document, blank=True)
-    refer_trimester = models.ForeignKey('trimesters.Trimester', related_name="back_trimester", null=True)
+    documents = models.ManyToManyField(Document, verbose_name=_('documents'), blank=True)
+    refer_trimester = models.ForeignKey('trimesters.Trimester', verbose_name=_('trimester'), related_name="back_trimester", null=True)
     active = models.BooleanField(_('active'), default=True)
 
     def get_name(self):

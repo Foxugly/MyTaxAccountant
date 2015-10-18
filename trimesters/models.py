@@ -20,8 +20,8 @@ class Trimester(models.Model):
     start_date = models.DateField(_('start date'), null=True)
     end_date = models.DateField(_('end_date'), null=True, blank=True)
     active = models.BooleanField(_('active'), default=False)
-    categories = models.ManyToManyField(Category, blank=True)
-    refer_year = models.ForeignKey('years.Year', related_name="back_year", null=True)
+    categories = models.ManyToManyField(Category, verbose_name=_('categories'), blank=True)
+    refer_year = models.ForeignKey('years.Year', verbose_name=_('year'), related_name="back_year", null=True)
     favorite = models.BooleanField(_('favorite'), default=False)
 
     def get_docs(self):
