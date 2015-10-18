@@ -38,6 +38,9 @@ to generate .po files :
 for english, french and dutch.
 
 complete translations and compile :
+
 	django-admin compilemessages --locale=en
 	django-admin compilemessages --locale=fr
 	django-admin compilemessages --locale=nl
+
+
