@@ -25,8 +25,8 @@ class Company(models.Model):
     address_2 = models.CharField(_("address cont'd"), max_length=128, blank=True, null=True)
     zip_code = models.CharField(_("zip code"), max_length=5, blank=True, null=True)
     city = models.CharField(_("city"), max_length=128, blank=True, null=True)
-    country = models.ForeignKey(Country, _('country'), blank=True)
-    years = models.ManyToManyField(Year, _('year'), blank=True)
+    country = models.ForeignKey(Country, blank=True)
+    years = models.ManyToManyField(Year, blank=True)
     active = models.BooleanField(_('active'), default=False)
     favorite = models.BooleanField(_('favorite'), default=False)
 

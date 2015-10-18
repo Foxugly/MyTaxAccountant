@@ -7,13 +7,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('categories', '0007_typecategory_active'),
+        ('years', '0001_initial'),
+        ('trimesters', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='category',
-            name='active',
-            field=models.BooleanField(default=True),
+            model_name='trimester',
+            name='refer_year',
+            field=models.ForeignKey(related_name='back_year', to='years.Year', null=True),
         ),
     ]

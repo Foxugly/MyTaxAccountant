@@ -7,14 +7,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('companies', '0002_auto_20151012_0029'),
+        ('documents', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='company',
-            name='favorite',
-            field=models.BooleanField(default=0),
-            preserve_default=False,
+            model_name='page',
+            name='refer_document',
+            field=models.ForeignKey(related_name='back_document', to='documents.Document', null=True),
         ),
     ]

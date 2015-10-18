@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('years', '0001_initial'),
+        ('trimesters', '0001_initial'),
         ('categories', '0001_initial'),
     ]
 
@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='category',
             name='refer_trimester',
-            field=models.ForeignKey(related_name='back_trimester', to='years.Year', null=True),
+            field=models.ForeignKey(related_name='back_trimester', to='trimesters.Trimester', null=True),
         ),
     ]

@@ -15,8 +15,26 @@ class Migration(migrations.Migration):
             name='Category',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('cat', models.CharField(default=b'O', max_length=1, choices=[(b'S', 'Sales'), (b'I', 'Invoice'), (b'B', 'Bank'), (b'O', 'Others')])),
-                ('documents', models.ManyToManyField(to='documents.Document')),
+                ('active', models.BooleanField(default=True, verbose_name='active')),
             ],
+        ),
+        migrations.CreateModel(
+            name='TypeCategory',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=128, verbose_name='Type of documents')),
+                ('priority', models.IntegerField(unique=True, verbose_name='Priority')),
+                ('active', models.BooleanField(default=True, verbose_name='active')),
+            ],
+        ),
+        migrations.AddField(
+            model_name='category',
+            name='cat',
+            field=models.ForeignKey(to='categories.TypeCategory'),
+        ),
+        migrations.AddField(
+            model_name='category',
+            name='documents',
+            field=models.ManyToManyField(to='documents.Document', blank=True),
         ),
     ]

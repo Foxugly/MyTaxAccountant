@@ -14,6 +14,7 @@ from django.contrib.auth import models as authmod
 from django.contrib.auth.models import User
 from companies.models import Company
 from django import forms
+from django.utils.translation import ugettext_lazy  as _
 
 class CreateUserForm(forms.Form):
     username = forms.CharField()

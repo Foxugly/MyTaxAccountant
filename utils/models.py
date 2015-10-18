@@ -13,14 +13,6 @@ from django.db import models
 from django.forms import ModelForm
 
 
-CAT_DOCUMENTS = (
-    ('S', _('Sales')),
-    ('I', _('Invoice')),
-    ('B', _('Bank')),
-    ('O', _('Others')),
-)
-
-
 class Country(models.Model):
     name = models.TextField(_("Country"))
     

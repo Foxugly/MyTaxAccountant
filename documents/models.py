@@ -21,7 +21,7 @@ class Page(models.Model):
     filename = models.CharField(_('filename'), max_length=100, default='blank')
     width = models.IntegerField(_('width'))
     height = models.IntegerField(_('height'))
-    refer_document = models.ForeignKey('documents.Document', _('document'), related_name="back_document", null=True)
+    refer_document = models.ForeignKey('documents.Document', related_name="back_document", null=True)
 
     def get_absolute_path(self):
         return os.path.join(self.refer_document.refer_category.get_absolute_path(),self.filename)
@@ -42,10 +42,10 @@ class Page(models.Model):
 
 class Document(models.Model):
     name = models.TextField(_('filename'))
-    owner = models.ForeignKey(User,_('owner'))
-    refer_category = models.ForeignKey('categories.Category', _('category'), related_name="back_category", null=True)
+    owner = models.ForeignKey(User)
+    refer_category = models.ForeignKey('categories.Category', related_name="back_category", null=True)
     size = models.IntegerField(_('size'), default=0)
-    pages = models.ManyToManyField(Page, _('pages'), blank=True)
+    pages = models.ManyToManyField(Page, blank=True)
     date = models.DateTimeField( _('date'), auto_now=True, null=False)
     description = models.TextField(_('description'))
     complete = models.BooleanField(_('complete'), default=False)

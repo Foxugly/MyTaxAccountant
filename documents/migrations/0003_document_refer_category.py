@@ -7,13 +7,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('documents', '0007_auto_20151015_2341'),
+        ('categories', '0001_initial'),
+        ('documents', '0002_page_refer_document'),
     ]
 
     operations = [
         migrations.AddField(
             model_name='document',
-            name='complete',
-            field=models.BooleanField(default=False),
+            name='refer_category',
+            field=models.ForeignKey(related_name='back_category', to='categories.Category', null=True),
         ),
     ]

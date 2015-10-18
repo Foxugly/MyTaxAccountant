@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='year',
             name='refer_company',
-            field=models.ForeignKey(related_name='back_company', to='companies.Company', null=True),
+            field=models.ForeignKey(related_name='back_company', blank=True, to='companies.Company', null=True),
         ),
     ]

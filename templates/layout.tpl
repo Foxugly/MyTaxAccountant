@@ -19,13 +19,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <style>
-    div[class="row"] {
-    border: 1px dotted rgba(0, 0, 0, 0.5);
-}
+      /*div[class="row"] {
+          border: 1px dotted rgba(0, 0, 0, 0.5);
+      }
 
-div[class^="col-"] {
-    background-color: rgba(255, 0, 0, 0.2);
-}
+      div[class^="col-"] {
+          background-color: rgba(255, 0, 0, 0.2);
+      }*/
     </style>
     {% block header %}
     {% endblock %}

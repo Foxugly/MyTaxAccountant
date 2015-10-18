@@ -7,8 +7,8 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('utils', '__first__'),
         ('trimesters', '__first__'),
-        ('utils', '0001_initial'),
     ]
 
     operations = [
@@ -16,9 +16,10 @@ class Migration(migrations.Migration):
             name='Year',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('active', models.BooleanField(default=False)),
+                ('active', models.BooleanField(default=False, verbose_name='active')),
+                ('favorite', models.BooleanField(default=False, verbose_name='favorite')),
                 ('fiscal_year', models.ForeignKey(to='utils.FiscalYear')),
-                ('trimesters', models.ManyToManyField(to='trimesters.Trimester')),
+                ('trimesters', models.ManyToManyField(to='trimesters.Trimester', blank=True)),
             ],
         ),
     ]

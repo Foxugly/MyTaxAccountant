@@ -15,10 +15,10 @@ import os
 from django.utils.translation import ugettext_lazy  as _
 
 class Year(models.Model):
-    fiscal_year = models.ForeignKey(FiscalYear, _('fiscalyear'))
+    fiscal_year = models.ForeignKey(FiscalYear)
     active = models.BooleanField(_('active'), default=False)
-    trimesters = models.ManyToManyField(Trimester, _('trimester'), blank=True)
-    refer_company = models.ForeignKey('companies.Company', _('company'), related_name="back_company", blank=True, null=True)
+    trimesters = models.ManyToManyField(Trimester, blank=True)
+    refer_company = models.ForeignKey('companies.Company', related_name="back_company", blank=True, null=True)
     favorite = models.BooleanField(_('favorite'), default=False)
 
     def get_company(self):

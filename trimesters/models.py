@@ -20,14 +20,13 @@ class Trimester(models.Model):
     start_date = models.DateField(_('start date'), null=True)
     end_date = models.DateField(_('end_date'), null=True, blank=True)
     active = models.BooleanField(_('active'), default=False)
-    categories = models.ManyToManyField(Category, _('category'), blank=True)
-    refer_year = models.ForeignKey('years.Year', _('year'), related_name="back_year", null=True)
+    categories = models.ManyToManyField(Category, blank=True)
+    refer_year = models.ForeignKey('years.Year', related_name="back_year", null=True)
     favorite = models.BooleanField(_('favorite'), default=False)
 
     def get_docs(self):
-        # TODO trier par date de réception
         out = []
-        for category in self.categories.all() :
+        for category in self.categories.all().order_by('cat__priority') :
             out += category.documents.all()
         return out
 
