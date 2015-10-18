@@ -13,9 +13,15 @@ Installation
 ============
 
 To install:
-    pip install -r requirements.txt
-    python manage.py syncdb
-    python manage.py migrate
+
+	pip install -r requirements.txt
+	python manage.py syncdb
+	python manage.py migrate
 
 To add a test set:
-    python manage.py shell < data.py
+
+	python manage.py shell < data.py
+
+To run:
+
+	python manage.py runserver
