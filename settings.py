@@ -63,15 +63,13 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
 
 WSGI_APPLICATION = 'wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
 DATABASES = {
     'default': {
@@ -93,6 +91,7 @@ LOGIN_URL = '/user/login/'
 
 LANGUAGES = (
   ('fr', _('Français')),
+  ('nl', _('Nederlands')),
   ('en', _('English')),
 )
 

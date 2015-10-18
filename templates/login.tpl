@@ -1,7 +1,5 @@
 {% extends "layout.tpl" %}
 {% block content %}
-
-
 {% if next %}
     {% if user.is_authenticated %}
     <p>Your account doesn't have access to this page. To proceed,
@@ -9,7 +7,6 @@
     {% else %}
     {% endif %}
 {% endif %}
-
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
     <form class="form-horizontal" method="post" action="{% url 'django.contrib.auth.views.login' %}">

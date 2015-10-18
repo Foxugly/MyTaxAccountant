@@ -17,11 +17,11 @@ import os
 from PIL import Image
 
 class Page(models.Model):
-    num = models.IntegerField()
-    filename = models.CharField(max_length=100, default='blank')
-    width = models.IntegerField()
-    height = models.IntegerField()
-    refer_document = models.ForeignKey('documents.Document', related_name="back_document", null=True)
+    num = models.IntegerField(_('page number'))
+    filename = models.CharField(_('filename'), max_length=100, default='blank')
+    width = models.IntegerField(_('width'))
+    height = models.IntegerField(_('height'))
+    refer_document = models.ForeignKey('documents.Document', _('document'), related_name="back_document", null=True)
 
     def get_absolute_path(self):
         return os.path.join(self.refer_document.refer_category.get_absolute_path(),self.filename)
@@ -41,14 +41,14 @@ class Page(models.Model):
         super(Page, self).delete()
 
 class Document(models.Model):
-    name = models.TextField()
-    owner = models.ForeignKey(User)
-    refer_category = models.ForeignKey('categories.Category', related_name="back_category", null=True)
-    size = models.IntegerField(default=0)
-    pages = models.ManyToManyField(Page, blank=True)
-    date = models.DateTimeField(auto_now=True, null=False)
-    description = models.TextField()
-    complete = models.BooleanField(default=False)
+    name = models.TextField(_('filename'))
+    owner = models.ForeignKey(User,_('owner'))
+    refer_category = models.ForeignKey('categories.Category', _('category'), related_name="back_category", null=True)
+    size = models.IntegerField(_('size'), default=0)
+    pages = models.ManyToManyField(Page, _('pages'), blank=True)
+    date = models.DateTimeField( _('date'), auto_now=True, null=False)
+    description = models.TextField(_('description'))
+    complete = models.BooleanField(_('complete'), default=False)
 
     def get_npages(self):
         return len(self.pages.all())

@@ -1,0 +1,191 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-18 17:50+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: categories/models.py:17
+msgid "Type of documents"
+msgstr ""
+
+#: categories/models.py:18
+msgid "Priority"
+msgstr ""
+
+#: categories/models.py:19 categories/models.py:28 companies/models.py:30
+#: trimesters/models.py:22 years/models.py:19
+msgid "active"
+msgstr ""
+
+#: categories/models.py:25
+msgid "Category"
+msgstr ""
+
+#: categories/models.py:26
+msgid "Documents"
+msgstr ""
+
+#: categories/models.py:27
+msgid "Trimester"
+msgstr ""
+
+#: companies/models.py:20
+msgid "Name of the company"
+msgstr ""
+
+#: companies/models.py:22
+msgid "Description of the company"
+msgstr ""
+
+#: companies/models.py:23
+msgid "TVA number"
+msgstr ""
+
+#: companies/models.py:24
+msgid "address"
+msgstr ""
+
+#: companies/models.py:25
+msgid "address cont'd"
+msgstr ""
+
+#: companies/models.py:26
+msgid "zip code"
+msgstr ""
+
+#: companies/models.py:27
+msgid "city"
+msgstr ""
+
+#: companies/models.py:28
+msgid "country"
+msgstr ""
+
+#: companies/models.py:29 trimesters/models.py:24
+msgid "year"
+msgstr ""
+
+#: companies/models.py:31 trimesters/models.py:25 years/models.py:22
+msgid "favorite"
+msgstr ""
+
+#: documents/models.py:20
+msgid "page number"
+msgstr ""
+
+#: documents/models.py:21 documents/models.py:44
+msgid "filename"
+msgstr ""
+
+#: documents/models.py:22
+msgid "width"
+msgstr ""
+
+#: documents/models.py:23
+msgid "height"
+msgstr ""
+
+#: documents/models.py:24
+msgid "document"
+msgstr ""
+
+#: documents/models.py:45
+msgid "owner"
+msgstr ""
+
+#: documents/models.py:46 trimesters/models.py:23
+msgid "category"
+msgstr ""
+
+#: documents/models.py:47
+msgid "size"
+msgstr ""
+
+#: documents/models.py:48
+msgid "pages"
+msgstr ""
+
+#: documents/models.py:49
+msgid "date"
+msgstr ""
+
+#: documents/models.py:50
+msgid "description"
+msgstr ""
+
+#: documents/models.py:51
+msgid "complete"
+msgstr ""
+
+#: settings.py:93
+msgid "Français"
+msgstr ""
+
+#: settings.py:94
+msgid "Nederlands"
+msgstr ""
+
+#: settings.py:95
+msgid "English"
+msgstr ""
+
+#: trimesters/models.py:19
+msgid "trimester number"
+msgstr ""
+
+#: trimesters/models.py:20
+msgid "start date"
+msgstr ""
+
+#: trimesters/models.py:21
+msgid "end_date"
+msgstr ""
+
+#: trimesters/models.py:45 years/models.py:20
+msgid "trimester"
+msgstr ""
+
+#: utils/models.py:17
+msgid "Sales"
+msgstr ""
+
+#: utils/models.py:18
+msgid "Invoice"
+msgstr ""
+
+#: utils/models.py:19
+msgid "Bank"
+msgstr ""
+
+#: utils/models.py:20
+msgid "Others"
+msgstr ""
+
+#: utils/models.py:25
+msgid "Country"
+msgstr ""
+
+#: utils/models.py:37
+msgid "Fiscal year"
+msgstr ""
+
+#: years/models.py:18
+msgid "fiscalyear"
+msgstr ""
+
+#: years/models.py:21
+msgid "company"
+msgstr ""

@@ -15,17 +15,17 @@ import os
 
 class TypeCategory(models.Model):
     name = models.CharField(_("Type of documents"), max_length=128)
-    priority = models.IntegerField(unique=True)
-    active = models.BooleanField(default=True)
+    priority = models.IntegerField(_('Priority'), unique=True)
+    active = models.BooleanField(_('active'), default=True)
 
     def __str__(self):
         return self.name
 
 class Category(models.Model):
-    cat = models.ForeignKey(TypeCategory)
-    documents = models.ManyToManyField(Document, blank=True)
-    refer_trimester = models.ForeignKey('trimesters.Trimester', related_name="back_trimester", null=True)
-    active = models.BooleanField(default=True)
+    cat = models.ForeignKey(TypeCategory, _('Category'))
+    documents = models.ManyToManyField(Document, _('Documents'), blank=True)
+    refer_trimester = models.ForeignKey('trimesters.Trimester', _('Trimester'), related_name="back_trimester", null=True)
+    active = models.BooleanField(_('active'), default=True)
 
     def get_name(self):
         return u'%s' % (self.cat.name)

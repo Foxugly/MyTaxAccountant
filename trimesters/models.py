@@ -16,13 +16,13 @@ import os
 
 
 class Trimester(models.Model):
-    number = models.IntegerField(null=True)
-    start_date = models.DateField(null=True)
-    end_date = models.DateField(null=True, blank=True)
-    active = models.BooleanField(default=False)
-    categories = models.ManyToManyField(Category, blank=True)
-    refer_year = models.ForeignKey('years.Year', related_name="back_year", null=True)
-    favorite = models.BooleanField(default=False)
+    number = models.IntegerField(_('trimester number'), null=True)
+    start_date = models.DateField(_('start date'), null=True)
+    end_date = models.DateField(_('end_date'), null=True, blank=True)
+    active = models.BooleanField(_('active'), default=False)
+    categories = models.ManyToManyField(Category, _('category'), blank=True)
+    refer_year = models.ForeignKey('years.Year', _('year'), related_name="back_year", null=True)
+    favorite = models.BooleanField(_('favorite'), default=False)
 
     def get_docs(self):
         # TODO trier par date de réception

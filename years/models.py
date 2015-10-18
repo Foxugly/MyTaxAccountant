@@ -12,13 +12,14 @@ from django.forms import ModelForm
 from trimesters.models import Trimester
 from utils.models import FiscalYear
 import os
+from django.utils.translation import ugettext_lazy  as _
 
 class Year(models.Model):
-    fiscal_year = models.ForeignKey(FiscalYear)
-    active = models.BooleanField(default=False)
-    trimesters = models.ManyToManyField(Trimester, blank=True)
-    refer_company = models.ForeignKey('companies.Company', related_name="back_company", blank=True, null=True)
-    favorite = models.BooleanField(default=False)
+    fiscal_year = models.ForeignKey(FiscalYear, _('fiscalyear'))
+    active = models.BooleanField(_('active'), default=False)
+    trimesters = models.ManyToManyField(Trimester, _('trimester'), blank=True)
+    refer_company = models.ForeignKey('companies.Company', _('company'), related_name="back_company", blank=True, null=True)
+    favorite = models.BooleanField(_('favorite'), default=False)
 
     def get_company(self):
         return self.refer_company
