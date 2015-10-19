@@ -9,6 +9,7 @@
 
 from django.utils.translation import ugettext_lazy  as _
 from django.db import models
+from django.forms import ModelForm
 from documents.models import Document
 from django.conf import settings
 import os
@@ -42,6 +43,10 @@ class Category(models.Model):
     def count_docs(self):
         return len(self.documents.all())
 
+    def get_doc(self,i):
+        if i < self.count_docs():
+            return self.documents.all().order_by('pk')[i]
+
     def as_json(self):
         return dict(id=self.id, name=self.cat.name, n=str(self.count_docs()), ) 
 
@@ -60,3 +65,4 @@ class Category(models.Model):
             d.delete()
         os.rmdir(self.get_absolute_path())
         super(Category, self).delete()
+    

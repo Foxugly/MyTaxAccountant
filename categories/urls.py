@@ -9,11 +9,12 @@
 
 from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import login_required
-from categories.views import category_view, add_documents, list_documents
+from categories.views import category_view, add_documents, list_documents, form_document
 
 
 urlpatterns = patterns('categories.views',
 	url(r'^(?P<category_id>[0-9]+)/add_documents/$', login_required(add_documents), name='add_documents'),
 	url(r'^(?P<category_id>[0-9]+)/list_documents/$', login_required(list_documents), name='list_documents'),
+	url(r'^(?P<category_id>[0-9]+)/form/$', login_required(form_document), name='list_documents'),
     url(r'^(?P<category_id>[0-9]+)/$', login_required(category_view), name='category_view'),
 )

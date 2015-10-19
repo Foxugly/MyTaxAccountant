@@ -4,6 +4,7 @@
 {% load upload_tags %}
 {% load details_cat %}
 {% load tools %}
+{% load i18n %}
 {% block header %}
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.9/css/dataTables.bootstrap.min.css">
 <link rel="stylesheet" href=" {% static "upload/css/style.css" %} ">
@@ -12,7 +13,7 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-12">
         <ul class="nav nav-tabs nav-pills" role="tablist">
             {% for c in userprofile|companies|years|trimesters|categories %}
                 {% if category %}
@@ -32,36 +33,40 @@
         </ul>
     </div>
 </div>
-<div class="row" style="margin-top:20px;margin-bottom:20px;">
-    <div class="col-md-6 col-md-offset-2">
+<div class="row" style="margin-top:10px;margin-bottom:10px;">
+    <div class="col-md-10">
        <span class="btn btn-success fileinput-button">
             <i class="glyphicon glyphicon-plus"></i>
-            <span>Upload files</span>
+            <span>{% blocktrans %} Upload files {% endblocktrans %} </span>
             <input id="fileupload" type="file" name="file" multiple>
         </span>
     </div>
     <div class="col-md-2 text-right">
-        <div class="btn-group " role="group" aria-label="...">
-            <button type="button" class="btn btn-default active"><span class="glyphicon glyphicon-list"></span></button>
-            <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-file"></span></button>
+        <div id="view_group" class="btn-group" data-toggle="buttons">
+            <label class="btn btn-default">
+                <input name="view_data" value="list" type="radio"><span class="glyphicon glyphicon-list"></span>
+            </label>
+            <label class="btn btn-default">
+                <input name="view_data" value="form" type="radio"><span class="glyphicon glyphicon-file"></span>
+            </label>
         </div>
     </div>
 </div>
-<div id="progress_row" class="row hide">
-    <div id="progress" class="progress col-md-6 col-md-offset-2">
+<div id="progress_row" class="row hide"><!-- hide -->
+    <div id="progress" class="progress col-md-6">
             <div class="progress-bar progress-bar-success"></div>
     </div>
 </div>
-<div id="fileupload_list" class="row hide">
-    <div class="col-md-5 col-md-offset-2">
+<div id="fileupload_list" class="row hide"><!-- hide -->
+    <div class="col-md-5">
         <ul id="files-group" class="list-group"></ul>
     </div>
     <div class="col-md-1">
         <a id="valid_files" href="#" class="btn btn-primary btn-primary"><span class="glyphicon glyphicon-ok"></span> Validate</a>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-8 col-md-offset-2">
+<div id="div_list" class="row">
+    <div class="col-md-12">
         <table id="datatable" class="table table-striped table-bordered" width="100%" cellspacing="0">
             <thead>
                 <tr>
@@ -103,6 +108,17 @@
                 {% endif %}
             </tbody>
         </table>
+    </div>
+</div>
+<div id="div_img_form" class="row hide">
+    <div id="div_img" class="col-md-6" style="width:50%;height: 600px;overflow-y: auto; text-align:center;">
+        <img style="max-width:95%;" src="http://genesis-theme-aestetics.esy.es/wp-content/uploads/2014/10/example.jpg" />
+        <img style="max-width:95%;"  src="http://media.nrj.fr/436x327/2011/07/Example_JUILLET_Single_Changed_the_way_you_kiss_me_CR_Mercury.jpg" />
+        <img style="max-width:95%;" src="https://s3.amazonaws.com/bookfresh.hourtown.com/6fad7df62c19d996a096cb39be1ef04f_example_Master_logo.jpg" />
+        <img style="max-width:95%;" src="http://doc.qt.io/qt-4.8/images/qml-tic-tac-toe-example.png" />
+    </div>
+    <div id="div_form" class="col-md-6">
+        coucou
     </div>
 </div>
 <!-- Modal -->
@@ -295,5 +311,38 @@ $('ul.nav-pills li a').click(function (e) {
 $(".img_modal").click(function(){
     img_modal($(this));
 });
+
+$('.input[type="radio"]').click(function(){
+    console.log('tzret');
+});
+
+$("#view_group :input").change(function() {
+    var view = this.value;
+    if (view == 'list'){
+        $("#div_list").removeClass("hide");
+        $("#div_img_form").addClass("hide");
+    }
+    else if (view == 'form'){
+        $("#div_list").addClass("hide");
+        $("#div_img_form").removeClass("hide");
+        var id = $('ul.nav-pills li.active a').attr("id")
+        var url = '/category/' + id + '/form/';
+        console.log(url);
+        $.ajax({
+            url: url,
+            type: 'GET',
+            traditional: true,
+            dataType: 'json',
+            success: function(result){
+                console.log(result['form']);
+                $('#div_img').html('<img style="max-width:95%;" src="http://genesis-theme-aestetics.esy.es/wp-content/uploads/2014/10/example.jpg" />');
+                $('#div_form').html(result['form']); 
+                /* TODO COMPLETER */
+            }
+        });
+    }
+});
+
+
 </script>
 {% endblock %}

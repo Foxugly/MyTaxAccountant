@@ -13,7 +13,7 @@ from categories.models import Category
 from mimetypes import MimeTypes
 import json
 from django.conf import settings
-from documents.models import Page, Document
+from documents.models import Page, Document, DocumentForm
 from fileupload.models import FileUpload
 import shutil
 from PIL import Image
@@ -86,4 +86,14 @@ def list_documents(request,category_id):
         for d in c.get_docs() :
             data.append(d.as_json())
         results['doc_list'] = data
+        return HttpResponse(json.dumps(results))
+
+def form_document(request,category_id):
+    if request.is_ajax():
+        results = {}
+        cat = Category.objects.get(pk=category_id)
+        if cat.count_docs() > 0 :
+            form = DocumentForm(instance=cat.get_doc(0))
+            print form.as_table()
+            results['form'] = form.as_table()
         return HttpResponse(json.dumps(results))
