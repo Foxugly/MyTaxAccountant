@@ -71,7 +71,7 @@
               </div>
               <div class='form-group'>
                 <select id="sel_year" class="form-control" >
-                  <optgroup label = "Choose a tax year">
+                 <optgroup label = "Choose a tax year">
                     {% for y in userprofile|companies|years %}
                       {% if year %}
                         {% if y == trimester %}

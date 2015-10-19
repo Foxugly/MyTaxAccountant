@@ -43,7 +43,7 @@
     </div>
     <div class="col-md-2 text-right">
         <div id="view_group" class="btn-group" data-toggle="buttons">
-            <label class="btn btn-default">
+            <label class="btn btn-default active">
                 <input name="view_data" value="list" type="radio"><span class="glyphicon glyphicon-list"></span>
             </label>
             <label class="btn btn-default">
@@ -112,13 +112,16 @@
 </div>
 <div id="div_img_form" class="row hide">
     <div id="div_img" class="col-md-6" style="width:50%;height: 600px;overflow-y: auto; text-align:center;">
-        <img style="max-width:95%;" src="http://genesis-theme-aestetics.esy.es/wp-content/uploads/2014/10/example.jpg" />
-        <img style="max-width:95%;"  src="http://media.nrj.fr/436x327/2011/07/Example_JUILLET_Single_Changed_the_way_you_kiss_me_CR_Mercury.jpg" />
-        <img style="max-width:95%;" src="https://s3.amazonaws.com/bookfresh.hourtown.com/6fad7df62c19d996a096cb39be1ef04f_example_Master_logo.jpg" />
-        <img style="max-width:95%;" src="http://doc.qt.io/qt-4.8/images/qml-tic-tac-toe-example.png" />
     </div>
-    <div id="div_form" class="col-md-6">
-        coucou
+    <div class="col-md-6">
+        <div id="div_info" width="100%">
+            <div id="alert_save_notsaved" class="alert alert-info" role="alert">{% blocktrans %} Not saved !{% endblocktrans %}</div>
+            <div id="alert_save_saved" class="alert alert-success hide" role="alert">{% blocktrans %} Saved !{% endblocktrans %}</div>
+        </div>
+        <div id="div_form" width="100%"></div>
+        <div id="div_pager" width="100%" style="text-align:center;">
+            <p id="pagination"></p>
+        </div>
     </div>
 </div>
 <!-- Modal -->
@@ -146,6 +149,7 @@
 <script src=" {% static "upload/js/jquery.iframe-transport.js" %}"></script>
 <script src=" {% static "upload/js/jquery.fileupload.js" %}"></script>
 <script src=" {% static "upload/js/jquery.cookie.js" %}"></script>
+<script src=" {% static "bootpag/jquery.bootpag.min.js" %}"></script>
 <script>
 function csrfSafeMethod(method) {
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
@@ -207,8 +211,9 @@ $(function () {
 $(document).ready(function() {
     var datatable = $('#datatable').DataTable();
     console.log('READY');
-
+    $('#sel_company').change();
 });
+
 
 function img_modal(e){
     var id = e.attr('id');
@@ -251,6 +256,7 @@ function update_data(){
                     img_modal($(this));
                 });
             }
+            $('#pagination').bootpag({total: result['nav_list'][0]['n']});
         }
     });
 }
@@ -304,6 +310,9 @@ $('ul.nav-pills li a').click(function (e) {
                     img_modal($(this));
                 });
             }
+            console.log(parseInt(result['n']));
+            $('#pagination').bootpag({total: parseInt(result['n'])});
+            /* TODO faut récupérer les infos pour [1] ou dire 'ya rien con' */
         }
     });
 });
@@ -312,9 +321,11 @@ $(".img_modal").click(function(){
     img_modal($(this));
 });
 
-$('.input[type="radio"]').click(function(){
-    console.log('tzret');
-});
+
+function save_form(){
+    $('#alert_save_notsaved').addClass('hide');
+    $('#alert_save_saved').removeClass('hide');
+}
 
 $("#view_group :input").change(function() {
     var view = this.value;
@@ -325,24 +336,46 @@ $("#view_group :input").change(function() {
     else if (view == 'form'){
         $("#div_list").addClass("hide");
         $("#div_img_form").removeClass("hide");
+        $('#alert_save_notsaved').removeClass('hide');
+        $('#alert_save_saved').addClass('hide');
         var id = $('ul.nav-pills li.active a').attr("id")
         var url = '/category/' + id + '/form/';
-        console.log(url);
         $.ajax({
             url: url,
             type: 'GET',
             traditional: true,
             dataType: 'json',
             success: function(result){
-                console.log(result['form']);
-                $('#div_img').html('<img style="max-width:95%;" src="http://genesis-theme-aestetics.esy.es/wp-content/uploads/2014/10/example.jpg" />');
-                $('#div_form').html(result['form']); 
-                /* TODO COMPLETER */
+                $('#div_img').html(result['img']);
+                $('#div_form').html(result['form']);
+                $('#btn_save').click(function(){
+                    console.log('click');
+                    save_form();
+    
+                });
             }
         });
     }
 });
 
+$('#pagination').bootpag({
+        total: 1,
+        page: 2,
+        maxVisible: 5,
+        leaps: true,
+        firstLastUse: true,
+        first: '←',
+        last: '→',
+        wrapClass: 'pagination',
+        activeClass: 'active',
+        disabledClass: 'disabled',
+        nextClass: 'next',
+        prevClass: 'prev',
+        lastClass: 'last',
+        firstClass: 'first'
+    }).on("page", function(event, num){
+        $("#console").append("Page " + num).append('<br />');
+}); 
 
 </script>
 {% endblock %}

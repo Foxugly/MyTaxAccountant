@@ -9,12 +9,14 @@
 
 from django.utils.translation import ugettext_lazy  as _
 from django.db import models, connection
+from django.forms import ModelForm
 from django import forms
 from django.contrib.auth.models import User
 from settings import UPLOAD_DIR
 from re import sub
 import os
 from PIL import Image
+from django.utils import timezone
 
 class Page(models.Model):
     num = models.IntegerField(_('page number'))
@@ -28,6 +30,9 @@ class Page(models.Model):
 
     def get_relative_path(self):
         return os.path.join(self.refer_document.refer_category.get_relative_path(),self.filename)
+
+    def as_img(self):
+        return '<img style="max-width:95%;" src="' + str(self.get_relative_path()) + '" />'
 
     def get_size(self):
         s = os.path.getsize(self.get_absolute_path())
@@ -46,7 +51,7 @@ class Document(models.Model):
     refer_category = models.ForeignKey('categories.Category', verbose_name=_('category'), related_name="back_category", null=True)
     size = models.IntegerField(_('size'), default=0)
     pages = models.ManyToManyField(Page, blank=True)
-    date = models.DateTimeField( _('date'), auto_now=True, null=False)
+    date = models.DateTimeField( _('date'), default=timezone.now, null=False)
     description = models.TextField(_('description'))
     complete = models.BooleanField(_('complete'), default=False)
 
@@ -66,6 +71,12 @@ class Document(models.Model):
     def all_pages(self):
         return self.pages.all().order_by('id')
 
+    def as_img(self):
+        txt = ''
+        for p in self.all_pages():
+            txt+= p.as_img()
+        return txt
+
     def get_size(self):
         return self.size
 
@@ -79,3 +90,29 @@ class Document(models.Model):
         for p in self.pages.all():
             p.delete()
         super(Document, self).delete()
+
+class DocumentForm(ModelForm):
+    name = forms.CharField(label=_('Filename'), max_length=200, widget=forms.TextInput())
+
+    def __init__(self, *args, **kwargs):
+        super(DocumentForm, self).__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({'class': 'form-control'})
+
+    class Meta:
+        model = Document
+        fields = ['name', 'date', 'description']
+
+
+    def as_div(self):
+        txt = '<form class="form-horizontal">\n<fieldset>\n<legend>' + str(_('Document')) +'</legend>'
+        for f in self:
+            txt+= '<div class="form-group">\n'
+            txt+= f.label_tag().replace('<label ', '<label class="col-md-4 control-label" ' )+'\n'
+            txt+= '<div class="col-md-8">' + str(f) + '</div>\n<span class="help-block"></span>\n'
+            txt+= '</div>\n'
+        txt+= '<div class="form-group">\n'
+        txt+= '<div class="col-md-offset-2 col-md-8">\n'
+        txt+= '<a id="btn_save" class="btn btn-block btn-success">' + str(_('Save')) + '</a>\n</div>\n</div>'
+        txt += '</fieldset>\n</form>'
+        return txt

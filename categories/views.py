@@ -86,6 +86,7 @@ def list_documents(request,category_id):
         for d in c.get_docs() :
             data.append(d.as_json())
         results['doc_list'] = data
+        results['n'] = c.count_docs()
         return HttpResponse(json.dumps(results))
 
 def form_document(request,category_id):
@@ -94,6 +95,6 @@ def form_document(request,category_id):
         cat = Category.objects.get(pk=category_id)
         if cat.count_docs() > 0 :
             form = DocumentForm(instance=cat.get_doc(0))
-            print form.as_table()
-            results['form'] = form.as_table()
+            results['img'] = cat.get_doc(0).as_img()
+            results['form'] = form.as_div()
         return HttpResponse(json.dumps(results))
