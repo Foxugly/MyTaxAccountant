@@ -20,22 +20,25 @@ from PIL import Image
 import os
 from threading import Thread
 from pyPdf import PdfFileReader
+import re
 
 def category_view(request, category_id):
     return HttpResponse("category_view")
 
 def convert_pdf_to_jpg(cat, path, f, doc):
-    filename = f.replace('.pdf', '.jpg') #TODO 
-    new_path =  cat.get_path() + str(doc.id) + '_' + '%03d' + '_' + filename
+    p = re.compile(r'.[Pp][Dd][Ff]$')
+    filename = p.sub('.jpg', f)
+    new_path =  cat.get_absolute_path() + '/' + str(doc.id) + '_' + '%03d' + '_' + filename
     cmd = 'convert -density 600 ' + path + ' ' + new_path
     os.system(cmd)
     pdf = PdfFileReader(open(path,'rb'))
     n = pdf.getNumPages()
     for i in range(0,n) :
-        path_page = cat.get_absolute_path() + str(doc.id) + '_' + "%03d" % i + '_' + filename
+        name_page = str(doc.id) + '_' + "%03d" % i + '_' + filename
+        path_page = cat.get_absolute_path() + '/' + name_page
         im = Image.open(path_page)
         w, h = im.size
-        doc.add_page(doc.get_npages()+1, path_page, w, h)
+        doc.add_page(doc.get_npages()+1, name_page, w, h)
     for fu in FileUpload.objects.all():
         if fu.file.path == path :
             fu.delete()
@@ -89,12 +92,12 @@ def list_documents(request,category_id):
         results['n'] = c.count_docs()
         return HttpResponse(json.dumps(results))
 
-def form_document(request,category_id):
+def form_document(request,category_id,n):
     if request.is_ajax():
         results = {}
         cat = Category.objects.get(pk=category_id)
         if cat.count_docs() > 0 :
-            form = DocumentForm(instance=cat.get_doc(0))
+            form = DocumentForm(instance=cat.get_doc(int(n)-1))
             results['img'] = cat.get_doc(0).as_img()
             results['form'] = form.as_div()
         return HttpResponse(json.dumps(results))

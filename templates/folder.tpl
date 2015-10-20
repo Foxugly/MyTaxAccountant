@@ -110,13 +110,12 @@
         </table>
     </div>
 </div>
-<div id="div_img_form" class="row hide">
+<div id="div_img_form" class="row">
     <div id="div_img" class="col-md-6" style="width:50%;height: 600px;overflow-y: auto; text-align:center;">
     </div>
     <div class="col-md-6">
-        <div id="div_info" width="100%">
-            <div id="alert_save_notsaved" class="alert alert-info" role="alert">{% blocktrans %} Not saved !{% endblocktrans %}</div>
-            <div id="alert_save_saved" class="alert alert-success hide" role="alert">{% blocktrans %} Saved !{% endblocktrans %}</div>
+        <div id="div_info" width="100%" style="min-height:55px;">
+            <div id="alert_save_saved" class="alert alert-success" role="alert">{% blocktrans %} Saved !{% endblocktrans %}</div>
         </div>
         <div id="div_form" width="100%"></div>
         <div id="div_pager" width="100%" style="text-align:center;">
@@ -211,6 +210,8 @@ $(function () {
 $(document).ready(function() {
     var datatable = $('#datatable').DataTable();
     console.log('READY');
+    $('#alert_save_saved').hide();
+    $("#div_img_form").hide();
     $('#sel_company').change();
 });
 
@@ -268,7 +269,7 @@ $('#valid_files').click(function() {
         files.push(current.text());
     });
     $('#files-group').empty()
-    $("#fileupload_list" ).addClass( "hide" );
+    $("#fileupload_list" ).addClass( "hide" ); // TODO .hide();
     var jsonText = JSON.stringify(files);
     var id = $('ul.nav-pills li.active a').attr("id")
     var url = '/category/' + id + '/add_documents/';
@@ -292,6 +293,33 @@ $('#valid_files').click(function() {
     });
 });
 
+
+function save_form(){
+    $('#alert_save_saved').show().delay( 1000 ).fadeOut(1000);
+}
+
+function view_form(img, form){
+    $('#div_img').html(img);
+    $('#div_form').html(form);
+    $('#btn_save').click(function(){
+        save_form();
+    });
+}
+
+function get_form_data(i){
+    var id = $('ul.nav-pills li.active a').attr("id")
+    var url = '/category/' + id + '/form/' + i + '/';
+    $.ajax({
+        url: url,
+        type: 'GET',
+        traditional: true,
+        dataType: 'json',
+        success: function(result){
+            view_form(result['img'],result['form']);
+        }
+    });
+}
+
 $('ul.nav-pills li a').click(function (e) {
     $('ul.nav-pills li.active').removeClass('active')
     $(this).parent('li').addClass('active')
@@ -310,9 +338,13 @@ $('ul.nav-pills li a').click(function (e) {
                     img_modal($(this));
                 });
             }
-            console.log(parseInt(result['n']));
-            $('#pagination').bootpag({total: parseInt(result['n'])});
-            /* TODO faut récupérer les infos pour [1] ou dire 'ya rien con' */
+            var n = parseInt(result['n']);
+            $('#pagination').bootpag({total: n});
+            if (n == 0 ){
+                console.log('0');
+            }else{
+                get_form_data(1);
+            }
         }
     });
 });
@@ -321,40 +353,18 @@ $(".img_modal").click(function(){
     img_modal($(this));
 });
 
-
-function save_form(){
-    $('#alert_save_notsaved').addClass('hide');
-    $('#alert_save_saved').removeClass('hide');
-}
-
 $("#view_group :input").change(function() {
     var view = this.value;
     if (view == 'list'){
-        $("#div_list").removeClass("hide");
-        $("#div_img_form").addClass("hide");
+        $("#div_list").show();
+        $("#div_img_form").hide();
+        $('#alert_save_saved').hide();
     }
     else if (view == 'form'){
-        $("#div_list").addClass("hide");
-        $("#div_img_form").removeClass("hide");
-        $('#alert_save_notsaved').removeClass('hide');
-        $('#alert_save_saved').addClass('hide');
-        var id = $('ul.nav-pills li.active a').attr("id")
-        var url = '/category/' + id + '/form/';
-        $.ajax({
-            url: url,
-            type: 'GET',
-            traditional: true,
-            dataType: 'json',
-            success: function(result){
-                $('#div_img').html(result['img']);
-                $('#div_form').html(result['form']);
-                $('#btn_save').click(function(){
-                    console.log('click');
-                    save_form();
-    
-                });
-            }
-        });
+        $("#div_list").hide();
+        $("#div_img_form").show();
+        $('#alert_save_saved').hide();
+        get_form_data(1);
     }
 });
 
@@ -375,6 +385,7 @@ $('#pagination').bootpag({
         firstClass: 'first'
     }).on("page", function(event, num){
         $("#console").append("Page " + num).append('<br />');
+        get_form_data(num);
 }); 
 
 </script>
