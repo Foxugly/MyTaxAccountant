@@ -52,7 +52,8 @@ class Document(models.Model):
     size = models.IntegerField(_('size'), default=0)
     pages = models.ManyToManyField(Page, blank=True)
     date = models.DateTimeField( _('date'), default=timezone.now, null=False)
-    description = models.TextField(_('description'))
+    description = models.TextField(_('description'), blank=True, null=True)
+    fiscal_id = models.CharField(_('Fiscal ID'), max_length=100, blank=True, null=True)
     complete = models.BooleanField(_('complete'), default=False)
 
     def get_npages(self):
@@ -67,6 +68,7 @@ class Document(models.Model):
         p.save()
         self.size += p.get_size()
         self.pages.add(p)
+        self.save()
 
     def all_pages(self):
         return self.pages.all().order_by('id')
@@ -84,7 +86,7 @@ class Document(models.Model):
         return self.name
 
     def as_json(self):
-        return dict(id=self.id, name=self.name, date=self.date.strftime('%d/%m/%Y'), description= self.description, complete=self.complete)
+        return dict(id=self.id, name=self.name, date=self.date.strftime('%d/%m/%Y'), description= self.description, complete=self.complete, fiscal_id=self.fiscal_id)
 
     def delete(self):
         for p in self.pages.all():
@@ -101,7 +103,7 @@ class DocumentForm(ModelForm):
 
     class Meta:
         model = Document
-        fields = ['name', 'date', 'description']
+        fields = ['owner', 'name', 'date', 'description', 'fiscal_id']
 
 
     def as_div(self):

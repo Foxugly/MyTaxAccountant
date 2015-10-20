@@ -43,11 +43,11 @@
     </div>
     <div class="col-md-2 text-right">
         <div id="view_group" class="btn-group" data-toggle="buttons">
-            <label class="btn btn-default active">
-                <input name="view_data" value="list" type="radio"><span class="glyphicon glyphicon-list"></span>
+            <label class="btn btn-default">
+                <input id="input_view_list" name="view_data" value="list" type="radio"><span class="glyphicon glyphicon-list"></span>
             </label>
             <label class="btn btn-default">
-                <input name="view_data" value="form" type="radio"><span class="glyphicon glyphicon-file"></span>
+                <input id="input_view_form" name="view_data" value="form" type="radio"><span class="glyphicon glyphicon-file"></span>
             </label>
         </div>
     </div>
@@ -210,8 +210,8 @@ $(function () {
 $(document).ready(function() {
     var datatable = $('#datatable').DataTable();
     console.log('READY');
-    $('#alert_save_saved').hide();
     $("#div_img_form").hide();
+    $('#input_view_list').click();
     $('#sel_company').change();
 });
 
@@ -232,7 +232,7 @@ function img_modal(e){
 }
 
 function update_datatable(data){
-    $('#datatable').dataTable().fnAddData([ data['id'], "<a id='" + data['id'] + "' class='img_modal' data-toggle='modal' data-target='#myModal'>" + data['name'] + "</a>", data['date'], data['description'], data['description']]);
+    $('#datatable').dataTable().fnAddData([ data['id'], "<a id='" + data['id'] + "' class='img_modal' data-toggle='modal' data-target='#myModal'>" + data['name'] + "</a>", data['date'], data['description'], data['complete']]);
 }
 
 function update_data(){
@@ -257,7 +257,7 @@ function update_data(){
                     img_modal($(this));
                 });
             }
-            $('#pagination').bootpag({total: result['nav_list'][0]['n']});
+            $('#pagination').bootpag({total: result['nav_list'][0]['n'], page: 1});
         }
     });
 }
@@ -295,12 +295,25 @@ $('#valid_files').click(function() {
 
 
 function save_form(){
-    $('#alert_save_saved').show().delay( 1000 ).fadeOut(1000);
+    var form = $('#div_form form');
+    var id = $('#doc_id').val();
+    var url = '/document/' + id + '/update/';
+    $.ajax({
+        url: url,
+        type: 'GET',
+        data: form.serialize(),
+        traditional: true,
+        dataType: 'json',
+        success: function(result){
+            $('#alert_save_saved').show().delay( 1000 ).fadeOut(1000);
+        }
+    });
+    
 }
 
-function view_form(img, form){
+function view_form(img, form,doc_id){
     $('#div_img').html(img);
-    $('#div_form').html(form);
+    $('#div_form').html('<input id="doc_id" type="hidden" name="doc_id" value="' + doc_id + '">' +form);
     $('#btn_save').click(function(){
         save_form();
     });
@@ -315,7 +328,15 @@ function get_form_data(i){
         traditional: true,
         dataType: 'json',
         success: function(result){
-            view_form(result['img'],result['form']);
+            if (result['valid'] == true){
+                view_form(result['img'],result['form'], result['doc_id']);
+                $('#pagination').show();
+            }
+            else{
+                $('#div_img').html(" ");
+                $('#div_form').html('<div class="alert alert-info" role="alert">No documents for this category</div>');
+                $('#pagination').hide();
+            }      
         }
     });
 }
@@ -339,12 +360,10 @@ $('ul.nav-pills li a').click(function (e) {
                 });
             }
             var n = parseInt(result['n']);
-            $('#pagination').bootpag({total: n});
-            if (n == 0 ){
-                console.log('0');
-            }else{
-                get_form_data(1);
-            }
+            $('#pagination').bootpag({total: n,page: 1}).on("page", function(event, num){
+                get_form_data(num);
+            });
+            get_form_data(1);
         }
     });
 });
@@ -353,7 +372,7 @@ $(".img_modal").click(function(){
     img_modal($(this));
 });
 
-$("#view_group :input").change(function() {
+$("#view_group :input:radio").change(function() {
     var view = this.value;
     if (view == 'list'){
         $("#div_list").show();
@@ -364,13 +383,14 @@ $("#view_group :input").change(function() {
         $("#div_list").hide();
         $("#div_img_form").show();
         $('#alert_save_saved').hide();
+        //$('#pagination').bootpag({page: 1});
         get_form_data(1);
     }
 });
 
 $('#pagination').bootpag({
         total: 1,
-        page: 2,
+        page: 1,
         maxVisible: 5,
         leaps: true,
         firstLastUse: true,
@@ -384,7 +404,6 @@ $('#pagination').bootpag({
         lastClass: 'last',
         firstClass: 'first'
     }).on("page", function(event, num){
-        $("#console").append("Page " + num).append('<br />');
         get_form_data(num);
 }); 
 

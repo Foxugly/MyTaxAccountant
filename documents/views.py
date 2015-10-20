@@ -9,7 +9,7 @@
 
 from django.shortcuts import render
 from django.http import HttpResponse
-from documents.models import Document
+from documents.models import Document, DocumentForm
 import json
 
 def document_view(request, document_id):
@@ -21,3 +21,15 @@ def document_view(request, document_id):
 		for p in d.pages.all().order_by('num'):
 			result['img'] += '<img style="max-width:100%;" src="' + str(p.get_relative_path()) + '" />'
 		return HttpResponse(json.dumps(result))
+
+def update_ajax(request, document_id):
+	print 'update_ajax'
+	if request.is_ajax():
+		doc = Document.objects.get(id=document_id)
+		form = DocumentForm(request.GET,instance=doc)
+		print form
+		if form.is_valid():
+			form.save()
+			return HttpResponse(json.dumps('OK'))
+		else :
+			return HttpResponse(json.dumps('ERROR'))

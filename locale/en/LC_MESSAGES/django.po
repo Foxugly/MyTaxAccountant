@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-18 17:50+0200\n"
+"POT-Creation-Date: 2015-10-20 20:23+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,29 +17,25 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: categories/models.py:17
+#: categories/models.py:18
 msgid "Type of documents"
 msgstr ""
 
-#: categories/models.py:18
+#: categories/models.py:19
 msgid "Priority"
 msgstr ""
 
-#: categories/models.py:19 categories/models.py:28 companies/models.py:30
+#: categories/models.py:20 categories/models.py:29 companies/models.py:30
 #: trimesters/models.py:22 years/models.py:19
 msgid "active"
 msgstr ""
 
-#: categories/models.py:25
-msgid "Category"
-msgstr ""
-
-#: categories/models.py:26
-msgid "Documents"
-msgstr ""
-
 #: categories/models.py:27
-msgid "Trimester"
+msgid "documents"
+msgstr ""
+
+#: categories/models.py:28 trimesters/models.py:44
+msgid "trimester"
 msgstr ""
 
 #: companies/models.py:20
@@ -70,64 +66,64 @@ msgstr ""
 msgid "city"
 msgstr ""
 
-#: companies/models.py:28
-msgid "country"
-msgstr ""
-
-#: companies/models.py:29 trimesters/models.py:24
-msgid "year"
-msgstr ""
-
 #: companies/models.py:31 trimesters/models.py:25 years/models.py:22
 msgid "favorite"
 msgstr ""
 
-#: documents/models.py:20
+#: documents/models.py:22
 msgid "page number"
 msgstr ""
 
-#: documents/models.py:21 documents/models.py:44
+#: documents/models.py:23 documents/models.py:49
 msgid "filename"
 msgstr ""
 
-#: documents/models.py:22
+#: documents/models.py:24
 msgid "width"
 msgstr ""
 
-#: documents/models.py:23
+#: documents/models.py:25
 msgid "height"
 msgstr ""
 
-#: documents/models.py:24
+#: documents/models.py:26
 msgid "document"
 msgstr ""
 
-#: documents/models.py:45
-msgid "owner"
-msgstr ""
-
-#: documents/models.py:46 trimesters/models.py:23
+#: documents/models.py:51
 msgid "category"
 msgstr ""
 
-#: documents/models.py:47
+#: documents/models.py:52
 msgid "size"
 msgstr ""
 
-#: documents/models.py:48
-msgid "pages"
-msgstr ""
-
-#: documents/models.py:49
+#: documents/models.py:54
 msgid "date"
 msgstr ""
 
-#: documents/models.py:50
+#: documents/models.py:55
 msgid "description"
 msgstr ""
 
-#: documents/models.py:51
+#: documents/models.py:56
+msgid "Fiscal ID"
+msgstr ""
+
+#: documents/models.py:57
 msgid "complete"
+msgstr ""
+
+#: documents/models.py:97
+msgid "Filename"
+msgstr ""
+
+#: documents/models.py:110
+msgid "Document"
+msgstr ""
+
+#: documents/models.py:118
+msgid "Save"
 msgstr ""
 
 #: settings.py:93
@@ -154,36 +150,28 @@ msgstr ""
 msgid "end_date"
 msgstr ""
 
-#: trimesters/models.py:45 years/models.py:20
-msgid "trimester"
+#: trimesters/models.py:23
+msgid "categories"
+msgstr ""
+
+#: trimesters/models.py:24
+msgid "year"
+msgstr ""
+
+#: users/models.py:28
+msgid "user"
+msgstr ""
+
+#: users/models.py:29
+msgid "companies"
 msgstr ""
 
 #: utils/models.py:17
-msgid "Sales"
-msgstr ""
-
-#: utils/models.py:18
-msgid "Invoice"
-msgstr ""
-
-#: utils/models.py:19
-msgid "Bank"
-msgstr ""
-
-#: utils/models.py:20
-msgid "Others"
-msgstr ""
-
-#: utils/models.py:25
 msgid "Country"
 msgstr ""
 
-#: utils/models.py:37
+#: utils/models.py:29
 msgid "Fiscal year"
-msgstr ""
-
-#: years/models.py:18
-msgid "fiscalyear"
 msgstr ""
 
 #: years/models.py:21
