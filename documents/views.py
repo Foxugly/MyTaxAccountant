@@ -9,7 +9,7 @@
 
 from django.shortcuts import render
 from django.http import HttpResponse
-from documents.models import Document, DocumentForm
+from documents.models import Document, DocumentAdminForm, DocumentForm
 import json
 
 def document_view(request, document_id):
@@ -26,7 +26,11 @@ def update_ajax(request, document_id):
 	print 'update_ajax'
 	if request.is_ajax():
 		doc = Document.objects.get(id=document_id)
-		form = DocumentForm(request.GET,instance=doc)
+		form = None
+		if request.user.is_superuser:
+			form = DocumentAdminForm(request.GET,instance=doc)
+		else:
+			form = DocumentForm(request.GET,instance=doc)
 		print form
 		if form.is_valid():
 			form.save()

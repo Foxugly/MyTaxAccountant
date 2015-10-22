@@ -13,7 +13,7 @@ from categories.models import Category
 from mimetypes import MimeTypes
 import json
 from django.conf import settings
-from documents.models import Page, Document, DocumentForm
+from documents.models import Page, Document, DocumentForm, DocumentAdminForm, DocumentReadOnlyForm
 from fileupload.models import FileUpload
 import shutil
 from PIL import Image
@@ -98,7 +98,14 @@ def form_document(request,category_id,n):
         cat = Category.objects.get(pk=category_id)
         if cat.count_docs() > 0 :
             doc = cat.get_doc(int(n)-1)
-            form = DocumentForm(instance=doc)
+            form = None
+            if request.user.is_superuser:
+				form = DocumentAdminForm(instance=doc)
+            else:
+				if doc.lock:
+					DocumentReadOnlyForm(instance=doc)
+				else :
+					form = DocumentForm(instance=doc)
             results['img'] = doc.as_img()
             results['form'] = form.as_div()
             results['doc_id'] = doc.id

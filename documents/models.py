@@ -55,6 +55,7 @@ class Document(models.Model):
     description = models.TextField(_('description'), blank=True, null=True)
     fiscal_id = models.CharField(_('Fiscal ID'), max_length=100, blank=True, null=True)
     complete = models.BooleanField(_('complete'), default=False)
+    lock = models.BooleanField(_('locked'), default=False)
 
     def get_npages(self):
         return len(self.pages.all())
@@ -93,17 +94,17 @@ class Document(models.Model):
             p.delete()
         super(Document, self).delete()
 
-class DocumentForm(ModelForm):
+class DocumentAdminForm(ModelForm):
     name = forms.CharField(label=_('Filename'), max_length=200, widget=forms.TextInput())
 
     def __init__(self, *args, **kwargs):
-        super(DocumentForm, self).__init__(*args, **kwargs)
+        super(DocumentAdminForm, self).__init__(*args, **kwargs)
         for field in iter(self.fields):
             self.fields[field].widget.attrs.update({'class': 'form-control'})
 
     class Meta:
         model = Document
-        fields = ['owner', 'name', 'date', 'description', 'fiscal_id']
+        fields = ['owner', 'name', 'date', 'description', 'fiscal_id', 'lock']
 
 
     def as_div(self):
@@ -118,3 +119,23 @@ class DocumentForm(ModelForm):
         txt+= '<a id="btn_save" class="btn btn-block btn-success">' + str(_('Save')) + '</a>\n</div>\n</div>'
         txt += '</fieldset>\n</form>'
         return txt
+ 
+class DocumentForm(DocumentAdminForm):
+    def __init__(self, *args, **kwargs):
+        super(DocumentForm, self).__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({'class': 'form-control'})
+            if str(field) == 'lock':
+				self.fields[field].widget.attrs['readonly'] = True
+	
+	 
+class DocumentReadOnlyForm(DocumentAdminForm):
+    def __init__(self, *args, **kwargs):
+        super(DocumentReadOnlyForm, self).__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({'class': 'form-control'})
+            self.fields[field].widget.attrs['readonly'] = True
+
+    class Meta:
+        model = Document
+        fields = ['owner', 'name', 'date', 'description', 'fiscal_id']
