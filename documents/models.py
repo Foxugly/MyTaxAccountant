@@ -96,7 +96,7 @@ class Document(models.Model):
 
 class DocumentAdminForm(ModelForm):
     name = forms.CharField(label=_('Filename'), max_length=200, widget=forms.TextInput())
-
+    
     def __init__(self, *args, **kwargs):
         super(DocumentAdminForm, self).__init__(*args, **kwargs)
         for field in iter(self.fields):
@@ -105,6 +105,9 @@ class DocumentAdminForm(ModelForm):
     class Meta:
         model = Document
         fields = ['owner', 'name', 'date', 'description', 'fiscal_id', 'lock']
+        widgets = {
+            'description': forms.Textarea(attrs={'cols': 40, 'rows': 4}),
+        }
 
 
     def as_div(self):
