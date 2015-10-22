@@ -23,7 +23,6 @@ def document_view(request, document_id):
 		return HttpResponse(json.dumps(result))
 
 def update_ajax(request, document_id):
-	print 'update_ajax'
 	if request.is_ajax():
 		doc = Document.objects.get(id=document_id)
 		form = None
@@ -31,7 +30,6 @@ def update_ajax(request, document_id):
 			form = DocumentAdminForm(request.GET,instance=doc)
 		else:
 			form = DocumentForm(request.GET,instance=doc)
-		print form
 		if form.is_valid():
 			form.save()
 			return HttpResponse(json.dumps('OK'))

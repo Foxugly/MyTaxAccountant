@@ -103,7 +103,7 @@ def form_document(request,category_id,n):
 				form = DocumentAdminForm(instance=doc)
             else:
 				if doc.lock:
-					DocumentReadOnlyForm(instance=doc)
+					form = DocumentReadOnlyForm(instance=doc)
 				else :
 					form = DocumentForm(instance=doc)
             results['img'] = doc.as_img()
