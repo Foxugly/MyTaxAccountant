@@ -1,4 +1,4 @@
 django
 pypdf
-south
+imagemagick
 pillow
