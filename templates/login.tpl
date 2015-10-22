@@ -33,7 +33,7 @@
         {% if next %}
           <input type="hidden" name="next" value="{{ next }}" />
         {% else %}
-          <input type="hidden" name="next" value="/company/1/" />
+          <input type="hidden" name="next" value="/" />
         {% endif %}
         <!-- Button -->
         <div class="form-group">
