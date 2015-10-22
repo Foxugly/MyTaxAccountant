@@ -127,6 +127,7 @@ class DocumentForm(DocumentAdminForm):
             self.fields[field].widget.attrs.update({'class': 'form-control'})
             if str(field) == 'lock':
 				self.fields[field].widget.attrs['readonly'] = True
+				self.fields[field].widget.attrs['disabled'] ='disabled'
 	
 	 
 class DocumentReadOnlyForm(DocumentAdminForm):
@@ -135,7 +136,5 @@ class DocumentReadOnlyForm(DocumentAdminForm):
         for field in iter(self.fields):
             self.fields[field].widget.attrs.update({'class': 'form-control'})
             self.fields[field].widget.attrs['readonly'] = True
+            self.fields[field].widget.attrs['disabled'] ='disabled'
 
-    class Meta:
-        model = Document
-        fields = ['owner', 'name', 'date', 'description', 'fiscal_id']
