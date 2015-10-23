@@ -11,6 +11,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from users.models import UserProfile
 from trimesters.models import Trimester
+from documents.models import DocumentForm, DocumentAdminForm, DocumentReadOnlyForm
 import json
 
 def trimester_view(request, trimester_id):
@@ -22,16 +23,37 @@ def trimester_view(request, trimester_id):
 
 
 def list_categories(request, trimester_id):
-	if request.is_ajax():
-		t = Trimester.objects.get(id=trimester_id)
-		result = {}
-		nav_list = []
-		doc_list = []
-		for c in t.categories.filter(active=True).order_by('cat__priority'):
-			nav_list.append(c.as_json())
-		result['nav_list'] = nav_list
-		c = t.categories.filter(active=True).order_by('cat__priority')[:1]
-		for d in c[0].get_docs():
-			doc_list.append(d.as_json())
-		result['doc_list'] = doc_list
-		return HttpResponse(json.dumps(result))
+    if request.is_ajax():
+        t = Trimester.objects.get(id=trimester_id)
+        result = {}
+        nav_list = []
+        doc_list = []
+        for c in t.categories.filter(active=True).order_by('cat__priority'):
+            nav_list.append(c.as_json())
+        result['nav_list'] = nav_list
+        c = t.categories.filter(active=True).order_by('cat__priority')[:1]
+        first = True
+        if c[0].count_docs() > 0:
+            for d in c[0].get_docs():
+                if first :
+                    form = None
+                    if request.user.is_superuser:
+                        form = DocumentAdminForm(instance=d)
+                    else:
+                        if doc.lock:
+                            form = DocumentReadOnlyForm(instance=d)
+                        else :
+                            form = DocumentForm(instance=d)
+                    result['img'] = d.as_img()
+                    result['form'] = form.as_div()
+                    result['doc_id'] = d.id
+                    result['valid'] = True
+                    first = False
+                doc_list.append(d.as_json())
+        else:
+            result['img'] = None
+            result['form'] = None
+            result['doc_id'] = 0
+            result['valid'] = False
+        result['doc_list'] = doc_list
+        return HttpResponse(json.dumps(result))

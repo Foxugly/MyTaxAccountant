@@ -154,22 +154,6 @@ function csrfSafeMethod(method) {
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
 
-function close_uploadfile(e){
-    var id = e.attr('id');
-    var url = '/upload/remove/' + id + '/';
-    $.ajax({
-        url: url,
-        type: 'GET',
-        traditional: true,
-        dataType: 'json',
-        success: function(result){
-        }
-    });
-    e.parent().remove();
-    if ($("#files-group li").length == 0){
-        $("#fileupload_list" ).addClass( "hide" );
-    }
-}
 $(function () {
     'use strict';
     var url = '/upload/basic/';
@@ -209,12 +193,27 @@ $(function () {
 
 $(document).ready(function() {
     var datatable = $('#datatable').DataTable();
-    console.log('READY');
     $("#div_img_form").hide();
     $('#input_view_list').click();
     $('#sel_company').change();
 });
 
+function close_uploadfile(e){
+    var id = e.attr('id');
+    var url = '/upload/remove/' + id + '/';
+    $.ajax({
+        url: url,
+        type: 'GET',
+        traditional: true,
+        dataType: 'json',
+        success: function(result){
+        }
+    });
+    e.parent().remove();
+    if ($("#files-group li").length == 0){
+        $("#fileupload_list" ).addClass( "hide" );
+    }
+}
 
 function img_modal(e){
     var id = e.attr('id');
@@ -235,6 +234,38 @@ function update_datatable(data){
     $('#datatable').dataTable().fnAddData([ data['id'], "<a id='" + data['id'] + "' class='img_modal' data-toggle='modal' data-target='#myModal'>" + data['name'] + "</a>", data['date'], data['description'], data['complete']]);
 }
 
+function save_form(){
+    var form = $('#div_form form');
+    var id = $('#doc_id').val();
+    var url = '/document/' + id + '/update/';
+    $.ajax({
+        url: url,
+        type: 'GET',
+        data: form.serialize(),
+        traditional: true,
+        dataType: 'json',
+        success: function(result){
+            $('#alert_save_saved').show().delay( 1000 ).fadeOut(1000);
+        }
+    });
+}
+
+function view_form(valid, img, form,doc_id){
+    if (valid == true){
+        $('#div_img').html(img);
+        $('#div_form').html('<input id="doc_id" type="hidden" name="doc_id" value="' + doc_id + '">' +form);
+        $('#btn_save').click(function(){
+            save_form();
+        });
+        $('#pagination').show();
+    }
+    else{
+        $('#div_img').html(" ");
+        $('#div_form').html('<div class="alert alert-info" role="alert">No documents for this category</div>');
+        $('#pagination').hide();
+    }   
+}
+
 function update_data(){
     var t = $('#sel_trimester').val();
     var url = '/trimester/' + t + '/list_categories/';
@@ -248,6 +279,7 @@ function update_data(){
                 var a = '<a data-target="#" data-toggle="pill" id="' + result['nav_list'][i]['id'] + '" href="#">' + result['nav_list'][i]['name'] + ' <span class="badge">'+ result['nav_list'][i]['n'] +'</span></a>';
                 $("ul.nav-pills li:eq(" + i + ") a").html(result['nav_list'][i]['name'] + ' <span class="badge">'+ result['nav_list'][i]['n'] +'</span>');
                 $("ul.nav-pills li:eq(" + i + ") a").attr("id",result['nav_list'][i]['id']);
+                $("ul.nav.nav-pills li:eq(" + i + ")").removeClass("active");
             }
             $("ul.nav.nav-pills li:eq(0)").addClass("active");
             $('#datatable').dataTable().fnClearTable();
@@ -258,9 +290,26 @@ function update_data(){
                 });
             }
             $('#pagination').bootpag({total: result['nav_list'][0]['n'], page: 1});
+            view_form(result['valid'], result['img'],result['form'], result['doc_id']);
         }
     });
 }
+
+
+function get_form_data(i){
+    var id = $('ul.nav-pills li.active a').attr("id")
+    var url = '/category/' + id + '/form/' + i + '/';
+    $.ajax({
+        url: url,
+        type: 'GET',
+        traditional: true,
+        dataType: 'json',
+        success: function(result){
+            view_form(result['valid'], result['img'],result['form'], result['doc_id']);   
+        }
+    });
+}
+
 
 $('#valid_files').click(function() {
     var files = []
@@ -292,54 +341,6 @@ $('#valid_files').click(function() {
         }
     });
 });
-
-
-function save_form(){
-    var form = $('#div_form form');
-    var id = $('#doc_id').val();
-    var url = '/document/' + id + '/update/';
-    $.ajax({
-        url: url,
-        type: 'GET',
-        data: form.serialize(),
-        traditional: true,
-        dataType: 'json',
-        success: function(result){
-            $('#alert_save_saved').show().delay( 1000 ).fadeOut(1000);
-        }
-    });
-    
-}
-
-function view_form(img, form,doc_id){
-    $('#div_img').html(img);
-    $('#div_form').html('<input id="doc_id" type="hidden" name="doc_id" value="' + doc_id + '">' +form);
-    $('#btn_save').click(function(){
-        save_form();
-    });
-}
-
-function get_form_data(i){
-    var id = $('ul.nav-pills li.active a').attr("id")
-    var url = '/category/' + id + '/form/' + i + '/';
-    $.ajax({
-        url: url,
-        type: 'GET',
-        traditional: true,
-        dataType: 'json',
-        success: function(result){
-            if (result['valid'] == true){
-                view_form(result['img'],result['form'], result['doc_id']);
-                $('#pagination').show();
-            }
-            else{
-                $('#div_img').html(" ");
-                $('#div_form').html('<div class="alert alert-info" role="alert">No documents for this category</div>');
-                $('#pagination').hide();
-            }      
-        }
-    });
-}
 
 $('ul.nav-pills li a').click(function (e) {
     $('ul.nav-pills li.active').removeClass('active')
@@ -383,7 +384,6 @@ $("#view_group :input:radio").change(function() {
         $("#div_list").hide();
         $("#div_img_form").show();
         $('#alert_save_saved').hide();
-        //$('#pagination').bootpag({page: 1});
         get_form_data(1);
     }
 });
