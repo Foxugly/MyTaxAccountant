@@ -25,21 +25,22 @@ Including another URLconf
 """
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from django.shortcuts import redirect, render, render_to_response
-from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from django.shortcuts import render
 from django.conf.urls.static import static
-from os.path import dirname, abspath, join
-from utils.perms import get_context
-
-
-
-def home(request):
-    if request.user.is_authenticated():
-        return render_to_response('folder.tpl', get_context(request))
-    return render(request, "layout.tpl")
+from utils.views import lang
+from users.views import home
 
 admin.autodiscover()
+
+
+def custom_404(request):
+    return render(request, "404.tpl")
+
+
+def custom_500(request):
+    return render(request, "500.tpl")
+
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
@@ -49,7 +50,13 @@ urlpatterns = [
     url(r'^document/', include('documents.urls'), name='documents'),
     url(r'^trimester/', include('trimesters.urls'), name='trimesters'),
     url(r'^category/', include('categories.urls'), name='categories'),
+    url(r'^lang/$', lang, name="lang"),
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^upload/', include('fileupload.urls')),
     url(r'^$', home, name='index'),
-] + patterns('',(r'^media/(.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+] \
+    + patterns('', (r'^media/(.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}), )\
+    + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+handler404 = 'urls.custom_404'
+handler500 = 'urls.custom_500'

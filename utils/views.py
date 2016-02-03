@@ -7,6 +7,23 @@
 # the Free Software Foundation, either version 3 of the License, or (at
 # your option) any later version.
 
-from django.shortcuts import render
+from django.http import HttpResponse
+from django.utils import translation
+from django import http
+import json
+from django.conf import settings
 
-# Create your views here.
+
+def lang(request):
+    results = {}
+    if request.is_ajax():
+        user_language = request.POST['lang']
+        translation.activate(user_language)
+        request.session[translation.LANGUAGE_SESSION_KEY] = user_language
+        results['return'] = True
+        response = http.HttpResponse(json.dumps(results))
+        response.set_cookie(settings.LANGUAGE_COOKIE_NAME, user_language)
+        return response
+    else:
+        results['return'] = False
+    return HttpResponse(json.dumps(results))

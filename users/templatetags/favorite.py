@@ -8,66 +8,74 @@
 # your option) any later version.
 
 from django import template
-from users.models import UserProfile
 
 
 register = template.Library()
 
-@register.filter()
-def companies(userprofile):
-    return userprofile.companies.filter(active=True)
 
 @register.filter()
-def favorite_company(userprofile):
+def companies(user):
+    return user.userprofile.companies.filter(active=True)
+
+
+@register.filter()
+def favorite_company(user):
     out = None
     first = True
-    for c in userprofile.companies.filter(active=True):
-        if first :
+    for c in user.userprofile.companies.filter(active=True):
+        if first:
             out = c
             first = False
-        if c.favorite :
+        if c.favorite:
             out = c
     return out
+
 
 @register.filter()
 def years(company):
     return company[0].years.filter(active=True)
+
 
 @register.filter()
 def favorite_year(company):
     out = None
     first = True
     for c in company[0].years.filter(active=True):
-        if first :
+        if first:
             out = c
             first = False
-        if c.favorite :
+        if c.favorite:
             out = c
     return out
+
 
 @register.filter()
 def trimesters(year):
     return year[0].trimesters.filter(active=True)
+
 
 @register.filter()
 def favorite_trimester(year):
     out = None
     first = True
     for y in year[0].trimesters.filter(active=True):
-        if first :
+        if first:
             out = y
             first = False
-        if y.favorite :
+        if y.favorite:
             out = y
     return out
+
 
 @register.filter()
 def categories(trimester):
     return trimester[0].categories.filter(active=True)
 
+
 @register.filter()
 def documents(category):
     return category[0].documents.all()
+
 
 @register.filter()
 def name(inst):

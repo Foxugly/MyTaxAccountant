@@ -5,17 +5,12 @@
 {% load details_cat %}
 {% load tools %}
 {% load i18n %}
-{% block header %}
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.9/css/dataTables.bootstrap.min.css">
-<link rel="stylesheet" href=" {% static "upload/css/style.css" %} ">
-<link rel="stylesheet" href=" {% static "upload/css/jquery.fileupload-ui.css" %}" >
-{% endblock %}
-
 {% block content %}
+{% if user.is_authenticated %}
 <div class="row">
     <div class="col-md-12">
         <ul class="nav nav-tabs nav-pills" role="tablist">
-            {% for c in userprofile|companies|years|trimesters|categories %}
+            {% for c in user|companies|years|trimesters|categories %}
                 {% if category %}
                     {%if c == category %}
                         <li role="presentation" class="active"><a data-target="#" data-toggle="pill" id="{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
@@ -90,7 +85,7 @@
      
             <tbody>
                 {% if category %}
-                    {% for c in userprofile|companies|years|trimesters|categories %}
+                    {% for c in user|companies|years|trimesters|categories %}
                         {% if c == category %}
                             {% for d in c|documents %}
                                 <tr><td>{{d.id}}</td><td><a id={{d.id}} class='img_modal' data-toggle="modal" data-target="#myModal">{{d.name}}</a></td><td>{{d.date}}</td><td>{{d.description}}</td><td>{{d.complete}}</td></tr>
@@ -98,7 +93,7 @@
                         {% endif %}
                     {% endfor %}
                 {% else %}
-                    {% for c in userprofile|companies|years|trimesters|categories %}
+                    {% for c in user|companies|years|trimesters|categories %}
                         {% if forloop.first %}
                             {% for d in c.documents.all %}
                                 <tr><td>{{d.id}}</td><td><a id={{d.id}} class='img_modal' data-toggle="modal" data-target="#myModal">{{d.name}}</a></td><td>{{d.date}}</td><td>{{d.description}}</td><td>{{d.complete}}</td></tr>
@@ -139,273 +134,21 @@
         </div>
     </div>
 </div>
+{%  endif %}
 {% endblock %}
 
-{% block js %} 
-<script type="text/javascript" src="http://cdn.datatables.net/1.10.9/js/jquery.dataTables.js"></script>
-<script type="text/javascript" src="http://cdn.datatables.net/1.10.9/js/dataTables.bootstrap.min.js"></script>
-<script src=" {% static "upload/js/vendor/jquery.ui.widget.js" %}"></script>
-<script src=" {% static "upload/js/jquery.iframe-transport.js" %}"></script>
-<script src=" {% static "upload/js/jquery.fileupload.js" %}"></script>
-<script src=" {% static "upload/js/jquery.cookie.js" %}"></script>
-<script src=" {% static "bootpag/jquery.bootpag.min.js" %}"></script>
+
+{% block js %}
 <script>
-function csrfSafeMethod(method) {
-    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-}
-
-$(function () {
-    'use strict';
-    var url = '/upload/basic/';
-    var csrftoken = $.cookie('csrftoken');
-    $('#fileupload').fileupload({
-        url: url,
-        crossDomain: false,
-        beforeSend: function(xhr, settings) {
-            if (!csrfSafeMethod(settings.type)) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
-        },
-        dataType: 'json',
-        done: function (e, data) {
-            $("#fileupload_list" ).removeClass( "hide" );
-            $.each(data.result.files, function (index, file) {
-                $("#files-group").append('\n<li class="list-group-item list-group-item-success"><span>' + file.name + '</span><button id="' + file.id + '" type="button" class="close close_fileupload">&times;</button></li>\n'); 
-            });
-            $(".close_fileupload").click(function(){
-                close_uploadfile($(this));
-            });
-        },
-        progressall: function (e, data) {
-            $("#progress_row" ).removeClass( "hide" );
-            var progress = parseInt(data.loaded / data.total * 100, 10);
-            $('#progress .progress-bar').css(
-                'width',
-                progress + '%'
-            );
-            if (progress == 100){
-                $("#progress_row" ).addClass( "hide" );
-            }
-        }
-    }).prop('disabled', !$.support.fileInput)
-        .parent().addClass($.support.fileInput ? undefined : 'disabled');
-});
-
 $(document).ready(function() {
-    var datatable = $('#datatable').DataTable();
+    var datatable = $('#datatable').DataTable( {
+            "language": {
+                "url": "/static/datatables/i18n/{{ LANGUAGE_CODE }}.lang"
+            }
+        } );
     $("#div_img_form").hide();
     $('#input_view_list').click();
     $('#sel_company').change();
 });
-
-function close_uploadfile(e){
-    var id = e.attr('id');
-    var url = '/upload/remove/' + id + '/';
-    $.ajax({
-        url: url,
-        type: 'GET',
-        traditional: true,
-        dataType: 'json',
-        success: function(result){
-        }
-    });
-    e.parent().remove();
-    if ($("#files-group li").length == 0){
-        $("#fileupload_list" ).addClass( "hide" );
-    }
-}
-
-function img_modal(e){
-    var id = e.attr('id');
-    var url = '/document/' + id + '/';
-    $.ajax({
-        url: url,
-        type: 'GET',
-        traditional: true,
-        dataType: 'json',
-        success: function(result){
-            $("#modal-title").text(result['name']);
-            $("#modal-body").html(result['img']);
-        }
-    });
-}
-
-function update_datatable(data){
-    $('#datatable').dataTable().fnAddData([ data['id'], "<a id='" + data['id'] + "' class='img_modal' data-toggle='modal' data-target='#myModal'>" + data['name'] + "</a>", data['date'], data['description'], data['complete']]);
-}
-
-function save_form(){
-    var form = $('#div_form form');
-    var id = $('#doc_id').val();
-    var url = '/document/' + id + '/update/';
-    $.ajax({
-        url: url,
-        type: 'GET',
-        data: form.serialize(),
-        traditional: true,
-        dataType: 'json',
-        success: function(result){
-            $('#alert_save_saved').show().delay( 1000 ).fadeOut(1000);
-        }
-    });
-}
-
-function view_form(valid, img, form,doc_id){
-    if (valid == true){
-        $('#div_img').html(img);
-        $('#div_form').html('<input id="doc_id" type="hidden" name="doc_id" value="' + doc_id + '">' +form);
-        $('#btn_save').click(function(){
-            save_form();
-        });
-        $('#pagination').show();
-    }
-    else{
-        $('#div_img').html(" ");
-        $('#div_form').html('<div class="alert alert-info" role="alert">No documents for this category</div>');
-        $('#pagination').hide();
-    }   
-}
-
-function update_data(){
-    var t = $('#sel_trimester').val();
-    var url = '/trimester/' + t + '/list_categories/';
-    $.ajax({
-        url: url,
-        type: 'GET',
-        traditional: true,
-        dataType: 'json',
-        success: function(result){
-            for (i = 0; i < result['nav_list'].length; i++) {
-                var a = '<a data-target="#" data-toggle="pill" id="' + result['nav_list'][i]['id'] + '" href="#">' + result['nav_list'][i]['name'] + ' <span class="badge">'+ result['nav_list'][i]['n'] +'</span></a>';
-                $("ul.nav-pills li:eq(" + i + ") a").html(result['nav_list'][i]['name'] + ' <span class="badge">'+ result['nav_list'][i]['n'] +'</span>');
-                $("ul.nav-pills li:eq(" + i + ") a").attr("id",result['nav_list'][i]['id']);
-                $("ul.nav.nav-pills li:eq(" + i + ")").removeClass("active");
-            }
-            $("ul.nav.nav-pills li:eq(0)").addClass("active");
-            $('#datatable').dataTable().fnClearTable();
-            for (i = 0; i < result['doc_list'].length; i++) {
-                update_datatable(result['doc_list'][i]);
-                $(".img_modal").click(function(){
-                    img_modal($(this));
-                });
-            }
-            $('#pagination').bootpag({total: result['nav_list'][0]['n'], page: 1});
-            view_form(result['valid'], result['img'],result['form'], result['doc_id']);
-        }
-    });
-}
-
-
-function get_form_data(i){
-    var id = $('ul.nav-pills li.active a').attr("id")
-    var url = '/category/' + id + '/form/' + i + '/';
-    $.ajax({
-        url: url,
-        type: 'GET',
-        traditional: true,
-        dataType: 'json',
-        success: function(result){
-            view_form(result['valid'], result['img'],result['form'], result['doc_id']);   
-        }
-    });
-}
-
-
-$('#valid_files').click(function() {
-    var files = []
-    $('#files-group').find('li').each(function(){
-        var current = $(this).find('span');
-        files.push(current.text());
-    });
-    $('#files-group').empty()
-    $("#fileupload_list" ).addClass( "hide" ); // TODO .hide();
-    var jsonText = JSON.stringify(files);
-    var id = $('ul.nav-pills li.active a').attr("id")
-    var url = '/category/' + id + '/add_documents/';
-    $.ajax({
-        url: url,
-        type: 'GET',
-        data: {'files':files},
-        traditional: true,
-        dataType: 'html',
-        success: function(result){
-            result = JSON.parse(result);
-            $('#datatable').dataTable().fnClearTable();
-            for (i = 0; i < result['doc_list'].length; i++) {
-                update_datatable(result['doc_list'][i]);
-                $(".img_modal").click(function(){
-                    img_modal($(this));
-                });
-            }
-            $('ul.nav-pills li.active span').html(result['n']);
-        }
-    });
-});
-
-$('ul.nav-pills li a').click(function (e) {
-    $('ul.nav-pills li.active').removeClass('active')
-    $(this).parent('li').addClass('active')
-    var id = $('ul.nav-pills li.active a').attr("id")
-    var url = '/category/' + id + '/list_documents/';
-    $.ajax({
-        url: url,
-        type: 'GET',
-        traditional: true,
-        dataType: 'json',
-        success: function(result){
-            $('#datatable').dataTable().fnClearTable();
-            for (i = 0; i < result['doc_list'].length; i++) {
-                update_datatable(result['doc_list'][i]);
-                $(".img_modal").click(function(){
-                    img_modal($(this));
-                });
-            }
-            var n = parseInt(result['n']);
-            $('#pagination').bootpag({total: n,page: 1}).on("page", function(event, num){
-                get_form_data(num);
-            });
-            get_form_data(1);
-        }
-    });
-});
-
-$(".img_modal").click(function(){
-    img_modal($(this));
-});
-
-$("#view_group :input:radio").change(function() {
-    var view = this.value;
-    if (view == 'list'){
-        $("#div_list").show();
-        $("#div_img_form").hide();
-        $('#alert_save_saved').hide();
-    }
-    else if (view == 'form'){
-        $("#div_list").hide();
-        $("#div_img_form").show();
-        $('#alert_save_saved').hide();
-        get_form_data(1);
-    }
-});
-
-$('#pagination').bootpag({
-        total: 1,
-        page: 1,
-        maxVisible: 5,
-        leaps: true,
-        firstLastUse: true,
-        first: '←',
-        last: '→',
-        wrapClass: 'pagination',
-        activeClass: 'active',
-        disabledClass: 'disabled',
-        nextClass: 'next',
-        prevClass: 'prev',
-        lastClass: 'last',
-        firstClass: 'first'
-    }).on("page", function(event, num){
-        get_form_data(num);
-}); 
-
 </script>
 {% endblock %}

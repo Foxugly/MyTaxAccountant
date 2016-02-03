@@ -7,17 +7,4 @@
 # the Free Software Foundation, either version 3 of the License, or (at
 # your option) any later version.
 
-from users.models import UserProfile
-from companies.models import Company
-from years.models import Year
-from trimesters.models import Trimester
-from categories.models import Category, TypeCategory
-from documents.models import Document
 
-from utils.models import FiscalYear
-
-def get_context(request):
-    c = {}
-    c['userprofile'] = UserProfile.objects.get(user=request.user)
-    c['type_doc'] = TypeCategory.objects.filter(active=True).order_by('priority')
-    return c

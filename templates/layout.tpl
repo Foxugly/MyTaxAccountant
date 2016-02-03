@@ -8,28 +8,42 @@
 # your option) any later version.
 
 {% endcomment %}
+{% load bootstrap3 %}
 {% load i18n %}
 {% load favorite %}
-
+{% load staticfiles %}
 <!DOCTYPE HTML>
 <html lang="en">
   <head>
     <title>MyTaxAccountant</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <style>
-      body {
-        padding-top: 60px;
-      }
-      /*div[class="row"] {
-          border: 1px dotted rgba(0, 0, 0, 0.5);
-      }
-
-      div[class^="col-"] {
-          background-color: rgba(255, 0, 0, 0.2);
-      }*/
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!--  CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.9/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href=" {% static "upload/css/style.css" %} ">
+    <link rel="stylesheet" href=" {% static "upload/css/jquery.fileupload-ui.css" %}" >
+    {% block css %}
+    {% endblock %}
+    <link href='{% static "css/perso.css" %}' rel='stylesheet' />
+    <!--  JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="http://cdn.datatables.net/1.10.9/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="http://cdn.datatables.net/1.10.9/js/dataTables.bootstrap.min.js"></script>
+    <script src=" {% static "upload/js/vendor/jquery.ui.widget.js" %}"></script>
+    <script src=" {% static "upload/js/jquery.iframe-transport.js" %}"></script>
+    <script src=" {% static "upload/js/jquery.fileupload.js" %}"></script>
+    <script src=" {% static "upload/js/jquery.cookie.js" %}"></script>
+    <script src=" {% static "bootpag/jquery.bootpag.min.js" %}"></script>
+    {% block js %}
+    {% endblock %}
+    <script src='{% static "js/perso.js" %}'></script>
     {% block header %}
     {% endblock %}
   </head>
@@ -43,15 +57,15 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">MyTaxAccoutant</a>
+          <a class="navbar-brand" href="/">MyTaxAccoutant</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          {% if userprofile.user.is_authenticated %}
+          {% if user.is_authenticated %}
           <form class="navbar-form navbar-left" role="search">
             <div class='form-group'>
               <select id="sel_company" class="form-control" >
                   <optgroup label = "Choose a compagny">
-                    {% for c in userprofile|companies %}
+                    {% for c in user|companies %}
                       {% if company %}
                         {% if  c == company %}
                           <option value='{{c.id}}' selected>{{ c|name }}</option>
@@ -59,7 +73,7 @@
                           <option value='{{c.id}}'>{{ c|name }}</option>
                         {% endif %}
                       {% else %}
-                        {% if  c == userprofile|favorite_company %}
+                        {% if  c == user|favorite_company %}
                           <option value='{{c.id}}' selected>{{ c|name }}</option>
                         {% else %}
                           <option value='{{c.id}}'>{{ c|name }}</option>
@@ -72,7 +86,7 @@
               <div class='form-group'>
                 <select id="sel_year" class="form-control" >
                  <optgroup label = "Choose a tax year">
-                    {% for y in userprofile|companies|years %}
+                    {% for y in user|companies|years %}
                       {% if year %}
                         {% if y == trimester %}
                           <option value='{{y.id}}' selected>{{ y|name  }}</option>
@@ -80,7 +94,7 @@
                           <option value='{{y.id}}'>{{ y|name  }}</option>
                         {% endif %}
                       {% else %}
-                        {% if y == userprofile|companies|favorite_year %}
+                        {% if y == user|companies|favorite_year %}
                           <option  value='{{y.id}}' selected>{{ y|name  }}</option>
                         {% else %}
                           <option value='{{y.id}}'>{{ y|name  }}</option>
@@ -93,7 +107,7 @@
               <div class='form-group'>
                 <select id="sel_trimester" class="form-control" >
                   <optgroup label = "Choose a trimester">         
-                    {% for t in userprofile|companies|years|trimesters %}
+                    {% for t in user|companies|years|trimesters %}
                       {% if trimister %}
                         {% if t == trimester %}
                           <option value='{{t.id}}' selected>{{ t|name }}</option>
@@ -101,7 +115,7 @@
                           <option value='{{t.id}}'>{{ t|name }}</option>
                         {% endif %}
                       {% else %}
-                        {% if t == userprofile|companies|years|favorite_trimester %}
+                        {% if t == user|companies|years|favorite_trimester %}
                           <option value='{{t.id}}' selected>{{ t|name  }}</option>
                         {% else %}
                           <option value='{{t.id}}'>{{ t|name  }}</option>
@@ -114,15 +128,31 @@
           </form>
           {% endif %}
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">{% blocktrans %} Help{% endblocktrans %} </a></li>
-            {% if userprofile.user.is_authenticated %}
+            <li>
+                <div class='navbar-form form-group'>
+                    <select id="language" name="language" class="form-control select2-nosearch">
+                        {% get_current_language as LANGUAGE_CODE %}
+                        {% get_available_languages as LANGUAGES %}
+                        {% get_language_info_list for LANGUAGES as languages %}
+                        {% for language in languages %}
+                            <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected="selected"{% endif %}>
+                                {{ language.name_local|capfirst }} ({{ language.code }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </li>
+            <li><a href="/">{% blocktrans %} Help{% endblocktrans %} </a></li>
+            {% if user.is_authenticated %}
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span> {{userprofile.user.first_name}} {{userprofile.user.last_name}} <span class="caret"></span></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span> {{user.first_name}} {{user.last_name}} <span class="caret"></span></a>
               <ul class="dropdown-menu" style='background:black;color:white;'>
-                <li><a class="glyphicon glyphicon-cog" href="/user/settings/">{% blocktrans %} Profil{% endblocktrans %} </a></li>
-                <li><a class="glyphicon glyphicon-off" href="/user/logout/">{% blocktrans %} Déconnexion{% endblocktrans %} </a></li>
+                <li><a class="glyphicon glyphicon-cog" href="{%  url 'settings' %}">{% blocktrans %} Profil{% endblocktrans %} </a></li>
+                <li><a class="glyphicon glyphicon-off" href="{%  url 'logout' %}">{% blocktrans %} Déconnexion{% endblocktrans %} </a></li>
               </ul>
             </li>
+            {% else %}
+                <li><a href="{%  url 'login' %}">{% trans "Connexion" %}</a></li>
             {% endif %}
           </ul>
         </div>
@@ -142,7 +172,7 @@
       {% block content %}
       <div class='row'>
         
-          {% if not userprofile.user.is_authenticated %}
+          {% if not user.is_authenticated %}
           	  <div class="col-md-6 col-md-offset-3" style="margin-top:20px"><p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://www.lieutenantguillaume.com/static/img/partner-of-success-stories.png"/></p></div>
               <div class="col-md-6 col-md-offset-3" style="margin-top:20px">
                 {% blocktrans %}
@@ -150,71 +180,11 @@
                 {% endblocktrans %}   
           	  </div>
               <div class="col-md-4 col-md-offset-4" style="margin-top:20px">
-                <a href="/user/login" class="btn btn-success btn-lg btn-block">{% blocktrans %}Connexion{% endblocktrans %} </a>
+                <a href="{%  url 'login' %}" class="btn btn-success btn-lg btn-block">{% blocktrans %}Connexion{% endblocktrans %} </a>
               </div>
   	        </div>
           {% endif %}
-        
       </div>
-      {% endblock %}
-      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-      <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-      <script>
-
-        function update_trimesters(){
-          var y = $('#sel_year').val();
-          var url = '/year/' + y + '/list/';
-          $.ajax({
-              url: url,
-              type: 'GET',
-              traditional: true,
-              dataType: 'json',
-              success: function(result){
-                  $('#sel_trimester').empty().append('<optgroup label = "Choose a trimester">')
-                  for( var i = 0, len = result.length; i < len; i++ ) {
-                      $('#sel_trimester').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>')
-                  }
-                  $('#sel_trimester').append('</optgroup>');
-                  update_data();
-              }
-          });
-        }
-
-        function update_years(){
-          var c = $('#sel_company').val();
-          var url = '/company/' + c + '/list/';
-          $.ajax({
-              url: url,
-              type: 'GET',
-              traditional: true,
-              dataType: 'json',
-              success: function(result){
-                  $('#sel_year').empty().append('<optgroup label = "Choose a tax year">')
-                  for( var i = 0, len = result.length; i < len; i++ ) {
-                      $('#sel_year').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>')
-                  }
-                  $('#sel_year').append('</optgroup>');
-                  update_trimesters();
-              }
-          });
-        }
-
-        
-
-        $('#sel_trimester').change(function() {
-          update_data();
-          
-        });
-        $('#sel_year').change(function() {
-          update_trimesters();
-          
-        });
-        $('#sel_company').change(function() {
-          update_years();
-        });
-        
-      </script>
-      {% block js %}
       {% endblock %}
     </div>
   </body>

@@ -7,7 +7,7 @@
 # the Free Software Foundation, either version 3 of the License, or (at
 # your option) any later version.
 
-from django.utils.translation import ugettext_lazy  as _
+from django.utils.translation import ugettext_lazy as _
 
 """
 Django settings for MyTaxAccountant project.
@@ -30,10 +30,7 @@ SECRET_KEY = '-b+&3%*nxun2l+id*85aou#vpkw%uhd3ko&b06jmkr#ke)6k3k'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
-
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -44,7 +41,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'admin',
+    'bootstrap3',
     'companies',
     'years',
     'trimesters',
@@ -81,7 +78,7 @@ DATABASES = {
 UPLOAD_LOG = '/tmp/upload_log'
 
 LANGUAGE_CODE = 'en'
-TIME_ZONE = 'Europe/Paris'
+TIME_ZONE = 'Europe/Brussels'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -90,7 +87,7 @@ LOGIN_REDIRECT_URL = '/user/'
 LOGIN_URL = '/user/login/'
 
 LANGUAGES = (
-  ('fr', _('Français')),
+  ('fr', _('Francais')),
   ('nl', _('Nederlands')),
   ('en', _('English')),
 )
@@ -105,7 +102,7 @@ STOCK_DIR = 'folders'
 STATIC_URL = '/static/'
 
 ADMIN_MEDIA_PREFIX = '/static/admin/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
 
 
 STATICFILES_FINDERS = (
@@ -114,26 +111,28 @@ STATICFILES_FINDERS = (
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.core.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
-
-ROOT_URLCONF = 'urls'
-
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'templates'),
-    # '%s/templates/' % BASE_DIR,
-)
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.core.context_processors.request',
-    'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.static',
-)
 
 LOGGING = {
     'version': 1,
