@@ -41,9 +41,9 @@
     <script src=" {% static "upload/js/jquery.fileupload.js" %}"></script>
     <script src=" {% static "upload/js/jquery.cookie.js" %}"></script>
     <script src=" {% static "bootpag/jquery.bootpag.min.js" %}"></script>
+    <script src='{% static "js/perso.js" %}'></script>
     {% block js %}
     {% endblock %}
-    <script src='{% static "js/perso.js" %}'></script>
     {% block header %}
     {% endblock %}
   </head>

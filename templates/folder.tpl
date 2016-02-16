@@ -154,6 +154,7 @@ $(document).ready(function() {
     $("#div_img_form").hide();
     $('#input_view_list').click();
     $('#sel_company').change();
+    $('#pagination').bootpag({total: {{ user|companies|years|trimesters|categories|first|len_docs }}, page: 1});
 });
 </script>
 {% endblock %}
