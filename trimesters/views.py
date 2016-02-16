@@ -14,12 +14,13 @@ from trimesters.models import Trimester
 from documents.models import DocumentForm, DocumentAdminForm, DocumentReadOnlyForm
 import json
 
+
 def trimester_view(request, trimester_id):
     u = UserProfile.objects.get(user=request.user)
     t = Trimester.objects.get(id=trimester_id)
     y = t.refer_year
     c = y.refer_company
-    return render_to_response('folder.tpl', {'userprofile' : u, 'trimester' : t, 'year': y,'company': c})
+    return render_to_response('folder.tpl', {'userprofile': u, 'trimester' : t, 'year': y,'company': c})
 
 
 def list_categories(request, trimester_id):
@@ -35,14 +36,13 @@ def list_categories(request, trimester_id):
         first = True
         if c[0].count_docs() > 0:
             for d in c[0].get_docs():
-                if first :
-                    form = None
+                if first:
                     if request.user.is_superuser:
                         form = DocumentAdminForm(instance=d)
                     else:
-                        if doc.lock:
+                        if d.lock:
                             form = DocumentReadOnlyForm(instance=d)
-                        else :
+                        else:
                             form = DocumentForm(instance=d)
                     result['img'] = d.as_img()
                     result['form'] = form.as_div()
@@ -55,5 +55,6 @@ def list_categories(request, trimester_id):
             result['form'] = None
             result['doc_id'] = 0
             result['valid'] = False
+        result['title_trimester'] = str(t)
         result['doc_list'] = doc_list
         return HttpResponse(json.dumps(result))

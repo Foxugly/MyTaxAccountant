@@ -9,6 +9,11 @@
 {% if user.is_authenticated %}
 <div class="row">
     <div class="col-md-12">
+        <h1 class="text-center" id="title_trimester">{{ user|companies|years|favorite_trimester }}</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
         <ul class="nav nav-tabs nav-pills" role="tablist">
             {% for c in user|companies|years|trimesters|categories %}
                 {% if category %}

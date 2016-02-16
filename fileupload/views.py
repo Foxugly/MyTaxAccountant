@@ -49,15 +49,16 @@ class FileUploadListView(ListView):
     model = FileUpload
 
     def render_to_response(self, context, **response_kwargs):
-        files = [ serialize(p) for p in self.get_queryset() ]
+        files = [ serialize(p) for p in self.get_queryset()]
         data = {'files': files}
         response = JSONResponse(data, mimetype=response_mimetype(self.request))
         response['Content-Disposition'] = 'inline; filename=files.json'
         return response
 
+
 def remove_upload(request, fileupload_id):
     if request.is_ajax():
         f = FileUpload.objects.get(id=fileupload_id)
         f.delete()
-        results['return'] = 'OK'
+        results = {'return': 'OK'}
         return HttpResponse(json.dumps(results))

@@ -23,6 +23,7 @@ def order_name(name):
     name = re.sub(r'^.*/', '', name)
     return name
 
+
 def serialize(instance, file_attr='file'):
     """serialize -- Serialize a Picture instance into a dict.
 

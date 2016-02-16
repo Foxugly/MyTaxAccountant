@@ -250,7 +250,7 @@ $(document).ready(function() {
             traditional: true,
             dataType: 'json',
             success: function(result){
-                for (i = 0; i < result['nav_list'].length; i++) {
+                for (var i = 0; i < result['nav_list'].length; i++) {
                     var a = '<a data-target="#" data-toggle="pill" id="' + result['nav_list'][i]['id'] + '" href="#">' + result['nav_list'][i]['name'] + ' <span class="badge">'+ result['nav_list'][i]['n'] +'</span></a>';
                     $("ul.nav-pills li:eq(" + i + ") a").html(result['nav_list'][i]['name'] + ' <span class="badge">'+ result['nav_list'][i]['n'] +'</span>');
                     $("ul.nav-pills li:eq(" + i + ") a").attr("id",result['nav_list'][i]['id']);
@@ -258,13 +258,14 @@ $(document).ready(function() {
                 }
                 $("ul.nav.nav-pills li:eq(0)").addClass("active");
                 $('#datatable').dataTable().fnClearTable();
-                for (i = 0; i < result['doc_list'].length; i++) {
+                for (var i = 0; i < result['doc_list'].length; i++) {
                     update_datatable(result['doc_list'][i]);
                     $(".img_modal").click(function(){
                         img_modal($(this));
                     });
                 }
                 $('#pagination').bootpag({total: result['nav_list'][0]['n'], page: 1});
+                $('#title_trimester').html(result['title_trimester']);
                 view_form(result['valid'], result['img'],result['form'], result['doc_id']);
             }
         });

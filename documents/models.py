@@ -18,6 +18,7 @@ import os
 from PIL import Image
 from django.utils import timezone
 
+
 class Page(models.Model):
     num = models.IntegerField(_('page number'))
     filename = models.CharField(_('filename'), max_length=100, default='blank')

@@ -11,7 +11,7 @@
 
 from django.db import models
 from categories.models import Category, TypeCategory
-from django.utils.translation import ugettext_lazy  as _
+from django.utils.translation import ugettext_lazy as _
 import os
 
 
@@ -35,7 +35,6 @@ class Trimester(models.Model):
         for category in self.categories.all() :
             out += len(category.documents.all())
         return out
-
 
     def get_year(self):
         return self.refer_year
@@ -64,7 +63,7 @@ class Trimester(models.Model):
 
     def save(self, *args, **kwargs):
         super(Trimester, self).save(*args, **kwargs)
-        os.mkdir( self.get_absolute_path(), 0711 );
+        os.mkdir(self.get_absolute_path(), 0711)
 
     def delete(self):
         for c in self.categories.all():
