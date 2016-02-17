@@ -7,12 +7,11 @@
 # the Free Software Foundation, either version 3 of the License, or (at
 # your option) any later version.
 
-from django.utils.translation import ugettext_lazy  as _
+from django.utils.translation import ugettext_lazy as _
 from django.db import models
-from django.forms import ModelForm
 from documents.models import Document
-from django.conf import settings
 import os
+
 
 class TypeCategory(models.Model):
     name = models.CharField(_("Type of documents"), max_length=128)
@@ -22,14 +21,16 @@ class TypeCategory(models.Model):
     def __str__(self):
         return self.name
 
+
 class Category(models.Model):
     cat = models.ForeignKey(TypeCategory)
     documents = models.ManyToManyField(Document, verbose_name=_('documents'), blank=True)
-    refer_trimester = models.ForeignKey('trimesters.Trimester', verbose_name=_('trimester'), related_name="back_trimester", null=True)
+    refer_trimester = models.ForeignKey('trimesters.Trimester', verbose_name=_('trimester'),
+                                        related_name="back_trimester", null=True)
     active = models.BooleanField(_('active'), default=True)
 
     def get_name(self):
-        return u'%s' % (self.cat.name)
+        return u'%s' % self.cat.name
 
     def __str__(self):
         return u'%s - %s' % (self.refer_trimester, self.get_name())
@@ -43,12 +44,12 @@ class Category(models.Model):
     def count_docs(self):
         return len(self.documents.all())
 
-    def get_doc(self,i):
+    def get_doc(self, i):
         if i < self.count_docs():
-            return self.documents.all().order_by('pk')[i]
+            return self.documents.filter(id=i)
 
     def as_json(self):
-        return dict(id=self.id, name=self.cat.name, n=str(self.count_docs()), ) 
+        return dict(id=self.id, name=self.cat.name, n=str(self.count_docs()), )
 
     def get_relative_path(self):
         return os.path.join(self.refer_trimester.get_relative_path(), self.cat.name)
@@ -58,11 +59,10 @@ class Category(models.Model):
 
     def save(self, *args, **kwargs):
         super(Category, self).save(*args, **kwargs)
-        os.mkdir( self.get_absolute_path(), 0711 );
+        os.mkdir(self.get_absolute_path(), 0711)
 
-    def delete(self):
+    def delete(self, **kwargs):
         for d in self.documents.all():
             d.delete()
         os.rmdir(self.get_absolute_path())
         super(Category, self).delete()
-    

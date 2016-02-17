@@ -9,12 +9,21 @@
 
 from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import login_required
-from categories.views import category_view, add_documents, list_documents, form_document
-
+from categories.views import category_view, add_documents, list_documents, form_document, ajax_move, ajax_merge, \
+    ajax_split
 
 urlpatterns = patterns('categories.views',
-	url(r'^(?P<category_id>[0-9]+)/add_documents/$', login_required(add_documents), name='add_documents'),
-	url(r'^(?P<category_id>[0-9]+)/list_documents/$', login_required(list_documents), name='list_documents'),
-	url(r'^(?P<category_id>[0-9]+)/form/(?P<n>[0-9]+)/$', login_required(form_document), name='list_documents'),
-    url(r'^(?P<category_id>[0-9]+)/$', login_required(category_view), name='category_view'),
-)
+	url(r'^(?P<category_id>[0-9]+)/add_documents/$', login_required(add_documents),
+	   name='add_documents'),
+	url(r'^(?P<category_id>[0-9]+)/list_documents/$', login_required(list_documents),
+	   name='list_documents'),
+	url(r'^(?P<category_id>[0-9]+)/form/(?P<n>[0-9]+)/$', login_required(form_document),
+	   name='list_documents'),
+	url(r'^(?P<category_id>[0-9]+)/$', login_required(category_view), name='category_view'),
+	url(r'^(?P<category_id>[0-9]+)/ajax/move/(?P<n>[0-9]+)/$', login_required(ajax_move),
+	   name='ajax_move'),
+	url(r'^(?P<category_id>[0-9]+)/ajax/merge/(?P<n>[0-9]+)/$', login_required(ajax_merge),
+	   name='ajax_merge'),
+	url(r'^(?P<category_id>[0-9]+)/ajax/split/(?P<n>[0-9]+)/$', login_required(ajax_split),
+	   name='ajax_split'),
+	)

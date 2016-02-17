@@ -191,7 +191,7 @@ $(document).ready(function() {
     }
 
     function img_modal(e){
-        var id = e.attr('id');
+        var id = e.parent().parent().find('td:eq(0)')[0].innerHTML;
         var url = '/document/' + id + '/';
         $.ajax({
             url: url,
@@ -205,16 +205,63 @@ $(document).ready(function() {
         });
     }
 
+    function move_modal(e){
+        var id = e.parent().parent().find('td:eq(0)')[0].innerHTML;
+        console.log(id);
+        var url = '/document/' + id + '/';
+        $.ajax({
+            url: url,
+            type: 'GET',
+            traditional: true,
+            dataType: 'json',
+            success: function(result){
+                $("#modal-title").text(result['name']);
+                $("#modal-body").html(result['img']);
+            }
+        });
+    }
+
+    function split_modal(e){
+        var id = e.parent().parent().find('td:eq(0)')[0].innerHTML;
+        var url = '/document/' + id + '/';
+        $.ajax({
+            url: url,
+            type: 'GET',
+            traditional: true,
+            dataType: 'json',
+            success: function(result){
+                $("#modal-title").text(result['name']);
+                $("#modal-body").html(result['img']);
+            }
+        });
+    }
+
+    function merge_modal(e){
+        var id = e.parent().parent().find('td:eq(0)')[0].innerHTML;
+        var url = '/document/' + id + '/';
+        $.ajax({
+            url: url,
+            type: 'GET',
+            traditional: true,
+            dataType: 'json',
+            success: function(result){
+                $("#modal-title").text(result['name']);
+                $("#modal-body").html(result['img']);
+            }
+        });
+    }
+
+
     function update_datatable(data){
         var out = '<td>';
         if (data['complete']){
 
-            out += '<a href="#" class="btn btn-xs btn-default" title="Split"><span class="glyphicon glyphicon-resize-full"></span> </a>';
-            out += '<a href="#" class="btn btn-xs btn-default" title="Merge"><span class="glyphicon glyphicon-resize-small"></span> </a>';
-            out += '<a href="#" class="btn btn-xs btn-default" title="Move" class="move_modal"><span class="glyphicon glyphicon-transfer"></span> </a>';
+            out += '<a class="btn btn-xs btn-default split_modal" title="Split" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-full"></span> </a>';
+            out += '<a class="btn btn-xs btn-default merge_modal" title="Merge" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-small"></span> </a>';
+            out += '<a class="btn btn-xs btn-default move_modal" title="Move" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-transfer"></span> </a>';
         }
         else{
-            out += '<a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-refresh"></span> </a>';
+            out += '<a class="btn btn-xs btn-default"><span class="glyphicon glyphicon-refresh"></span> </a>';
         }
         out += '</td>'
         $('#datatable').dataTable().fnAddData([ data['id'], "<a id='" + data['id'] + "' class='img_modal' data-toggle='modal' data-target='#myModal'>" + data['name'] + "</a>", data['date'], data['description'], out]);
@@ -273,6 +320,17 @@ $(document).ready(function() {
                     update_datatable(result['doc_list'][i]);
                     $(".img_modal").click(function(){
                         img_modal($(this));
+                    });
+                    $(".move_modal").click(function(){
+                        move_modal($(this));
+                    });
+
+                    $(".merge_modal").click(function(){
+                        merge_modal($(this));
+                    });
+
+                    $(".split_modal").click(function(){
+                        split_modal($(this));
                     });
                 }
                 $('#pagination').bootpag({total: result['nav_list'][0]['n'], page: 1});
@@ -357,11 +415,23 @@ $(document).ready(function() {
     });
 
     $(".img_modal").click(function(){
+        console.log('img_modal');
         img_modal($(this));
     });
 
-    $(".img_modal").click(function(){
-        img_modal($(this));
+    $(".move_modal").click(function(){
+        console.log('move_modal');
+        move_modal($(this));
+    });
+
+    $(".merge_modal").click(function(){
+        console.log('merge_modal');
+        merge_modal($(this));
+    });
+
+    $(".split_modal").click(function(){
+        console.log('split_modal');
+        split_modal($(this));
     });
 
     $("#view_group :input:radio").change(function() {

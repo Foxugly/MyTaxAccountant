@@ -19,6 +19,7 @@ class Country(models.Model):
     def __str__(self):
         return self.name
 
+
 class CountryForm(ModelForm):
     class Meta:
         model = Country
@@ -30,6 +31,7 @@ class FiscalYear(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class FiscalYearForm(ModelForm):
     class Meta:

@@ -11,10 +11,9 @@ from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import login_required
 from documents.views import document_view, update_ajax
 
-
-
 urlpatterns = patterns('documents.views',
-	#url(r'^update/$', login_required(update_ajax), name='document_update_ajax'),
-    url(r'^(?P<document_id>[0-9]+)/update/$', login_required(update_ajax), name='document_update_ajax'),
-    url(r'^(?P<document_id>[0-9]+)/$', login_required(document_view), name='document_view'),
-)
+                       # url(r'^update/$', login_required(update_ajax), name='document_update_ajax'),
+                       url(r'^(?P<document_id>[0-9]+)/update/$', login_required(update_ajax),
+                           name='document_update_ajax'),
+                       url(r'^(?P<document_id>[0-9]+)/$', login_required(document_view), name='document_view'),
+                       )

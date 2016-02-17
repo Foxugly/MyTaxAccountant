@@ -26,13 +26,13 @@ class Trimester(models.Model):
 
     def get_docs(self):
         out = []
-        for category in self.categories.all().order_by('cat__priority') :
+        for category in self.categories.all().order_by('cat__priority'):
             out += category.documents.all()
         return out
 
-    def count_docs(self): 
+    def count_docs(self):
         out = 0
-        for category in self.categories.all() :
+        for category in self.categories.all():
             out += len(category.documents.all())
         return out
 
@@ -41,10 +41,11 @@ class Trimester(models.Model):
 
     def get_name(self):
         t = _('trimester')
-        return u'%s %s (%s)' % (t, str(self.number), self.start_date) 
+        return u'%s %s (%s)' % (t, str(self.number), self.start_date)
 
     def __str__(self):
-        return u' %s - %s - %s' % (str(self.refer_year.refer_company.get_name()), str(self.refer_year.get_name()), self.get_name())
+        return u' %s - %s - %s' % (
+            str(self.refer_year.refer_company.get_name()), str(self.refer_year.get_name()), self.get_name())
 
     def as_json(self):
         return dict(id=self.id, name=self.get_name())
@@ -65,8 +66,8 @@ class Trimester(models.Model):
         super(Trimester, self).save(*args, **kwargs)
         os.mkdir(self.get_absolute_path(), 0711)
 
-    def delete(self):
+    def delete(self, **kwargs):
         for c in self.categories.all():
-            c.delete()
+            c.delete(kwargs)
         os.rmdir(self.get_absolute_path())
         super(Trimester, self).delete()

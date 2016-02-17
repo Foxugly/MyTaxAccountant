@@ -100,10 +100,9 @@
                                     <td>{{d.description}}</td>
                                     {%  if d.complete %}
                                         <td>
-                                            <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-resize-full"></span> </a>
-                                            <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-resize-small"></span> </a>
-                                            <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-transfer"></span> </a>
-
+                                            <a class="btn btn-xs btn-default split_modal" title="Split" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-full"></span> </a>
+                                            <a class="btn btn-xs btn-default merge_modal" title="Merge" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-small"></span> </a>
+                                            <a class="btn btn-xs btn-default move_modal" title="Move" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-transfer"></span> </a>
                                         </td>
                                     {% else %}
                                         <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-refresh"></span> </a>
@@ -123,10 +122,9 @@
                                     <td>{{d.description}}</td>
                                     {%  if d.complete %}
                                         <td>
-                                            <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-resize-full"></span> </a>
-                                            <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-resize-small"></span> </a>
-                                            <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-transfer"></span> </a>
-
+                                            <a class="btn btn-xs btn-default split_modal" title="Split" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-full"></span> </a>
+                                            <a class="btn btn-xs btn-default merge_modal" title="Merge" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-small"></span> </a>
+                                            <a class="btn btn-xs btn-default move_modal" title="Move" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-transfer"></span> </a>
                                         </td>
                                     {% else %}
                                         <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-refresh"></span> </a>
