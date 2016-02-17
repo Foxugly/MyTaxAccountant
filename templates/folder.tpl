@@ -74,7 +74,7 @@
                     <th>Name</th>
                     <th>Date</th>
                     <th>Comments</th>
-                    <th>Status</th>
+                    <th>Operations</th>
                 </tr>
             </thead>
      
@@ -84,7 +84,7 @@
                     <th>Name</th>
                     <th>Date</th>
                     <th>Comments</th>
-                    <th>Status</th>
+                    <th>Operations</th>
                 </tr>
             </tfoot>
      
@@ -93,7 +93,22 @@
                     {% for c in user|companies|years|trimesters|categories %}
                         {% if c == category %}
                             {% for d in c|documents %}
-                                <tr><td>{{d.id}}</td><td><a id={{d.id}} class='img_modal' data-toggle="modal" data-target="#myModal">{{d.name}}</a></td><td>{{d.date}}</td><td>{{d.description}}</td><td>{{d.complete}}</td></tr>
+                                <tr>
+                                    <td>{{d.id}}</td>
+                                    <td><a id={{d.id}} class='img_modal' data-toggle="modal" data-target="#myModal">{{d.name}}</a></td>
+                                    <td>{{d.date}}</td>
+                                    <td>{{d.description}}</td>
+                                    {%  if d.complete %}
+                                        <td>
+                                            <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-resize-full"></span> </a>
+                                            <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-resize-small"></span> </a>
+                                            <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-transfer"></span> </a>
+
+                                        </td>
+                                    {% else %}
+                                        <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-refresh"></span> </a>
+                                    {% endif %}
+                                </tr>
                             {% endfor %}
                         {% endif %}
                     {% endfor %}
@@ -101,7 +116,22 @@
                     {% for c in user|companies|years|trimesters|categories %}
                         {% if forloop.first %}
                             {% for d in c.documents.all %}
-                                <tr><td>{{d.id}}</td><td><a id={{d.id}} class='img_modal' data-toggle="modal" data-target="#myModal">{{d.name}}</a></td><td>{{d.date}}</td><td>{{d.description}}</td><td>{{d.complete}}</td></tr>
+                                <tr>
+                                    <td>{{d.id}}</td>
+                                    <td><a id={{d.id}} class='img_modal' data-toggle="modal" data-target="#myModal">{{d.name}}</a></td>
+                                    <td>{{d.date}}</td>
+                                    <td>{{d.description}}</td>
+                                    {%  if d.complete %}
+                                        <td>
+                                            <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-resize-full"></span> </a>
+                                            <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-resize-small"></span> </a>
+                                            <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-transfer"></span> </a>
+
+                                        </td>
+                                    {% else %}
+                                        <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-refresh"></span> </a>
+                                    {% endif %}
+                                </tr>
                             {% endfor %}
                         {% endif %}
                     {% endfor %}

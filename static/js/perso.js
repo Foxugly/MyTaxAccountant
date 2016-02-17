@@ -206,7 +206,18 @@ $(document).ready(function() {
     }
 
     function update_datatable(data){
-        $('#datatable').dataTable().fnAddData([ data['id'], "<a id='" + data['id'] + "' class='img_modal' data-toggle='modal' data-target='#myModal'>" + data['name'] + "</a>", data['date'], data['description'], data['complete']]);
+        var out = '<td>';
+        if (data['complete']){
+
+            out += '<a href="#" class="btn btn-xs btn-default" title="Split"><span class="glyphicon glyphicon-resize-full"></span> </a>';
+            out += '<a href="#" class="btn btn-xs btn-default" title="Merge"><span class="glyphicon glyphicon-resize-small"></span> </a>';
+            out += '<a href="#" class="btn btn-xs btn-default" title="Move" class="move_modal"><span class="glyphicon glyphicon-transfer"></span> </a>';
+        }
+        else{
+            out += '<a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-refresh"></span> </a>';
+        }
+        out += '</td>'
+        $('#datatable').dataTable().fnAddData([ data['id'], "<a id='" + data['id'] + "' class='img_modal' data-toggle='modal' data-target='#myModal'>" + data['name'] + "</a>", data['date'], data['description'], out]);
     }
 
     function save_form(){
@@ -343,6 +354,10 @@ $(document).ready(function() {
                 get_form_data(1);
             }
         });
+    });
+
+    $(".img_modal").click(function(){
+        img_modal($(this));
     });
 
     $(".img_modal").click(function(){
