@@ -18,15 +18,15 @@
             {% for c in user|companies|years|trimesters|categories %}
                 {% if category %}
                     {%if c == category %}
-                        <li role="presentation" class="active"><a data-target="#" data-toggle="pill" id="{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
+                        <li role="presentation" class="active"><a data-target="#" data-toggle="pill" data-id="{{c.id}}" id="{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
                     {% else %}
-                        <li role="presentation"><a data-target="#" data-toggle="pill" id="b_{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
+                        <li role="presentation"><a data-target="#" data-toggle="pill" data-id="{{c.id}}" id="b_{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
                     {% endif %}
                 {% else %}
                     {%if forloop.first %}
-                        <li role="presentation" class="active"><a data-target="#" data-toggle="pill" id="{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
+                        <li role="presentation" class="active"><a data-target="#" data-id="{{c.id}}" data-toggle="pill" id="{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
                     {% else %}
-                        <li role="presentation"><a data-target="#" data-toggle="pill" id="{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
+                        <li role="presentation"><a data-target="#" data-toggle="pill" data-id="{{c.id}}" id="{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
                     {% endif %}
                 {% endif %}
             {% endfor %}
@@ -102,7 +102,7 @@
                                         <td>
                                             <a class="btn btn-xs btn-default split_modal" title="Split" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-full"></span> </a>
                                             <a class="btn btn-xs btn-default merge_modal" title="Merge" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-small"></span> </a>
-                                            <a class="btn btn-xs btn-default move_modal" title="Move" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-transfer"></span> </a>
+                                            <a class="btn btn-xs btn-default move_modal" title="Move" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer"></span> </a>
                                         </td>
                                     {% else %}
                                         <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-refresh"></span> </a>
@@ -124,7 +124,7 @@
                                         <td>
                                             <a class="btn btn-xs btn-default split_modal" title="Split" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-full"></span> </a>
                                             <a class="btn btn-xs btn-default merge_modal" title="Merge" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-small"></span> </a>
-                                            <a class="btn btn-xs btn-default move_modal" title="Move" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-transfer"></span> </a>
+                                            <a class="btn btn-xs btn-default move_modal" title="Move" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer"></span> </a>
                                         </td>
                                     {% else %}
                                         <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-refresh"></span> </a>
@@ -153,7 +153,7 @@
 </div>
 <!-- Modal -->
 <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-sm">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
@@ -167,9 +167,61 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="modal_move">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 id='modal-title' class="modal-title"></h4>
+            </div>
+            <div id='modal-body' class="modal-body" style="text-align:center;">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-md-4 col-sm-4 control-label" for="modal_company">{% trans "Company" %}</label>
+                        <div class="col-md-8 col-sm-8">
+                        <select id="modal_company" name="modal_company" class="form-control  select2-nosearch" style="width: 200px;">
+
+                        </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 col-sm-4 control-label" for="modal_year">{% trans "Year" %}</label>
+                        <div class="col-md-8 col-sm-8">
+                        <select id="modal_year" name="modal_year" class="form-control  select2-nosearch" style="width: 200px;">
+
+                        </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 col-sm-4 control-label" for="modal_trimester">{% trans "Trimester" %}</label>
+                        <div class="col-md-8 col-sm-8">
+                        <select id="modal_trimester" name="modal_trimester" class="form-control select2-nosearch" style="width: 200px;">
+                        </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 col-sm-4 control-label" for="modal_category">{% trans "Category" %}</label>
+                        <div class="col-md-8 col-sm-8">
+                        <select id="modal_category" name="modal_category" class="form-control  select2-nosearch" style="width: 200px;">
+
+                        </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 {%  endif %}
 {% endblock %}
-
 
 {% block js %}
 <script>

@@ -132,16 +132,16 @@ def ajax_move(request, category_id, n):
         if cat.count_docs() > 0:
             results['doc_id'] = cat.get_doc(int(n))
             tri = cat.refer_trimester
-            results['categories'] = [c.get_name() for c in tri.categories.all()]
-            results['category'] = cat.get_name()
+            results['categories'] = [c.as_json() for c in tri.categories.all()]
+            results['category'] = cat.as_json()
             year = tri.refer_year
-            results['trimesters'] = [t.get_name() for t in year.trimesters.all()]
-            results['trimester'] = tri.get_name()
+            results['trimesters'] = [t.as_json() for t in year.trimesters.all()]
+            results['trimester'] = tri.as_json()
             company = year.refer_company
-            results['years'] = [y.get_name() for y in company.years.all()]
-            results['year'] = year.get_name()
-            results['companies'] = [c.get_name() for c in request.user.userprofile.companies.all()]
-            results['company'] = company.get_name()
+            results['years'] = [y.as_json() for y in company.years.all()]
+            results['year'] = year.as_json()
+            results['companies'] = [c.as_json() for c in request.user.userprofile.companies.all()]
+            results['company'] = company.as_json()
             results['valid'] = True
         else:
             results['valid'] = False

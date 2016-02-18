@@ -45,8 +45,7 @@ class Category(models.Model):
         return len(self.documents.all())
 
     def get_doc(self, i):
-        if i < self.count_docs():
-            return self.documents.filter(id=i)
+        return self.documents.get(id=i)
 
     def as_json(self):
         return dict(id=self.id, name=self.cat.name, n=str(self.count_docs()), )

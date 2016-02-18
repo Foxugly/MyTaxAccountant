@@ -68,6 +68,6 @@ class Trimester(models.Model):
 
     def delete(self, **kwargs):
         for c in self.categories.all():
-            c.delete(kwargs)
+            c.delete()
         os.rmdir(self.get_absolute_path())
         super(Trimester, self).delete()

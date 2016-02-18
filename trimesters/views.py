@@ -58,3 +58,16 @@ def list_categories(request, trimester_id):
         result['title_trimester'] = str(t)
         result['doc_list'] = doc_list
         return HttpResponse(json.dumps(result))
+
+
+def list_categorie_n(request, trimester_id, num):  # num = [1,4]
+    if request.is_ajax():
+        t = Trimester.objects.get(id=trimester_id)
+        results = {}
+        data = []
+        c = t.categories.filter(active=True).order_by('cat__priority')[int(num)-1]
+        for d in c.get_docs():
+            data.append(d.as_json())
+        results['doc_list'] = data
+        results['n'] = c.count_docs()
+        return HttpResponse(json.dumps(results))

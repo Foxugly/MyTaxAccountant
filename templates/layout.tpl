@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.9/css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" href=" {% static "upload/css/style.css" %} ">
     <link rel="stylesheet" href=" {% static "upload/css/jquery.fileupload-ui.css" %}" >
+    <link href='{% static "select2-4.0.1/dist/css/select2.min.css" %}' rel='stylesheet' />
     {% block css %}
     {% endblock %}
     <link href='{% static "css/perso.css" %}' rel='stylesheet' />
@@ -41,6 +42,12 @@
     <script src=" {% static "upload/js/jquery.fileupload.js" %}"></script>
     <script src=" {% static "upload/js/jquery.cookie.js" %}"></script>
     <script src=" {% static "bootpag/jquery.bootpag.min.js" %}"></script>
+    <script type="text/javascript" src='{% static "select2-4.0.1/dist/js/select2.min.js" %}'></script>
+    {% if LANGUAGE_CODE != 'en' %}
+        {% with 'select2-4.0.1/dist/js/i18n/'|add:LANGUAGE_CODE|add:'.js' as select2_lang %}
+        <script type="text/javascript" src='{% static select2_lang %}'></script>
+        {% endwith %}
+    {%  endif %}
     <script src='{% static "js/perso.js" %}'></script>
     {% block js %}
     {% endblock %}
@@ -63,7 +70,7 @@
           {% if user.is_authenticated %}
           <form class="navbar-form navbar-left" role="search">
             <div class='form-group'>
-              <select id="sel_company" class="form-control" >
+              <select id="sel_company" class="form-control  select2-nosearch" >
                   <optgroup label = "Choose a compagny">
                     {% for c in user|companies %}
                       {% if company %}
@@ -84,7 +91,7 @@
                 </select>
               </div>
               <div class='form-group'>
-                <select id="sel_year" class="form-control" >
+                <select id="sel_year" class="form-control  select2-nosearch" >
                  <optgroup label = "Choose a tax year">
                     {% for y in user|companies|years %}
                       {% if year %}
@@ -105,7 +112,7 @@
                 </select>
               </div>
               <div class='form-group'>
-                <select id="sel_trimester" class="form-control" >
+                <select id="sel_trimester" class="form-control  select2-nosearch" >
                   <optgroup label = "Choose a trimester">         
                     {% for t in user|companies|years|trimesters %}
                       {% if trimister %}

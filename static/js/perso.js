@@ -83,6 +83,9 @@ $(document).ready(function() {
             .parent().addClass($.support.fileInput ? undefined : 'disabled');
     });
 
+    $('.select2').select2({width: 'resolve'});
+
+    $('.select2-nosearch').select2({ width: 'resolve', minimumResultsForSearch: -1});
 
     $('#confirm_yes_close').click(function(){
         $('#confirm_yes').hide();
@@ -132,10 +135,11 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(result){
                 $('#sel_trimester').empty().append('<optgroup label = "Choose a trimester">')
-                for( var i = 0, len = result.length; i < len; i++ ) {
+                for( var i = 0; i < result.length; i++ ) {
                     $('#sel_trimester').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>')
                 }
                 $('#sel_trimester').append('</optgroup>');
+                $('#sel_trimester').val(result[0].id).trigger('change');
                 update_data();
             }
         });
@@ -155,6 +159,7 @@ $(document).ready(function() {
                     $('#sel_year').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>')
                 }
                 $('#sel_year').append('</optgroup>');
+                $('#sel_year').val(result[0].id).trigger('change');
                 update_trimesters();
             }
         });
@@ -216,11 +221,118 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(result){
                 console.log(result);
-                //$("#modal-title").text(result['name']);
-                //$("#modal-body").html(result['img']);
+                $("#modal_company").empty();
+                for (var i=0; i < result['companies'].length;i++){
+                    var option = '<option value="' + result['companies'][i].id + '"';
+                    if (result['companies'][i].id == result['company'].id){
+                        option += ' selected="selected"';
+                    }
+                    option += '>' + result['companies'][i].name + '</option>';
+                    $("#modal_company").append(option);
+                }
+                $("#modal_company").val(result['company'].id).trigger('change');
+
+                $("#modal_year").empty();
+                for (var i=0; i < result['years'].length;i++){
+                    var option = '<option value="' + result['years'][i].id + '"';
+                    if (result['years'][i].id == result['year'].id){
+                        option += ' selected="selected"';
+                    }
+                    option += '>' + result['years'][i].name + '</option>';
+                    $("#modal_year").append(option);
+                }
+                $("#modal_year").val(result['year'].id).trigger('change');
+
+                 $("#modal_trimester").empty();
+                for (var i=0; i < result['trimesters'].length;i++){
+                    var option = '<option value="' + result['trimesters'][i].id + '"';
+                    if (result['years'][i].id == result['trimester'].id){
+                        option += ' selected="selected"';
+                    }
+                    option += '>' + result['trimesters'][i].name + '</option>';
+                    $("#modal_trimester").append(option);
+                }
+                $("#modal_trimester").val(result['trimester'].id).trigger('change');
+
+                 $("#modal_category").empty();
+                for (var i=0; i < result['categories'].length;i++){
+                    var option = '<option value="' + result['categories'][i].id + '"';
+                    if (result['categories'][i].id == result['category'].id){
+                        option += ' selected="selected"';
+                    }
+                    option += '>' + result['categories'][i].name + '</option>';
+                    $("#modal_category").append(option);
+                }
+                $("#modal_category").val(result['category'].id).trigger('change');
             }
         });
     }
+
+
+    function modal_trimesters(){
+        console.log("modal_tri");
+        var y = $('#modal_trimester').val();
+        var url = '/trimester/' + y + '/list/';
+        $.ajax({
+            url: url,
+            type: 'GET',
+            traditional: true,
+            dataType: 'json',
+            success: function(result){
+                $('#modal_category').empty();
+                for( var i = 0; i < result.length; i++ ) {
+                    $('#modal_category').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>')
+                }
+                $('#modal_category').val(result[0].id).trigger('change');
+            }
+        });
+    }
+
+    function modal_years(){
+        console.log("modal_years");
+        var y = $('#modal_year').val();
+        var url = '/year/' + y + '/list/';
+        $.ajax({
+            url: url,
+            type: 'GET',
+            traditional: true,
+            dataType: 'json',
+            success: function(result){
+                $('#modal_trimester').empty();
+                for( var i = 0; i < result.length; i++ ) {
+                    $('#modal_trimester').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>')
+                }
+                $('#modal_trimester').val(result[0].id).trigger('change');
+                $('#modal_trimester').val(result[0].id).trigger('change');
+                modal_trimesters();
+            }
+        });
+    }
+
+    function modal_companies(){
+        console.log("modal_companies");
+        var c = $('#modal_company').val();
+        var url = '/company/' + c + '/list/';
+        $.ajax({
+            url: url,
+            type: 'GET',
+            traditional: true,
+            dataType: 'json',
+            success: function(result){
+                $('#modal_year').empty();
+                for( var i = 0, len = result.length; i < len; i++ ) {
+                    $('#modal_year').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>')
+                }
+                $('#modal_year').append('</optgroup>');
+                $('#modal_year').val(result[0].id).trigger('change');
+                modal_years();
+            }
+        });
+    }
+
+    $('#modal_company').on('change', function () { modal_companies();});
+    $('#modal_year').on('change', function () { modal_years();});
+    $('#modal_trimester').on('change', function () { modal_trimesters();});
 
     function split_modal(e){
         var cat_id = $('ul.nav-pills li.active a').attr("id")
@@ -261,7 +373,7 @@ $(document).ready(function() {
 
             out += '<a class="btn btn-xs btn-default split_modal" title="Split" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-full"></span> </a>';
             out += '<a class="btn btn-xs btn-default merge_modal" title="Merge" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-small"></span> </a>';
-            out += '<a class="btn btn-xs btn-default move_modal" title="Move" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-transfer"></span> </a>';
+            out += '<a class="btn btn-xs btn-default move_modal" title="Move" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer"></span> </a>';
         }
         else{
             out += '<a class="btn btn-xs btn-default"><span class="glyphicon glyphicon-refresh"></span> </a>';
@@ -304,7 +416,7 @@ $(document).ready(function() {
 
     function update_data(){
         var t = $('#sel_trimester').val();
-        var url = '/trimester/' + t + '/list_categories/';
+        var url = '/trimester/' + t + '/list/';
         $.ajax({
             url: url,
             type: 'GET',
@@ -312,9 +424,8 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(result){
                 for (var i = 0; i < result['nav_list'].length; i++) {
-                    var a = '<a data-target="#" data-toggle="pill" id="' + result['nav_list'][i]['id'] + '" href="#">' + result['nav_list'][i]['name'] + ' <span class="badge">'+ result['nav_list'][i]['n'] +'</span></a>';
                     $("ul.nav-pills li:eq(" + i + ") a").html(result['nav_list'][i]['name'] + ' <span class="badge">'+ result['nav_list'][i]['n'] +'</span>');
-                    $("ul.nav-pills li:eq(" + i + ") a").attr("id",result['nav_list'][i]['id']);
+                    $("ul.nav-pills li:eq(" + i + ") a").attr( "data-id", result['nav_list'][i]['id']);
                     $("ul.nav.nav-pills li:eq(" + i + ")").removeClass("active");
                 }
                 $("ul.nav.nav-pills li:eq(0)").addClass("active");
@@ -345,8 +456,8 @@ $(document).ready(function() {
 
 
     function get_form_data(i){
-        var id = $('ul.nav-pills li.active a').attr("id")
-        var url = '/category/' + id + '/form/' + i + '/';
+        var cat_id = $('ul.nav-pills li.active a').attr("data-id");
+        var url = '/category/' + cat_id + '/form/' + i + '/'; /* TODO a corriger */
         $.ajax({
             url: url,
             type: 'GET',
@@ -360,6 +471,7 @@ $(document).ready(function() {
 
 
     $('#valid_files').click(function() {
+
         var files = []
         $('#files-group').find('li').each(function(){
             var current = $(this).find('span');
@@ -367,9 +479,10 @@ $(document).ready(function() {
         });
         $('#files-group').empty()
         $("#fileupload_list" ).addClass( "hide" ); // TODO .hide();
-        var jsonText = JSON.stringify(files);
-        var id = $('ul.nav-pills li.active a').attr("id")
-        var url = '/category/' + id + '/add_documents/';
+        var data_id = $('ul.nav-pills li.active a').attr("data-id");
+        var id = $('ul.nav-pills li.active a').attr("id");
+        var url = '/category/' + data_id + '/add_documents/';
+        console.log(url);
         $.ajax({
             url: url,
             type: 'GET',
@@ -391,10 +504,11 @@ $(document).ready(function() {
     });
 
     $('ul.nav-pills li a').click(function (e) {
-        $('ul.nav-pills li.active').removeClass('active')
-        $(this).parent('li').addClass('active')
-        var id = $('ul.nav-pills li.active a').attr("id")
-        var url = '/category/' + id + '/list_documents/';
+        $('ul.nav-pills li.active').removeClass('active');
+        $(this).parent('li').addClass('active');
+        var cat_id = $('ul.nav-pills li.active a').attr("data-id");
+        var url = '/category/' + cat_id + '/list/';
+        console.log(url);
         $.ajax({
             url: url,
             type: 'GET',

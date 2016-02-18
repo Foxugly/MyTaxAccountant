@@ -8,13 +8,14 @@
 # your option) any later version.
 
 
-from django.utils.translation import ugettext_lazy  as _
+from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.forms import ModelForm
 from utils.models import Country
 from years.models import Year
 from django.conf import settings
 import os
+
 
 class Company(models.Model):
     name = models.TextField(_("Name of the company"))
@@ -36,7 +37,7 @@ class Company(models.Model):
     def get_name(self):
         return self.name
 
-    def add_year(self,year):
+    def add_year(self, year):
         self.years.add(year)
 
     def __str__(self):
@@ -50,13 +51,14 @@ class Company(models.Model):
 
     def save(self, *args, **kwargs):
         super(Company, self).save(*args, **kwargs)
-        os.mkdir( self.get_absolute_path(), 0711 );
+        os.mkdir(self.get_absolute_path(), 0711)
 
-    def delete(self):
+    def delete(self, **kwargs):
         for y in self.years.all():
-            y.delete()
+            y.delete(kwargs)
         os.rmdir(self.get_absolute_path())
         super(Company, self).delete()
+
 
 class CompanyForm(ModelForm):
     class Meta:
