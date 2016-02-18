@@ -101,7 +101,6 @@ $(document).ready(function() {
     });
 
     $('#language').change(function() {
-        console.log("LANGUAGE");
         var select = $(this);
         var mydata = {lang:select.val()};
         var url = '/lang/';
@@ -206,47 +205,51 @@ $(document).ready(function() {
     }
 
     function move_modal(e){
-        var id = e.parent().parent().find('td:eq(0)')[0].innerHTML;
-        console.log(id);
-        var url = '/document/' + id + '/';
+        var cat_id = $('ul.nav-pills li.active a').attr("id")
+        var doc_id = e.parent().parent().find('td:eq(0)')[0].innerHTML;
+        var url = '/category/' + cat_id + '/ajax/move/' + doc_id + '/';
+        console.log(url);
         $.ajax({
             url: url,
             type: 'GET',
             traditional: true,
             dataType: 'json',
             success: function(result){
-                $("#modal-title").text(result['name']);
-                $("#modal-body").html(result['img']);
+                console.log(result);
+                //$("#modal-title").text(result['name']);
+                //$("#modal-body").html(result['img']);
             }
         });
     }
 
     function split_modal(e){
-        var id = e.parent().parent().find('td:eq(0)')[0].innerHTML;
-        var url = '/document/' + id + '/';
+        var cat_id = $('ul.nav-pills li.active a').attr("id")
+        var doc_id = e.parent().parent().find('td:eq(0)')[0].innerHTML;
+        var url = '/category/' + cat_id + '/ajax/split/' + doc_id + '/';
         $.ajax({
             url: url,
             type: 'GET',
             traditional: true,
             dataType: 'json',
             success: function(result){
-                $("#modal-title").text(result['name']);
-                $("#modal-body").html(result['img']);
+                //$("#modal-title").text(result['name']);
+                //$("#modal-body").html(result['img']);
             }
         });
     }
 
     function merge_modal(e){
-        var id = e.parent().parent().find('td:eq(0)')[0].innerHTML;
-        var url = '/document/' + id + '/';
+        var cat_id = $('ul.nav-pills li.active a').attr("id")
+        var doc_id = e.parent().parent().find('td:eq(0)')[0].innerHTML;
+        var url = '/category/' + cat_id + '/ajax/merge/' + doc_id + '/';
         $.ajax({
             url: url,
             type: 'GET',
             traditional: true,
             dataType: 'json',
             success: function(result){
-                $("#modal-title").text(result['name']);
-                $("#modal-body").html(result['img']);
+                //$("#modal-title").text(result['name']);
+                //$("#modal-body").html(result['img']);
             }
         });
     }
