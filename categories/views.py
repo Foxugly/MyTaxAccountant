@@ -109,7 +109,7 @@ def form_document(request, category_id, n):
         results = {}
         cat = Category.objects.get(pk=category_id)
         if cat.count_docs() > 0:
-            doc = cat.get_doc(int(n))
+            doc = cat.get_docs()[int(n)-1]
             if request.user.is_superuser:
                 results['form'] = DocumentAdminForm(instance=doc).as_div()
             else:
@@ -119,55 +119,6 @@ def form_document(request, category_id, n):
                     results['form'] = DocumentForm(instance=doc).as_div()
             results['img'] = doc.as_img()
             results['doc_id'] = doc.id
-            results['valid'] = True
-        else:
-            results['valid'] = False
-        return HttpResponse(json.dumps(results))
-
-
-def ajax_move(request, category_id, n):
-    if request.is_ajax():
-        results = {}
-        cat = Category.objects.get(pk=category_id)
-        if cat.count_docs() > 0:
-            results['doc_id'] = cat.get_doc(int(n))
-            tri = cat.refer_trimester
-            results['categories'] = [c.as_json() for c in tri.categories.all()]
-            results['category'] = cat.as_json()
-            year = tri.refer_year
-            results['trimesters'] = [t.as_json() for t in year.trimesters.all()]
-            results['trimester'] = tri.as_json()
-            company = year.refer_company
-            results['years'] = [y.as_json() for y in company.years.all()]
-            results['year'] = year.as_json()
-            results['companies'] = [c.as_json() for c in request.user.userprofile.companies.all()]
-            results['company'] = company.as_json()
-            results['valid'] = True
-        else:
-            results['valid'] = False
-        return HttpResponse(json.dumps(results))
-
-
-def ajax_merge(request, category_id, n):
-    if request.is_ajax():
-        results = {}
-        cat = Category.objects.get(pk=category_id)
-        if cat.count_docs() > 0:
-            doc = cat.get_doc(int(n))
-            # TODO AJOUTER
-            results['valid'] = True
-        else:
-            results['valid'] = False
-        return HttpResponse(json.dumps(results))
-
-
-def ajax_split(request, category_id, n):
-    if request.is_ajax():
-        results = {}
-        cat = Category.objects.get(pk=category_id)
-        if cat.count_docs() > 0:
-            doc = cat.get_doc(int(n))
-            # TODO AJOUTER
             results['valid'] = True
         else:
             results['valid'] = False

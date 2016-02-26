@@ -177,6 +177,7 @@ $(document).ready(function() {
         update_years();
     });
 
+
     function close_uploadfile(e){
         var id = e.attr('id');
         var url = '/upload/remove/' + id + '/';
@@ -195,8 +196,7 @@ $(document).ready(function() {
     }
 
     function img_modal(e){
-        var id = e.parent().parent().find('td:eq(0)')[0].innerHTML;
-        var url = '/document/' + id + '/';
+        var url = '/document/' + e[0].id + '/';
         $.ajax({
             url: url,
             type: 'GET',
@@ -210,9 +210,8 @@ $(document).ready(function() {
     }
 
     function move_modal(e){
-        var cat_id = $('ul.nav-pills li.active a').attr("id")
-        var doc_id = e.parent().parent().find('td:eq(0)')[0].innerHTML;
-        var url = '/category/' + cat_id + '/ajax/move/' + doc_id + '/';
+        console.log('move_moal');
+        var url = '/document/ajax/move/' + e[0]['dataset'].id + '/';
         console.log(url);
         $.ajax({
             url: url,
@@ -220,49 +219,36 @@ $(document).ready(function() {
             traditional: true,
             dataType: 'json',
             success: function(result){
-                console.log(result);
                 $("#modal_company").empty();
                 for (var i=0; i < result['companies'].length;i++){
                     var option = '<option value="' + result['companies'][i].id + '"';
-                    if (result['companies'][i].id == result['company'].id){
-                        option += ' selected="selected"';
-                    }
-                    option += '>' + result['companies'][i].name + '</option>';
+                    option += '>(' + result['companies'][i].id + ') ' + result['companies'][i].name + '</option>';
                     $("#modal_company").append(option);
                 }
                 $("#modal_company").val(result['company'].id).trigger('change');
-
-                $("#modal_year").empty();
+                /*$("#modal_year").empty();
                 for (var i=0; i < result['years'].length;i++){
                     var option = '<option value="' + result['years'][i].id + '"';
-                    if (result['years'][i].id == result['year'].id){
-                        option += ' selected="selected"';
-                    }
                     option += '>' + result['years'][i].name + '</option>';
                     $("#modal_year").append(option);
-                }
+                }*/
                 $("#modal_year").val(result['year'].id).trigger('change');
-
+                /*
                  $("#modal_trimester").empty();
                 for (var i=0; i < result['trimesters'].length;i++){
                     var option = '<option value="' + result['trimesters'][i].id + '"';
-                    if (result['years'][i].id == result['trimester'].id){
-                        option += ' selected="selected"';
-                    }
-                    option += '>' + result['trimesters'][i].name + '</option>';
+                    option += '>(' + result['trimesters'][i].id + ')' + result['trimesters'][i].name + '</option>';
                     $("#modal_trimester").append(option);
-                }
+                }*/
                 $("#modal_trimester").val(result['trimester'].id).trigger('change');
-
+                console.log(result['trimester'].id);
+                /*
                  $("#modal_category").empty();
                 for (var i=0; i < result['categories'].length;i++){
                     var option = '<option value="' + result['categories'][i].id + '"';
-                    if (result['categories'][i].id == result['category'].id){
-                        option += ' selected="selected"';
-                    }
-                    option += '>' + result['categories'][i].name + '</option>';
+                    option += '>('+ result['categories'][i].id +')' + result['categories'][i].name + '</option>';
                     $("#modal_category").append(option);
-                }
+                }*/
                 $("#modal_category").val(result['category'].id).trigger('change');
             }
         });
@@ -270,7 +256,6 @@ $(document).ready(function() {
 
 
     function modal_trimesters(){
-        console.log("modal_tri");
         var y = $('#modal_trimester').val();
         var url = '/trimester/' + y + '/list/';
         $.ajax({
@@ -280,16 +265,15 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(result){
                 $('#modal_category').empty();
-                for( var i = 0; i < result.length; i++ ) {
-                    $('#modal_category').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>')
+                for( var i = 0; i < result['nav_list'].length; i++ ) {
+                    $('#modal_category').append('<option value="'+ result['nav_list'][i].id + '">(' + result['nav_list'][i].id + ') '+ result['nav_list'][i].name +'</option>')
                 }
-                $('#modal_category').val(result[0].id).trigger('change');
+                $('#modal_category').val(result['nav_list'][0].id).trigger('change');
             }
         });
     }
 
     function modal_years(){
-        console.log("modal_years");
         var y = $('#modal_year').val();
         var url = '/year/' + y + '/list/';
         $.ajax({
@@ -300,9 +284,8 @@ $(document).ready(function() {
             success: function(result){
                 $('#modal_trimester').empty();
                 for( var i = 0; i < result.length; i++ ) {
-                    $('#modal_trimester').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>')
+                    $('#modal_trimester').append('<option value="'+ result[i].id + '">('+ result[i].id +')'+ result[i].name +'</option>')
                 }
-                $('#modal_trimester').val(result[0].id).trigger('change');
                 $('#modal_trimester').val(result[0].id).trigger('change');
                 modal_trimesters();
             }
@@ -310,7 +293,6 @@ $(document).ready(function() {
     }
 
     function modal_companies(){
-        console.log("modal_companies");
         var c = $('#modal_company').val();
         var url = '/company/' + c + '/list/';
         $.ajax({
@@ -321,7 +303,7 @@ $(document).ready(function() {
             success: function(result){
                 $('#modal_year').empty();
                 for( var i = 0, len = result.length; i < len; i++ ) {
-                    $('#modal_year').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>')
+                    $('#modal_year').append('<option value="'+ result[i].id + '">('+ result[i].id + ')'+ result[i].name +'</option>')
                 }
                 $('#modal_year').append('</optgroup>');
                 $('#modal_year').val(result[0].id).trigger('change');
@@ -335,9 +317,7 @@ $(document).ready(function() {
     $('#modal_trimester').on('change', function () { modal_trimesters();});
 
     function split_modal(e){
-        var cat_id = $('ul.nav-pills li.active a').attr("id")
-        var doc_id = e.parent().parent().find('td:eq(0)')[0].innerHTML;
-        var url = '/category/' + cat_id + '/ajax/split/' + doc_id + '/';
+        var url = '/document/ajax/split/' + e[0]['dataset'].id + '/';
         $.ajax({
             url: url,
             type: 'GET',
@@ -351,9 +331,7 @@ $(document).ready(function() {
     }
 
     function merge_modal(e){
-        var cat_id = $('ul.nav-pills li.active a').attr("id")
-        var doc_id = e.parent().parent().find('td:eq(0)')[0].innerHTML;
-        var url = '/category/' + cat_id + '/ajax/merge/' + doc_id + '/';
+        var url = '/document/ajax/merge/' + e[0]['dataset'].id + '/';
         $.ajax({
             url: url,
             type: 'GET',
@@ -369,17 +347,22 @@ $(document).ready(function() {
 
     function update_datatable(data){
         var out = '<td>';
+        var lock = '<td>';
+        if (data['lock']){
+            lock += '<a class="btn btn-xs btn-default"><span class="glyphicon glyphicon-lock"></span></a>';
+        }
+        lock += '</td>';
         if (data['complete']){
 
-            out += '<a class="btn btn-xs btn-default split_modal" title="Split" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-full"></span> </a>';
-            out += '<a class="btn btn-xs btn-default merge_modal" title="Merge" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-small"></span> </a>';
-            out += '<a class="btn btn-xs btn-default move_modal" title="Move" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer"></span> </a>';
+            out += '<a class="btn btn-xs btn-default split_modal" data-id="'+ data['id'] +'" title="Split" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-full"></span></a>';
+            out += '<a class="btn btn-xs btn-default merge_modal" data-id="'+ data['id'] +'" title="Merge" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-small"></span></a>';
+            out += '<a class="btn btn-xs btn-default move_modal" data-id="'+ data['id'] +'" title="Move" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer"></span></a>';
         }
         else{
             out += '<a class="btn btn-xs btn-default"><span class="glyphicon glyphicon-refresh"></span> </a>';
         }
-        out += '</td>'
-        $('#datatable').dataTable().fnAddData([ data['id'], "<a id='" + data['id'] + "' class='img_modal' data-toggle='modal' data-target='#myModal'>" + data['name'] + "</a>", data['date'], data['description'], out]);
+        out += '</td>';
+        $('#datatable').dataTable().fnAddData([data['fiscal_id'], "<a id='" + data['id'] + "' class='img_modal' data-toggle='modal' data-target='#myModal'>" + data['name'] + "</a>", data['date'], data['description'], lock, out]);
     }
 
     function save_form(){
@@ -394,6 +377,7 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(result){
                 $('#alert_save_saved').show().delay( 1000 ).fadeOut(1000);
+                update_data();
             }
         });
     }
@@ -432,20 +416,6 @@ $(document).ready(function() {
                 $('#datatable').dataTable().fnClearTable();
                 for (var i = 0; i < result['doc_list'].length; i++) {
                     update_datatable(result['doc_list'][i]);
-                    $(".img_modal").click(function(){
-                        img_modal($(this));
-                    });
-                    $(".move_modal").click(function(){
-                        move_modal($(this));
-                    });
-
-                    $(".merge_modal").click(function(){
-                        merge_modal($(this));
-                    });
-
-                    $(".split_modal").click(function(){
-                        split_modal($(this));
-                    });
                 }
                 $('#pagination').bootpag({total: result['nav_list'][0]['n'], page: 1});
                 $('#title_trimester').html(result['title_trimester']);
@@ -482,7 +452,6 @@ $(document).ready(function() {
         var data_id = $('ul.nav-pills li.active a').attr("data-id");
         var id = $('ul.nav-pills li.active a').attr("id");
         var url = '/category/' + data_id + '/add_documents/';
-        console.log(url);
         $.ajax({
             url: url,
             type: 'GET',
@@ -492,7 +461,7 @@ $(document).ready(function() {
             success: function(result){
                 result = JSON.parse(result);
                 $('#datatable').dataTable().fnClearTable();
-                for (i = 0; i < result['doc_list'].length; i++) {
+                for (var i = 0; i < result['doc_list'].length; i++) {
                     update_datatable(result['doc_list'][i]);
                     $(".img_modal").click(function(){
                         img_modal($(this));
@@ -503,12 +472,11 @@ $(document).ready(function() {
         });
     });
 
-    $('ul.nav-pills li a').click(function (e) {
+    $('ul.nav-pills li a').click(function () {
         $('ul.nav-pills li.active').removeClass('active');
         $(this).parent('li').addClass('active');
         var cat_id = $('ul.nav-pills li.active a').attr("data-id");
         var url = '/category/' + cat_id + '/list/';
-        console.log(url);
         $.ajax({
             url: url,
             type: 'GET',
@@ -516,39 +484,31 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(result){
                 $('#datatable').dataTable().fnClearTable();
-                for (i = 0; i < result['doc_list'].length; i++) {
+                for (var i = 0; i < result['doc_list'].length; i++) {
                     update_datatable(result['doc_list'][i]);
-                    $(".img_modal").click(function(){
-                        img_modal($(this));
-                    });
                 }
                 var n = parseInt(result['n']);
                 $('#pagination').bootpag({total: n,page: 1}).on("page", function(event, num){
                     get_form_data(num);
                 });
                 get_form_data(1);
+                /* TODO remplacer 1 et nmum */
+                $(".img_modal").click(function(){
+                    img_modal($(this));
+                });
+                $(".move_modal").click(function(){
+                    move_modal($(this));
+                });
+
+                $(".merge_modal").click(function(){
+                    merge_modal($(this));
+                });
+
+                $(".split_modal").click(function(){
+                    split_modal($(this));
+                });
             }
         });
-    });
-
-    $(".img_modal").click(function(){
-        console.log('img_modal');
-        img_modal($(this));
-    });
-
-    $(".move_modal").click(function(){
-        console.log('move_modal');
-        move_modal($(this));
-    });
-
-    $(".merge_modal").click(function(){
-        console.log('merge_modal');
-        merge_modal($(this));
-    });
-
-    $(".split_modal").click(function(){
-        console.log('split_modal');
-        split_modal($(this));
     });
 
     $("#view_group :input:radio").change(function() {
@@ -584,4 +544,5 @@ $(document).ready(function() {
         }).on("page", function(event, num){
             get_form_data(num);
     });
+
 });

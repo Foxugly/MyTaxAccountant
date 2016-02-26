@@ -89,7 +89,7 @@ class Document(models.Model):
 
     def as_json(self):
         return dict(id=self.id, name=self.name, date=self.date.strftime('%d/%m/%Y'), description=self.description,
-                    complete=self.complete, fiscal_id=self.fiscal_id)
+                    complete=self.complete, fiscal_id=self.fiscal_id, lock=self.lock)
 
     def delete(self, **kwargs):
         for p in self.pages.all():

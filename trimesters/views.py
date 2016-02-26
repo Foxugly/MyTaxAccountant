@@ -47,6 +47,8 @@ def list_categories(request, trimester_id):
                     result['img'] = d.as_img()
                     result['form'] = form.as_div()
                     result['doc_id'] = d.id
+                    result['fiscal_id'] = d.fiscal_id
+                    result['lock'] = d.lock
                     result['valid'] = True
                     first = False
                 doc_list.append(d.as_json())

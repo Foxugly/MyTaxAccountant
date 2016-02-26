@@ -70,70 +70,27 @@
         <table id="datatable" class="table table-striped table-bordered" width="100%" cellspacing="0">
             <thead>
                 <tr>
-                    <th>NumberID</th>
+                    <th>FiscalID</th>
                     <th>Name</th>
                     <th>Date</th>
                     <th>Comments</th>
+                    <th>Lock</th>
                     <th>Operations</th>
                 </tr>
             </thead>
      
             <tfoot>
                 <tr>
-                    <th>NumberID</th>
+                    <th>FiscalID</th>
                     <th>Name</th>
                     <th>Date</th>
                     <th>Comments</th>
+                    <th>Lock</th>
                     <th>Operations</th>
                 </tr>
             </tfoot>
      
             <tbody>
-                {% if category %}
-                    {% for c in user|companies|years|trimesters|categories %}
-                        {% if c == category %}
-                            {% for d in c|documents %}
-                                <tr>
-                                    <td>{{d.id}}</td>
-                                    <td><a id={{d.id}} class='img_modal' data-toggle="modal" data-target="#myModal">{{d.name}}</a></td>
-                                    <td>{{d.date}}</td>
-                                    <td>{{d.description}}</td>
-                                    {%  if d.complete %}
-                                        <td>
-                                            <a class="btn btn-xs btn-default split_modal" title="Split" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-full"></span> </a>
-                                            <a class="btn btn-xs btn-default merge_modal" title="Merge" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-small"></span> </a>
-                                            <a class="btn btn-xs btn-default move_modal" title="Move" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer"></span> </a>
-                                        </td>
-                                    {% else %}
-                                        <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-refresh"></span> </a>
-                                    {% endif %}
-                                </tr>
-                            {% endfor %}
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    {% for c in user|companies|years|trimesters|categories %}
-                        {% if forloop.first %}
-                            {% for d in c.documents.all %}
-                                <tr>
-                                    <td>{{d.id}}</td>
-                                    <td><a id={{d.id}} class='img_modal' data-toggle="modal" data-target="#myModal">{{d.name}}</a></td>
-                                    <td>{{d.date}}</td>
-                                    <td>{{d.description}}</td>
-                                    {%  if d.complete %}
-                                        <td>
-                                            <a class="btn btn-xs btn-default split_modal" title="Split" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-full"></span> </a>
-                                            <a class="btn btn-xs btn-default merge_modal" title="Merge" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-small"></span> </a>
-                                            <a class="btn btn-xs btn-default move_modal" title="Move" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer"></span> </a>
-                                        </td>
-                                    {% else %}
-                                        <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-refresh"></span> </a>
-                                    {% endif %}
-                                </tr>
-                            {% endfor %}
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
             </tbody>
         </table>
     </div>
@@ -234,6 +191,7 @@ $(document).ready(function() {
     $("#div_img_form").hide();
     $('#input_view_list').click();
     $('#sel_company').change();
+    $("ul.nav.nav-pills li:eq(0)").addClass("active");
     $('#pagination').bootpag({total: {{ user|companies|years|trimesters|categories|first|len_docs }}, page: 1});
 });
 </script>
