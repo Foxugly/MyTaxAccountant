@@ -92,7 +92,7 @@ def ajax_move_doc(request, doc_id, cat_id):
         old_cat = doc.refer_category
         new_cat = Category.objects.get(pk=int(cat_id))
         for p in doc.pages.all():
-            cmd = "mv " + p.get_relative_path()[1:] + " " + new_cat.get_relative_path()[1:] + "/"
+            cmd = "mv " + p.get_absolute_path() + " " + new_cat.get_absolute_path() + "/"
             os.system(cmd)
         doc.refer_category = new_cat
         doc.save()
