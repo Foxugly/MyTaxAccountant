@@ -42,6 +42,7 @@
     <script src=" {% static "upload/js/jquery.fileupload.js" %}"></script>
     <script src=" {% static "upload/js/jquery.cookie.js" %}"></script>
     <script src=" {% static "bootpag/jquery.bootpag.min.js" %}"></script>
+    <script src=" {% static "bootbox/bootbox.min.js" %}"></script>
     <script type="text/javascript" src='{% static "select2-4.0.1/dist/js/select2.min.js" %}'></script>
     {% if LANGUAGE_CODE != 'en' %}
         {% with 'select2-4.0.1/dist/js/i18n/'|add:LANGUAGE_CODE|add:'.js' as select2_lang %}

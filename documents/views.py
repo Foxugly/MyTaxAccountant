@@ -100,3 +100,14 @@ def ajax_move_doc(request, doc_id, cat_id):
         new_cat.documents.add(doc)
         results['valid'] = True
         return HttpResponse(json.dumps(results))
+
+
+def ajax_delete(request, doc_id):
+    if request.is_ajax():
+        results = {}
+        doc = Document.objects.get(pk=int(doc_id))
+        cat = doc.refer_category
+        cat.documents.remove(doc)
+        doc.delete()
+        results['valid'] = True
+        return HttpResponse(json.dumps(results))

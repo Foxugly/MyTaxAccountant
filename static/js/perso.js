@@ -299,6 +299,7 @@ $(document).ready(function() {
                 $('#modal_year').empty();
                 for( var i = 0, len = result.length; i < len; i++ ) {
                     $('#modal_year').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>');
+                    $('#modal_year').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>');
                 }
                 $('#modal_year').val(result[0].id).trigger('change');
                 /*modal_years();*/
@@ -327,13 +328,24 @@ $(document).ready(function() {
             type: 'GET',
             traditional: true,
             dataType: 'json',
-            success: function(result){
+            success: function(){
                 //$("#modal-title").text(result['name']);
                 //$("#modal-body").html(result['img']);
             }
         });
     }
 
+    function del_modal(e){
+        var url = '/document/ajax/delete/' +e.currentTarget['dataset'].id + '/';
+        console.log(url);
+        $.ajax({
+            url: url,
+            type: 'GET',
+            traditional: true,
+            dataType: 'json',
+            success: function(){}
+        });
+    }
 
     function update_datatable(data){
         var out = '<td>';
@@ -346,6 +358,7 @@ $(document).ready(function() {
             out += '<a id="btn_sp_'+ data['id']+'" class="btn btn-xs btn-default split_modal" data-id="'+ data['id'] +'" title="Split" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-full"></span></a>';
             out += '<a id="btn_me_'+ data['id']+'" class="btn btn-xs btn-default merge_modal" data-id="'+ data['id'] +'" title="Merge" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-small"></span></a>';
             out += '<a id="btn_mv_'+ data['id']+'" class="btn btn-xs btn-default move_modal" data-id="'+ data['id'] +'" title="Move" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer"></span></a>';
+            out += '<a id="btn_de_'+ data['id']+'" class="btn btn-xs btn-default del_modal" data-id="'+ data['id'] +'" title="Delete"><span class="glyphicon glyphicon-remove"></span></a>';
         }
         else{
             out += '<a class="btn btn-xs btn-default"><span class="glyphicon glyphicon-refresh"></span> </a>';
@@ -356,6 +369,24 @@ $(document).ready(function() {
         $("#btn_mv_"+data['id']).click(function(){move_modal($(this));});
         $("#btn_me_"+data['id']).click(function(){merge_modal($(this));});
         $("#btn_sp_"+data['id']).click(function(){split_modal($(this));});
+        $("#btn_de_"+data['id']).click(function(e){
+            var cat_id = $('ul.nav-pills li.active a')[0].id;
+            console.log(cat_id);
+            bootbox.confirm("Are you sure?", function(result) {
+                if(result) {
+                    del_modal(e);
+                    update_data();
+                    bootbox.alert("Document deleted !", function() {});
+                }
+                console.log('temporel1');
+                setTimeout(function(){
+                    console.log('temporel2');
+                    console.log(cat_id);
+                    $('#'+cat_id).addClass('active');
+                }, 400);
+
+            });
+         });
     }
 
     function save_form(){
