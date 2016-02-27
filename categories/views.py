@@ -78,7 +78,6 @@ def add_documents(request, category_id):
                 new_f = p.sub('.pdf', f)
                 new_path = path.replace(f, new_f)
                 cmd = 'soffice --headless --convert-to pdf  %s --outdir %s/upload' % (path, settings.MEDIA_ROOT)
-                print cmd
                 os.system(cmd)
                 thread = Thread(target=convert_pdf_to_jpg, args=(cat, new_path, new_f, d))
                 thread.start()
