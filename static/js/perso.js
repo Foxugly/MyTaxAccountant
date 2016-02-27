@@ -337,7 +337,6 @@ $(document).ready(function() {
 
     function del_modal(e){
         var url = '/document/ajax/delete/' +e.currentTarget['dataset'].id + '/';
-        console.log(url);
         $.ajax({
             url: url,
             type: 'GET',
@@ -370,21 +369,13 @@ $(document).ready(function() {
         $("#btn_me_"+data['id']).click(function(){merge_modal($(this));});
         $("#btn_sp_"+data['id']).click(function(){split_modal($(this));});
         $("#btn_de_"+data['id']).click(function(e){
-            var cat_id = $('ul.nav-pills li.active a')[0].id;
-            console.log(cat_id);
+            var btn = $('ul.nav-pills li.active a')[0];
             bootbox.confirm("Are you sure?", function(result) {
                 if(result) {
                     del_modal(e);
                     update_data();
-                    bootbox.alert("Document deleted !", function() {});
+                     bootbox.alert("Document deleted !", function() {btn.click();});
                 }
-                console.log('temporel1');
-                setTimeout(function(){
-                    console.log('temporel2');
-                    console.log(cat_id);
-                    $('#'+cat_id).addClass('active');
-                }, 400);
-
             });
          });
     }

@@ -18,15 +18,15 @@
             {% for c in user|companies|years|trimesters|categories %}
                 {% if category %}
                     {%if c == category %}
-                        <li role="presentation" class="active"><a data-target="#" data-toggle="pill" data-id="{{c.id}}" id="{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
+                        <li role="presentation" class="active"><a data-target="#" data-toggle="pill" data-id="{{c.id}}" id="nav_{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
                     {% else %}
-                        <li role="presentation"><a data-target="#" data-toggle="pill" data-id="{{c.id}}" id="b_{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
+                        <li role="presentation"><a data-target="#" data-toggle="pill" data-id="{{c.id}}" id="nav_{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
                     {% endif %}
                 {% else %}
                     {%if forloop.first %}
-                        <li role="presentation" class="active"><a data-target="#" data-id="{{c.id}}" data-toggle="pill" id="{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
+                        <li role="presentation" class="active"><a data-target="#" data-id="{{c.id}}" data-toggle="pill" id="nav_{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
                     {% else %}
-                        <li role="presentation"><a data-target="#" data-toggle="pill" data-id="{{c.id}}" id="{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
+                        <li role="presentation"><a data-target="#" data-toggle="pill" data-id="{{c.id}}" id="nav_{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
                     {% endif %}
                 {% endif %}
             {% endfor %}
