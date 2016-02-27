@@ -26,7 +26,6 @@ def document_view(request, document_id):
 def update_ajax(request, document_id):
     if request.is_ajax():
         doc = Document.objects.get(id=document_id)
-        form = None
         if request.user.is_superuser:
             form = DocumentAdminForm(request.GET, instance=doc)
         else:
