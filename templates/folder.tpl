@@ -70,23 +70,23 @@
         <table id="datatable" class="table table-striped table-bordered" width="100%" cellspacing="0">
             <thead>
                 <tr>
-                    <th>FiscalID</th>
-                    <th>Name</th>
-                    <th>Date</th>
-                    <th>Comments</th>
-                    <th>Lock</th>
-                    <th>Operations</th>
+                    <th>{% trans "FiscalID" %}</th>
+                    <th>{% trans "Name" %}</th>
+                    <th>{% trans "Date" %}</th>
+                    <th>{% trans "Comments" %}</th>
+                    <th>{% trans "Lock" %}</th>
+                    <th>{% trans "Operations" %}</th>
                 </tr>
             </thead>
      
             <tfoot>
                 <tr>
-                    <th>FiscalID</th>
-                    <th>Name</th>
-                    <th>Date</th>
-                    <th>Comments</th>
-                    <th>Lock</th>
-                    <th>Operations</th>
+                    <th>{% trans "FiscalID" %}</th>
+                    <th>{% trans "Name" %}</th>
+                    <th>{% trans "Date" %}</th>
+                    <th>{% trans "Comments" %}</th>
+                    <th>{% trans "Lock" %}</th>
+                    <th>{% trans "Operations" %}</th>
                 </tr>
             </tfoot>
      
@@ -135,11 +135,11 @@
             </div>
             <div id='modal-body' class="modal-body" style="text-align:center;">
                 <form class="form-horizontal">
+                    <input type="hidden" id="move_doc_id" value="">
                     <div class="form-group">
                         <label class="col-md-4 col-sm-4 control-label" for="modal_company">{% trans "Company" %}</label>
                         <div class="col-md-8 col-sm-8">
                         <select id="modal_company" name="modal_company" class="form-control  select2-nosearch" style="width: 200px;">
-
                         </select>
                         </div>
                     </div>
@@ -148,7 +148,6 @@
                         <label class="col-md-4 col-sm-4 control-label" for="modal_year">{% trans "Year" %}</label>
                         <div class="col-md-8 col-sm-8">
                         <select id="modal_year" name="modal_year" class="form-control  select2-nosearch" style="width: 200px;">
-
                         </select>
                         </div>
                     </div>
@@ -165,14 +164,14 @@
                         <label class="col-md-4 col-sm-4 control-label" for="modal_category">{% trans "Category" %}</label>
                         <div class="col-md-8 col-sm-8">
                         <select id="modal_category" name="modal_category" class="form-control  select2-nosearch" style="width: 200px;">
-
                         </select>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
+                <button id="document_move" type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Move" %}</button>
             </div>
         </div>
     </div>

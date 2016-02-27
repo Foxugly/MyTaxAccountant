@@ -9,7 +9,9 @@
 
 from django.http import HttpResponse
 from documents.models import Document, DocumentAdminForm, DocumentForm
+from categories.models import Category
 import json
+import os
 
 
 def document_view(request, document_id):
@@ -40,23 +42,17 @@ def ajax_move(request, n):
     if request.is_ajax():
         results = {}
         doc = Document.objects.get(pk=int(n))
-        print doc
         cat = doc.refer_category
-        print cat
         if cat.count_docs() > 0:
             results['doc_id'] = int(n)
             tri = cat.refer_trimester
-            print tri
-            # results['categories'] = [c.as_json() for c in tri.categories.all()]
-            results['category'] = cat.as_json()
             year = tri.refer_year
-            # results['trimesters'] = [t.as_json() for t in year.trimesters.all()]
-            results['trimester'] = tri.as_json()
             company = year.refer_company
-            # results['years'] = [y.as_json() for y in company.years.all()]
+            results['category'] = cat.as_json()
+            results['trimester'] = tri.as_json()
             results['year'] = year.as_json()
-            results['companies'] = [c.as_json() for c in request.user.userprofile.companies.all()]
             results['company'] = company.as_json()
+            results['companies'] = [c.as_json() for c in request.user.userprofile.companies.all()]
             results['valid'] = True
         else:
             results['valid'] = False
@@ -86,4 +82,21 @@ def ajax_split(request, n):
             results['valid'] = True
         else:
             results['valid'] = False
+        return HttpResponse(json.dumps(results))
+
+
+def ajax_move_doc(request, doc_id, cat_id):
+    if request.is_ajax():
+        results = {}
+        doc = Document.objects.get(pk=int(doc_id))
+        old_cat = doc.refer_category
+        new_cat = Category.objects.get(pk=int(cat_id))
+        for p in doc.pages.all():
+            cmd = "mv " + p.get_relative_path()[1:] + " " + new_cat.get_relative_path()[1:] + "/"
+            os.system(cmd)
+        doc.refer_category = new_cat
+        doc.save()
+        old_cat.documents.remove(doc)
+        new_cat.documents.add(doc)
+        results['valid'] = True
         return HttpResponse(json.dumps(results))
