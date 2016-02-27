@@ -13,7 +13,7 @@ from trimesters.views import trimester_view, list_categories, list_categorie_n
 
 
 urlpatterns = patterns('trimesters.views',
-    url(r'^(?P<trimester_id>[0-9]+)/list/$', login_required(list_categories), name='list_categories'),
+    url(r'^(?P<trimester_id>[0-9]+)/list/(?P<cat_id>[0-9]+)/$', login_required(list_categories), name='list_categories'),
     url(r'^(?P<trimester_id>[0-9]+)/category_n/(?P<num>[0-9]+)/$', login_required(list_categorie_n), name='list_categorie_n'),
     url(r'^(?P<trimester_id>[0-9]+)/$', login_required(trimester_view), name='trimester_view'),
 )

@@ -12,6 +12,7 @@ from django.http import HttpResponse
 from users.models import UserProfile
 from trimesters.models import Trimester
 from documents.models import DocumentForm, DocumentAdminForm, DocumentReadOnlyForm
+from categories.models import Category
 import json
 
 
@@ -23,7 +24,7 @@ def trimester_view(request, trimester_id):
     return render_to_response('folder.tpl', {'userprofile': u, 'trimester': t, 'year': y, 'company': c})
 
 
-def list_categories(request, trimester_id):
+def list_categories(request, trimester_id, cat_id):
     if request.is_ajax():
         t = Trimester.objects.get(id=trimester_id)
         result = {}
@@ -32,10 +33,13 @@ def list_categories(request, trimester_id):
         for c in t.categories.filter(active=True).order_by('cat__priority'):
             nav_list.append(c.as_json())
         result['nav_list'] = nav_list
-        c = t.categories.filter(active=True).order_by('cat__priority')[:1]
+        if int(cat_id) is not 0:
+            c = Category.objects.get(pk=int(cat_id))
+        else:
+            c = t.categories.filter(active=True).order_by('cat__priority')[0]
         first = True
-        if c[0].count_docs() > 0:
-            for d in c[0].get_docs():
+        if c.count_docs() > 0:
+            for d in c.get_docs():
                 if first:
                     if request.user.is_superuser:
                         form = DocumentAdminForm(instance=d)
