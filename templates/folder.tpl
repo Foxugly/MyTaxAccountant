@@ -176,6 +176,49 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="modal_split">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 id='modal_split_title' class="modal-title"></h4>
+            </div>
+            <div id='modal-body' class="modal-body" style="text-align:center;">
+                <form class="form-horizontal">
+                    <input type="hidden" id="modal_split_doc_id" value="">
+
+                    <div class="form-group">
+                        <label class="col-md-4 col-sm-4 control-label" for="modal_split_name">{% trans "Current name" %}</label>
+                        <div class="col-md-8 col-sm-8">
+                        <input id="modal_split_name" name="modal_split_name" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 col-sm-4 control-label" for="modal_company">{% trans "Split between" %}</label>
+                        <div class="col-md-8 col-sm-8 text-left">
+                        <select id="modal_split_cut" name="modal_split_cut" class="form-control  select2-nosearch" style="width: 200px;">
+                        </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 col-sm-4 control-label" for="modal_split_new_name">{% trans "Name of the new document" %}</label>
+                        <div class="col-md-8 col-sm-8">
+                        <input id="modal_split_new_name" name="modal_split_new_name" class="form-control">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
+                <button id="document_split" type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Split" %}</button>
+            </div>
+        </div>
+    </div>
+</div>
 {%  endif %}
 {% endblock %}
 

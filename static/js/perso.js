@@ -304,7 +304,7 @@ $(document).ready(function() {
                 $('#modal_year').empty();
                 for( var i = 0, len = result.length; i < len; i++ ) {
                     $('#modal_year').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>');
-                    $('#modal_year').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>');
+                    /*$('#modal_year').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>');*/
                 }
                 $('#modal_year').val(result[0].id).trigger('change');
                 /*modal_years();*/
@@ -320,8 +320,21 @@ $(document).ready(function() {
             traditional: true,
             dataType: 'json',
             success: function(result){
-                //$("#modal-title").text(result['name']);
-                //$("#modal-body").html(result['img']);
+                if (result['valid']) {
+                    console.log("helloworld");
+                    for( var i = 1; i < result['size']; i++ ) {
+                        console.log(i);
+                        $('#modal_split_cut').append('<option value="' + i + '">' + 'Page ' + i + ' and ' + (i+1) + '</option>');
+                    }
+                    $('#modal_split_doc_id').val(result['doc_id']);
+                    $('#modal_split_name').val(result['name']);
+                    $('#modal_split_new_name').val(result['nname']);
+                    $('#modal_split_cut').val(1).trigger('change');
+                    $("#modal_split").show();
+                }
+                else {
+                    bootbox.alert("the document cantains only one page");
+                }
             }
         });
     }
@@ -359,7 +372,7 @@ $(document).ready(function() {
         }
         lock += '</td>';
         if (data['complete']){
-            out += '<a id="btn_sp_'+ data['id']+'" class="btn btn-xs btn-default split_modal" data-id="'+ data['id'] +'" title="Split" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-full"></span></a>';
+            out += '<a id="btn_sp_'+ data['id']+'" class="btn btn-xs btn-default split_modal" data-id="'+ data['id'] +'" title="Split" data-toggle="modal" data-target="#modal_split"><span class="glyphicon glyphicon-resize-full"></span></a>';
             out += '<a id="btn_me_'+ data['id']+'" class="btn btn-xs btn-default merge_modal" data-id="'+ data['id'] +'" title="Merge" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-small"></span></a>';
             out += '<a id="btn_mv_'+ data['id']+'" class="btn btn-xs btn-default move_modal" data-id="'+ data['id'] +'" title="Move" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer"></span></a>';
             out += '<a id="btn_de_'+ data['id']+'" class="btn btn-xs btn-default del_modal" data-id="'+ data['id'] +'" title="Delete"><span class="glyphicon glyphicon-remove"></span></a>';
@@ -406,6 +419,7 @@ $(document).ready(function() {
         if (valid == true){
             $('#div_img').html(img);
             $('#div_form').html('<input id="doc_id" type="hidden" name="doc_id" value="' + doc_id + '">' +form);
+            $('#id_owner').select2({ width: 'resolve', minimumResultsForSearch: -1});
             $('#btn_save').click(function(){
                 save_form();
             });
@@ -450,10 +464,9 @@ $(document).ready(function() {
         });
     }
 
-
     function get_form_data(i){
         var cat_id = $('ul.nav-pills li.active a').attr("data-id");
-        var url = '/category/' + cat_id + '/form/' + i + '/'; /* TODO a corriger */
+        var url = '/category/' + cat_id + '/form/' + i + '/';
         $.ajax({
             url: url,
             type: 'GET',
@@ -465,16 +478,14 @@ $(document).ready(function() {
         });
     }
 
-
     $('#valid_files').click(function() {
-
-        var files = []
+        var files = [];
         $('#files-group').find('li').each(function(){
             var current = $(this).find('span');
             files.push(current.text());
         });
         $('#files-group').empty()
-        $("#fileupload_list" ).addClass( "hide" ); // TODO .hide();
+        $("#fileupload_list" ).addClass( "hide" );
         var data_id = $('ul.nav-pills li.active a').attr("data-id");
         var id = $('ul.nav-pills li.active a').attr("id");
         var url = '/category/' + data_id + '/add_documents/';

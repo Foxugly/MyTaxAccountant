@@ -10,6 +10,7 @@
 from django.http import HttpResponse
 from documents.models import Document, DocumentAdminForm, DocumentForm
 from categories.models import Category
+from django.utils.translation import ugettext_lazy as _
 import json
 import os
 
@@ -18,8 +19,11 @@ def document_view(request, document_id):
     if request.is_ajax():
         d = Document.objects.get(id=document_id)
         result = {'name': d.name, 'img': ''}
+        i = 1
         for p in d.pages.all().order_by('num'):
             result['img'] += '<img style="max-width:100%;" src="' + str(p.get_relative_path()) + '" />'
+            result['img'] += '<div class="text-center">%s %d</div>' % (_('Page'), i)
+            i += 1
         return HttpResponse(json.dumps(result))
 
 
@@ -75,10 +79,12 @@ def ajax_split(request, n):
     if request.is_ajax():
         results = {}
         doc = Document.objects.get(pk=int(n))
-        cat = doc.refer_category
-        if cat.count_docs() > 0:
-            # TODO AJOUTER
+        if doc.get_npages() > 1:
+            results['doc_id'] = doc.id
+            results['name'] = doc.name
             results['valid'] = True
+            results['nname'] = "new doc"
+            results['size'] = doc.get_npages()
         else:
             results['valid'] = False
         return HttpResponse(json.dumps(results))
