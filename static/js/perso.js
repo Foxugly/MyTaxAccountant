@@ -134,7 +134,7 @@ $(document).ready(function() {
     $('#modal_trimester').on('change', function () { modal_trimesters();});
 
     function update_categories(){
-        console.log('update_categories');
+        /*console.log('update_categories');*/
         var url = '/trimester/' + $('#sel_trimester').val() + '/list/';
         $.ajax({
             url: url,
@@ -220,7 +220,7 @@ $(document).ready(function() {
     }
 
     function move_modal(e){
-        console.log('move_modal');
+        /*console.log('move_modal');*/
         var url = '/document/ajax/move/' + e[0]['dataset'].id + '/';
         $.ajax({
             url: url,
@@ -264,7 +264,7 @@ $(document).ready(function() {
     });
 
     function modal_trimesters(){
-        console.log('modal_trimesters');
+        /*console.log('modal_trimesters');*/
         var url = '/trimester/' + $('#modal_trimester').val() + '/list/';
         $.ajax({
             url: url,
@@ -283,7 +283,7 @@ $(document).ready(function() {
     }
 
     function modal_years(){
-        console.log('modal_years');
+        /*console.log('modal_years');*/
         var url = '/year/' + $('#modal_year').val() + '/list/';
         $.ajax({
             url: url,
@@ -304,7 +304,7 @@ $(document).ready(function() {
     }
 
     function modal_companies(){
-        console.log('modal_companies');
+        /*console.log('modal_companies');*/
         var url = '/company/' + $('#modal_company').val() + '/list/';
         $.ajax({
             url: url,
