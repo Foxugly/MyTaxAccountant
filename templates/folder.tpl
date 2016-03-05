@@ -184,7 +184,7 @@
                 </div>
 
                 <form id='form_split' class="form-horizontal">
-                    <input id="modal_split_doc_id" name="modal_split_doc_id">
+                    <input type="hidden" id="modal_split_doc_id" name="modal_split_doc_id">
 
                     <div class="form-group">
                         <label class="col-md-4 col-sm-4 control-label" for="modal_split_name">{% trans "Current name" %}</label>

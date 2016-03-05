@@ -134,6 +134,7 @@ $(document).ready(function() {
     $('#modal_trimester').on('change', function () { modal_trimesters();});
 
     function update_categories(){
+        console.log('update_categories');
         var url = '/trimester/' + $('#sel_trimester').val() + '/list/';
         $.ajax({
             url: url,
@@ -158,9 +159,9 @@ $(document).ready(function() {
             traditional: true,
             dataType: 'json',
             success: function(result){
-                $('#sel_trimester').empty().append('<optgroup label = "Choose a trimester">')
+                $('#sel_trimester').empty().append('<optgroup label = "Choose a trimester">');
                 for( var i = 0; i < result['list'].length; i++ ) {
-                    $('#sel_trimester').append('<option value="'+ result['list'][i].id + '">'+ result['list'][i].name +'</option>')
+                    $('#sel_trimester').append('<option value="'+ result['list'][i].id + '">'+ result['list'][i].name +'</option>');
                 }
                 $('#sel_trimester').append('</optgroup>');
                 $('#sel_trimester').val(result['favorite'].id).trigger('change');
@@ -177,9 +178,9 @@ $(document).ready(function() {
             traditional: true,
             dataType: 'json',
             success: function(result){
-                $('#sel_year').empty().append('<optgroup label = "Choose a tax year">')
+                $('#sel_year').empty().append('<optgroup label = "Choose a tax year">');
                 for( var i = 0, len = result['list'].length; i < len; i++ ) {
-                    $('#sel_year').append('<option value="'+ result['list'][i].id + '">'+ result['list'][i].name +'</option>')
+                    $('#sel_year').append('<option value="'+ result['list'][i].id + '">'+ result['list'][i].name +'</option>');
                 }
                 $('#sel_year').append('</optgroup>');
                 $('#sel_year').val(result['favorite'].id).trigger('change');
@@ -219,7 +220,7 @@ $(document).ready(function() {
     }
 
     function move_modal(e){
-        /*console.log('move_modal');*/
+        console.log('move_modal');
         var url = '/document/ajax/move/' + e[0]['dataset'].id + '/';
         $.ajax({
             url: url,
@@ -240,10 +241,10 @@ $(document).ready(function() {
                 }, 100);
                 setTimeout(function(){
                     $("#modal_trimester").val(result['trimester'].id).trigger('change');
-                }, 400);
+                }, 300);
                 setTimeout(function(){
                     $("#modal_category").val(result['category'].id).trigger('change');
-                }, 700);
+                }, 500);
             }
         });
     }
@@ -256,32 +257,33 @@ $(document).ready(function() {
             traditional: true,
             dataType: 'json',
             success: function () {
-                update_data(false);
+                update_categories();
                 $('#modal_move').hide();
             }
         });
     });
 
     function modal_trimesters(){
-        /*console.log('modal_trimesters');*/
-        var url = '/trimester/' + $('#modal_trimester').val() + '/list/0/';
+        console.log('modal_trimesters');
+        var url = '/trimester/' + $('#modal_trimester').val() + '/list/';
         $.ajax({
             url: url,
             type: 'GET',
             traditional: true,
             dataType: 'json',
             success: function(result){
+                /*console.log(result);*/
                 $('#modal_category').empty();
                 for( var i = 0; i < result['nav_list'].length; i++ ) {
                     $('#modal_category').append('<option value="'+ result['nav_list'][i].id + '">'+ result['nav_list'][i].name +'</option>');
                 }
-                $('#modal_category').val(result['nav_list'][0].id).trigger('change');
+                $('#modal_category').val(result['nav_list'][0].id); /*.trigger('change');*/
             }
         });
     }
 
     function modal_years(){
-        /*console.log('modal_years');*/
+        console.log('modal_years');
         var url = '/year/' + $('#modal_year').val() + '/list/';
         $.ajax({
             url: url,
@@ -289,18 +291,20 @@ $(document).ready(function() {
             traditional: true,
             dataType: 'json',
             success: function(result){
+                /*console.log(result);*/
                 $('#modal_trimester').empty();
-                for( var i = 0; i < result.length; i++ ) {
-                    $('#modal_trimester').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>');
+                for( var i = 0; i < result['list'].length; i++ ) {
+                    $('#modal_trimester').append('<option value="'+ result['list'][i].id + '">'+ result['list'][i].name +'</option>');
                 }
-                $('#modal_trimester').val(result[0].id).trigger('change');
+                /*$('#modal_trimester').val(result['favorite'].id).trigger('change');*/
+                $('#modal_trimester').val(result['favorite'].id);
                 /*modal_trimesters();*/
             }
         });
     }
 
     function modal_companies(){
-        /*console.log('modal_companies');*/
+        console.log('modal_companies');
         var url = '/company/' + $('#modal_company').val() + '/list/';
         $.ajax({
             url: url,
@@ -308,11 +312,12 @@ $(document).ready(function() {
             traditional: true,
             dataType: 'json',
             success: function(result){
+                /*console.log(result);*/
                 $('#modal_year').empty();
-                for( var i = 0, len = result.length; i < len; i++ ) {
-                    $('#modal_year').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>');
+                for( var i = 0, len = result['list'].length; i < len; i++ ) {
+                    $('#modal_year').append('<option value="'+ result['list'][i].id + '">'+ result['list'][i].name +'</option>');
                 }
-                $('#modal_year').val(result[0].id).trigger('change');
+                $('#modal_year').val(result['favorite'].id).trigger('change');
             }
         });
     }
@@ -416,7 +421,7 @@ $(document).ready(function() {
                     bootbox.alert("Document deleted !", function() {btn.click();});
                 }
             });
-         });
+        });
     }
 
     function save_form(){
@@ -429,7 +434,7 @@ $(document).ready(function() {
             data: form.serialize(),
             traditional: true,
             dataType: 'json',
-            success: function(result){
+            success: function(){
                 $('#alert_save_saved').show().delay( 1000 ).fadeOut(1000);
                 update_data(false);
             }
@@ -478,8 +483,7 @@ $(document).ready(function() {
     }
 
     function get_form_data(i){
-        var cat_id = $('ul.nav-pills li.active a').attr("data-id");
-        var url = '/category/' + cat_id + '/form/' + i + '/';
+        var url = '/category/' + $('ul.nav-pills li.active a').attr("data-id") + '/form/' + i + '/';
         $.ajax({
             url: url,
             type: 'GET',
@@ -497,7 +501,7 @@ $(document).ready(function() {
             var current = $(this).find('span');
             files.push(current.text());
         });
-        $('#files-group').empty()
+        $('#files-group').empty();
         $("#fileupload_list" ).addClass( "hide" );
         var data_id = $('ul.nav-pills li.active a').attr("data-id");
         var id = $('ul.nav-pills li.active a').attr("id");
@@ -590,7 +594,7 @@ $(document).ready(function() {
             traditional: true,
             dataType: 'json',
             success: function(){
-                update_data();
+                update_categories();
             }
         });
     });
