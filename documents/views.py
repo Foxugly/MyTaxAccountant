@@ -84,6 +84,7 @@ def ajax_split(request, n):
             results['name'] = doc.name
             results['valid'] = True
             results['nname'] = "new doc"
+            results['img'] = doc.pages.all()[0].as_img(50)
             results['size'] = doc.get_npages()
         else:
             results['valid'] = False
@@ -114,5 +115,40 @@ def ajax_delete(request, doc_id):
         cat = doc.refer_category
         cat.documents.remove(doc)
         doc.delete()
+        results['valid'] = True
+        return HttpResponse(json.dumps(results))
+
+
+def ajax_img(request, doc_id, num):
+    if request.is_ajax():
+        results = {}
+        doc = Document.objects.get(pk=int(doc_id))
+        results['img'] = doc.pages.all()[int(num) - 1].as_img(50)
+        results['valid'] = True
+        return HttpResponse(json.dumps(results))
+
+
+def split_doc(request):
+    if request.is_ajax():
+        results = {}
+        print request.GET
+        cut = int(request.GET['modal_split_cut'][0])
+        doc = Document.objects.get(pk=int(request.GET['modal_split_doc_id']))
+        doc.name = request.GET['modal_split_name']
+        new_doc = Document(name=request.GET['modal_split_new_name'], owner=request.user,
+                           refer_category=doc.refer_category, complete=True)
+        pages = doc.pages.all()
+        new_doc.save()
+        i = 0
+        for p in pages:
+            if i >= cut:
+                new_doc.pages.add(p)
+                new_doc.size += p.get_size()
+                doc.size -= p.get_size()
+                doc.pages.remove(p)
+            i += 1
+        doc.refer_category.documents.add(new_doc)
+        doc.save()
+        new_doc.save()
         results['valid'] = True
         return HttpResponse(json.dumps(results))

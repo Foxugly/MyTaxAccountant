@@ -12,6 +12,13 @@ from years.models import Year
 import json
 
 
+def favorite_trimester(year):
+    t = year.trimesters.filter(active=True, favorite=True)
+    if not t:
+        t = [year.trimesters.filter(active=True)[0]]
+    return t[0]
+
+
 def year_view(request, year_id):
     return HttpResponse("year_view")
 
@@ -19,5 +26,6 @@ def year_view(request, year_id):
 def list_trimister(request, year_id):
     if request.is_ajax():
         y = Year.objects.get(id=year_id)
-        results = [t.as_json() for t in y.trimesters.filter(active=True)]
+        results = {'list': [t.as_json() for t in y.trimesters.filter(active=True)], 'return': True,
+                   'favorite': favorite_trimester(y).as_json()}
         return HttpResponse(json.dumps(results))

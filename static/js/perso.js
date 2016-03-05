@@ -125,9 +125,33 @@ $(document).ready(function() {
         });
     });
 
+    $('#sel_trimester').change(function() {update_categories();});
+    $('#sel_year').change(function() {update_trimesters();});
+    $('#sel_company').change(function() {update_years();});
+    $('ul.nav-pills li a').click(function() {nav_click($(this));});
+    $('#modal_company').on('change', function () { modal_companies();});
+    $('#modal_year').on('change', function () { modal_years();});
+    $('#modal_trimester').on('change', function () { modal_trimesters();});
+
+    function update_categories(){
+        var url = '/trimester/' + $('#sel_trimester').val() + '/list/';
+        $.ajax({
+            url: url,
+            type: 'GET',
+            traditional: true,
+            dataType: 'json',
+            success: function(result){
+                for (var i = 0; i < result['nav_list'].length; i++) {
+                    $("ul.nav-pills li:eq(" + i + ") a").html(result['nav_list'][i]['name'] + ' <span class="badge">'+ result['nav_list'][i]['n'] +'</span>');
+                    $("ul.nav-pills li:eq(" + i + ") a").attr( "data-id", result['nav_list'][i]['id']);
+                }
+                nav_click($('ul.nav-pills li.active a'));
+            }
+        });
+    }
+
     function update_trimesters(){
-        var y = $('#sel_year').val();
-        var url = '/year/' + y + '/list/';
+        var url = '/year/' + $('#sel_year').val() + '/list/';
         $.ajax({
             url: url,
             type: 'GET',
@@ -135,19 +159,18 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(result){
                 $('#sel_trimester').empty().append('<optgroup label = "Choose a trimester">')
-                for( var i = 0; i < result.length; i++ ) {
-                    $('#sel_trimester').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>')
+                for( var i = 0; i < result['list'].length; i++ ) {
+                    $('#sel_trimester').append('<option value="'+ result['list'][i].id + '">'+ result['list'][i].name +'</option>')
                 }
                 $('#sel_trimester').append('</optgroup>');
-                $('#sel_trimester').val(result[0].id).trigger('change');
+                $('#sel_trimester').val(result['favorite'].id).trigger('change');
                 update_data(true);
             }
         });
     }
 
     function update_years(){
-        var c = $('#sel_company').val();
-        var url = '/company/' + c + '/list/';
+        var url = '/company/' + $('#sel_company').val() + '/list/';
         $.ajax({
             url: url,
             type: 'GET',
@@ -155,26 +178,18 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(result){
                 $('#sel_year').empty().append('<optgroup label = "Choose a tax year">')
-                for( var i = 0, len = result.length; i < len; i++ ) {
-                    $('#sel_year').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>')
+                for( var i = 0, len = result['list'].length; i < len; i++ ) {
+                    $('#sel_year').append('<option value="'+ result['list'][i].id + '">'+ result['list'][i].name +'</option>')
                 }
                 $('#sel_year').append('</optgroup>');
-                $('#sel_year').val(result[0].id).trigger('change');
+                $('#sel_year').val(result['favorite'].id).trigger('change');
                 update_trimesters();
             }
         });
     }
 
-    $('#sel_trimester').change(function() {update_data(true);});
-    $('#sel_year').change(function() {update_trimesters();});
-    $('#sel_company').change(function() {update_years();});
-    $('#modal_company').on('change', function () { modal_companies();});
-    $('#modal_year').on('change', function () { modal_years();});
-    $('#modal_trimester').on('change', function () { modal_trimesters();});
-
     function close_uploadfile(e){
-        var id = e.attr('id');
-        var url = '/upload/remove/' + id + '/';
+        var url = '/upload/remove/' + e.attr('id') + '/';
         $.ajax({
             url: url,
             type: 'GET',
@@ -221,7 +236,7 @@ $(document).ready(function() {
                 $("#move_doc_id").val(result['doc_id']);
                 $("#modal_company").val(result['company'].id).trigger('change');
                 setTimeout(function(){
-                    $("#modal_year").val(result['year'].id).trigger('change');;
+                    $("#modal_year").val(result['year'].id).trigger('change');
                 }, 100);
                 setTimeout(function(){
                     $("#modal_trimester").val(result['trimester'].id).trigger('change');
@@ -235,7 +250,6 @@ $(document).ready(function() {
 
     $('#document_move').click(function document_move(){
         var url = '/document/ajax/move/' + $("#move_doc_id").val() + '/' + $("#modal_category").val() + '/';
-        var btn = $('ul.nav-pills li.active a')[0];
         $.ajax({
             url: url,
             type: 'GET',
@@ -244,18 +258,13 @@ $(document).ready(function() {
             success: function () {
                 update_data(false);
                 $('#modal_move').hide();
-                /*setTimeout(function(){
-                    btn.click();
-                }, 100);*/
             }
         });
     });
 
     function modal_trimesters(){
         /*console.log('modal_trimesters');*/
-        var y = $('#modal_trimester').val();
-        var url = '/trimester/' + y + '/list/0/';
-        /*console.log(url);*/
+        var url = '/trimester/' + $('#modal_trimester').val() + '/list/0/';
         $.ajax({
             url: url,
             type: 'GET',
@@ -273,8 +282,7 @@ $(document).ready(function() {
 
     function modal_years(){
         /*console.log('modal_years');*/
-        var y = $('#modal_year').val();
-        var url = '/year/' + y + '/list/';
+        var url = '/year/' + $('#modal_year').val() + '/list/';
         $.ajax({
             url: url,
             type: 'GET',
@@ -293,8 +301,7 @@ $(document).ready(function() {
 
     function modal_companies(){
         /*console.log('modal_companies');*/
-        var c = $('#modal_company').val();
-        var url = '/company/' + c + '/list/';
+        var url = '/company/' + $('#modal_company').val() + '/list/';
         $.ajax({
             url: url,
             type: 'GET',
@@ -304,10 +311,8 @@ $(document).ready(function() {
                 $('#modal_year').empty();
                 for( var i = 0, len = result.length; i < len; i++ ) {
                     $('#modal_year').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>');
-                    /*$('#modal_year').append('<option value="'+ result[i].id + '">'+ result[i].name +'</option>');*/
                 }
                 $('#modal_year').val(result[0].id).trigger('change');
-                /*modal_years();*/
             }
         });
     }
@@ -321,11 +326,14 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(result){
                 if (result['valid']) {
-                    console.log("helloworld");
                     for( var i = 1; i < result['size']; i++ ) {
-                        console.log(i);
                         $('#modal_split_cut').append('<option value="' + i + '">' + 'Page ' + i + ' and ' + (i+1) + '</option>');
                     }
+                    $('#modal_pagination').bootpag({total: result['size'], page: 1}).on("page", function(event, num){
+                        modal_update_img(result['doc_id'], num);
+                    });
+
+                    $('#modal_view').html(result['img']);
                     $('#modal_split_doc_id').val(result['doc_id']);
                     $('#modal_split_name').val(result['name']);
                     $('#modal_split_new_name').val(result['nname']);
@@ -335,6 +343,19 @@ $(document).ready(function() {
                 else {
                     bootbox.alert("the document cantains only one page");
                 }
+            }
+        });
+    }
+
+    function modal_update_img(doc_id, num){
+        var url = '/document/ajax/img/' + doc_id + '/' + num + '/';
+        $.ajax({
+            url: url,
+            type: 'GET',
+            traditional: true,
+            dataType: 'json',
+            success: function(result){
+               $('#modal_view').html(result['img']);
             }
         });
     }
@@ -432,34 +453,26 @@ $(document).ready(function() {
         }
     }
 
-    function update_data(refresh){
-        var t = $('#sel_trimester').val();
-        var cat_id = $('ul.nav-pills li.active a').attr("data-id");
-        var url = '/trimester/' + t + '/list/'+ cat_id + '/';
-        /*console.log(url);*/
+    function update_data(){
+        var url = '/category/'+ $('ul.nav-pills li.active a').attr("data-id") + '/list/';
         $.ajax({
             url: url,
             type: 'GET',
             traditional: true,
             dataType: 'json',
             success: function(result){
-                for (var i = 0; i < result['nav_list'].length; i++) {
-                    $("ul.nav-pills li:eq(" + i + ") a").html(result['nav_list'][i]['name'] + ' <span class="badge">'+ result['nav_list'][i]['n'] +'</span>');
-                    $("ul.nav-pills li:eq(" + i + ") a").attr( "data-id", result['nav_list'][i]['id']);
-                    if (refresh == true) {
-                        $("ul.nav.nav-pills li:eq(" + i + ")").removeClass("active");
-                    }
-                }
-                if (refresh == true) {
-                    $("ul.nav.nav-pills li:eq(0)").addClass("active");
-                }
                 $('#datatable').dataTable().fnClearTable();
                 for (var i = 0; i < result['doc_list'].length; i++) {
                     update_datatable(result['doc_list'][i]);
                 }
-                $('#pagination').bootpag({total: result['nav_list'][0]['n'], page: 1});
-                $('#title_trimester').html(result['title_trimester']);
-                view_form(result['valid'], result['img'],result['form'], result['doc_id']);
+                $('#pagination').bootpag({total: result['n'], page: 1});
+                if (result['doc'] == null){
+                    view_form(result['valid'], null, null, 0);
+                }
+                else{
+                    view_form(result['valid'], result['doc']['img'],result['form'], result['doc']['id']);
+                }
+                $('ul.nav-pills li.active a').click();
             }
         });
     }
@@ -509,9 +522,9 @@ $(document).ready(function() {
         });
     });
 
-    $('ul.nav-pills li a').click(function () {
+    function nav_click(e){
         $('ul.nav-pills li.active').removeClass('active');
-        $(this).parent('li').addClass('active');
+        e.parent('li').addClass('active');
         var cat_id = $('ul.nav-pills li.active a').attr("data-id");
         var url = '/category/' + cat_id + '/list/';
         $.ajax({
@@ -531,7 +544,7 @@ $(document).ready(function() {
                 get_form_data(1);
             }
         });
-    });
+    }
 
     $("#view_group :input:radio").change(function() {
         var view = this.value;
@@ -567,4 +580,18 @@ $(document).ready(function() {
             get_form_data(num);
     });
 
+    $('#document_split').click(function() {
+        var form = $('#form_split');
+        var url = '/document/split/';
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: form.serialize(),
+            traditional: true,
+            dataType: 'json',
+            success: function(){
+                update_data();
+            }
+        });
+    });
 });

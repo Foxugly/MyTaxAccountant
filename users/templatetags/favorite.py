@@ -20,61 +20,46 @@ def companies(user):
 
 @register.filter()
 def favorite_company(user):
-    out = None
-    first = True
-    for c in user.userprofile.companies.filter(active=True):
-        if first:
-            out = c
-            first = False
-        if c.favorite:
-            out = c
-    return out
+    c = user.userprofile.companies.filter(active=True, favorite=True)
+    if not c:
+        c = [user.userprofile.companies.filter(active=True)[0]]
+    return c[0]
 
 
 @register.filter()
 def years(company):
-    return company[0].years.filter(active=True)
+    return company.years.filter(active=True)
 
 
 @register.filter()
 def favorite_year(company):
-    out = None
-    first = True
-    for c in company[0].years.filter(active=True):
-        if first:
-            out = c
-            first = False
-        if c.favorite:
-            out = c
-    return out
+    y = company.years.filter(active=True, favorite=True)
+    if not y:
+        y = [company.years.filter(active=True)[0]]
+    return y[0]
 
 
 @register.filter()
 def trimesters(year):
-    return year[0].trimesters.filter(active=True)
+    return year.trimesters.filter(active=True)
 
 
 @register.filter()
 def favorite_trimester(year):
-    out = None
-    first = True
-    for y in year[0].trimesters.filter(active=True):
-        if first:
-            out = y
-            first = False
-        if y.favorite:
-            out = y
-    return out
+    t = year.trimesters.filter(active=True, favorite=True)
+    if not t:
+        t = [year.trimesters.filter(active=True)[0]]
+    return t[0]
 
 
 @register.filter()
 def categories(trimester):
-    return trimester[0].categories.filter(active=True)
+    return trimester.categories.filter(active=True)
 
 
 @register.filter()
 def documents(category):
-    return category[0].documents.all()
+    return category.documents.all()
 
 
 @register.filter()

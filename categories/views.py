@@ -83,43 +83,44 @@ def add_documents(request, category_id):
                 thread.start()
             else:
                 print 'ERREUR FORMAT FICHIER'
-        results = {}
-        data = []
-        for d in cat.get_docs():
-            data.append(d.as_json())
-        results['doc_list'] = data
-        results['n'] = cat.count_docs()
+        results = {'doc_list': [d.as_json() for d in cat.get_docs()], 'n': cat.count_docs()}
         return HttpResponse(json.dumps(results))
 
 
 def list_documents(request, category_id):
     if request.is_ajax():
-        results = {}
-        data = []
-        c = Category.objects.get(id=category_id)
-        for d in c.get_docs():
-            data.append(d.as_json())
-        results['doc_list'] = data
-        results['n'] = c.count_docs()
+        cat = Category.objects.get(id=category_id)
+        if cat.count_docs() == 0:
+            docjson = None
+            form = None
+        else:
+            doc = cat.get_docs()[0]
+            docjson = doc.as_json()
+            if request.user.is_superuser:
+                form = DocumentAdminForm(instance=doc).as_div()
+            else:
+                if doc.lock:
+                    form = DocumentReadOnlyForm(instance=doc).as_div()
+                else:
+                    form = DocumentForm(instance=doc).as_div()
+        results = {'doc_list': [d.as_json() for d in cat.get_docs()], 'n': cat.count_docs(), 'form': form,
+                   'doc': docjson, 'valid': True}
         return HttpResponse(json.dumps(results))
 
 
 def form_document(request, category_id, n):
     if request.is_ajax():
-        results = {}
         cat = Category.objects.get(pk=category_id)
         if cat.count_docs() > 0:
             doc = cat.get_docs()[int(n)-1]
             if request.user.is_superuser:
-                results['form'] = DocumentAdminForm(instance=doc).as_div()
+                form = DocumentAdminForm(instance=doc).as_div()
             else:
                 if doc.lock:
-                    results['form'] = DocumentReadOnlyForm(instance=doc).as_div()
+                    form = DocumentReadOnlyForm(instance=doc).as_div()
                 else:
-                    results['form'] = DocumentForm(instance=doc).as_div()
-            results['img'] = doc.as_img()
-            results['doc_id'] = doc.id
-            results['valid'] = True
+                    form = DocumentForm(instance=doc).as_div()
+            results = {'form': form, 'img': doc.as_img(), 'doc_id': doc.id, 'valid': True}
         else:
-            results['valid'] = False
+            results = {'valid': False}
         return HttpResponse(json.dumps(results))

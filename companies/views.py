@@ -14,12 +14,23 @@ import json
 from users.models import UserProfile
 from companies.models import Company
 
+
+def favorite_year(company):
+    y = company.years.filter(active=True, favorite=True)
+    if not y:
+        return company.years.filter(active=True)[0]
+    else:
+        return y[0]
+
+
 def company_view(request, company_id):
     userprofile = UserProfile.objects.get(user=request.user)
-    return render_to_response('folder.tpl', {'userprofile' : userprofile})
+    return render_to_response('folder.tpl', {'userprofile': userprofile})
+
 
 def list_year(request, company_id):
-	if request.is_ajax():
-		c = Company.objects.get(id=company_id)
-		results = [y.as_json() for y in c.years.filter(active=True)]
-		return HttpResponse(json.dumps(results))
+    if request.is_ajax():
+        c = Company.objects.get(id=company_id)
+        results = {'list': [y.as_json() for y in c.years.filter(active=True)], 'return': True,
+                   'favorite': favorite_year(c).as_json()}
+        return HttpResponse(json.dumps(results))

@@ -11,6 +11,7 @@ from django import template
 
 register = template.Library()
 
+
 @register.filter()
 def id(inst):
     return inst[0].id

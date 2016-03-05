@@ -72,65 +72,23 @@
           <form class="navbar-form navbar-left" role="search">
             <div class='form-group'>
               <select id="sel_company" class="form-control  select2-nosearch" >
-                  <optgroup label = "Choose a compagny">
-                    {% for c in user|companies %}
-                      {% if company %}
-                        {% if  c == company %}
-                          <option value='{{c.id}}' selected>{{ c|name }}</option>
-                        {% else %}
-                          <option value='{{c.id}}'>{{ c|name }}</option>
-                        {% endif %}
-                      {% else %}
-                        {% if  c == user|favorite_company %}
-                          <option value='{{c.id}}' selected>{{ c|name }}</option>
-                        {% else %}
-                          <option value='{{c.id}}'>{{ c|name }}</option>
-                        {% endif %}
-                      {% endif %}
-                    {% endfor %}
-                  </optgroup>
+                <optgroup label = "Choose a compagny">
+                  {% for c in user|companies %}
+                    {% if  c == user|favorite_company %}
+                      <option value='{{c.id}}' selected>{{ c|name }}</option>
+                    {% else %}
+                      <option value='{{c.id}}'>{{ c|name }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </optgroup>
+              </select>
+            </div>
+              <div class='form-group'>
+                <select id="sel_year" class="form-control  select2-nosearch" style="width:200px;">
                 </select>
               </div>
               <div class='form-group'>
-                <select id="sel_year" class="form-control  select2-nosearch" >
-                 <optgroup label = "Choose a tax year">
-                    {% for y in user|companies|years %}
-                      {% if year %}
-                        {% if y == trimester %}
-                          <option value='{{y.id}}' selected>{{ y|name  }}</option>
-                        {% else %}
-                          <option value='{{y.id}}'>{{ y|name  }}</option>
-                        {% endif %}
-                      {% else %}
-                        {% if y == user|companies|favorite_year %}
-                          <option  value='{{y.id}}' selected>{{ y|name  }}</option>
-                        {% else %}
-                          <option value='{{y.id}}'>{{ y|name  }}</option>
-                        {% endif %}
-                      {% endif %}
-                    {% endfor %}
-                  </optgroup>
-                </select>
-              </div>
-              <div class='form-group'>
-                <select id="sel_trimester" class="form-control  select2-nosearch" >
-                  <optgroup label = "Choose a trimester">         
-                    {% for t in user|companies|years|trimesters %}
-                      {% if trimister %}
-                        {% if t == trimester %}
-                          <option value='{{t.id}}' selected>{{ t|name }}</option>
-                        {% else %}
-                          <option value='{{t.id}}'>{{ t|name }}</option>
-                        {% endif %}
-                      {% else %}
-                        {% if t == user|companies|years|favorite_trimester %}
-                          <option value='{{t.id}}' selected>{{ t|name  }}</option>
-                        {% else %}
-                          <option value='{{t.id}}'>{{ t|name  }}</option>
-                        {% endif %}
-                      {% endif %}
-                    {% endfor %}
-                  </optgroup>
+                <select id="sel_trimester" class="form-control  select2-nosearch" style="width:200px;">
                 </select>
               </div>
           </form>

@@ -9,25 +9,17 @@
 {% if user.is_authenticated %}
 <div class="row">
     <div class="col-md-12">
-        <h1 class="text-center" id="title_trimester">{{ user|companies|years|favorite_trimester }}</h1>
+        <h1 class="text-center" id="title_trimester"><!-- user|favorite_company|favorite_year|favorite_trimester --></h1>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
         <ul class="nav nav-tabs nav-pills" role="tablist">
-            {% for c in user|companies|years|trimesters|categories %}
-                {% if category %}
-                    {%if c == category %}
-                        <li role="presentation" class="active"><a data-target="#" data-toggle="pill" data-id="{{c.id}}" id="nav_{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
-                    {% else %}
-                        <li role="presentation"><a data-target="#" data-toggle="pill" data-id="{{c.id}}" id="nav_{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
-                    {% endif %}
+            {% for c in user|favorite_company|favorite_year|favorite_trimester|categories %}
+                {%if forloop.first %}
+                    <li role="presentation" class="active"><a data-target="#" data-id="{{c.id}}" data-toggle="pill" id="nav_{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
                 {% else %}
-                    {%if forloop.first %}
-                        <li role="presentation" class="active"><a data-target="#" data-id="{{c.id}}" data-toggle="pill" id="nav_{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
-                    {% else %}
-                        <li role="presentation"><a data-target="#" data-toggle="pill" data-id="{{c.id}}" id="nav_{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
-                    {% endif %}
+                    <li role="presentation"><a data-target="#" data-toggle="pill" data-id="{{c.id}}" id="nav_{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
                 {% endif %}
             {% endfor %}
         </ul>
@@ -186,8 +178,13 @@
                 <h4 id='modal_split_title' class="modal-title"></h4>
             </div>
             <div id='modal-body' class="modal-body" style="text-align:center;">
-                <form class="form-horizontal">
-                    <input type="hidden" id="modal_split_doc_id" value="">
+                <div id="modal_view"></div>
+                <div id="modal_pager" width="100%" style="text-align:center;">
+                    <p id="modal_pagination"></p>
+                </div>
+
+                <form id='form_split' class="form-horizontal">
+                    <input id="modal_split_doc_id" name="modal_split_doc_id">
 
                     <div class="form-group">
                         <label class="col-md-4 col-sm-4 control-label" for="modal_split_name">{% trans "Current name" %}</label>
@@ -233,8 +230,8 @@ $(document).ready(function() {
     $("#div_img_form").hide();
     $('#input_view_list').click();
     $('#sel_company').change();
-    $("ul.nav.nav-pills li:eq(0)").addClass("active");
-    $('#pagination').bootpag({total: {{ user|companies|years|trimesters|categories|first|len_docs }}, page: 1});
+    $('#pagination').bootpag({total: {{ user|favorite_company|favorite_year|favorite_trimester|categories|first|len_docs }}, page: 1});
+
 });
 </script>
 {% endblock %}

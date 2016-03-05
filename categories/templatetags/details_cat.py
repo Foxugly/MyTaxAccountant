@@ -11,6 +11,7 @@ from categories.models import Category
 
 register = template.Library()
 
+
 @register.filter()
 def len_docs(category):
     return len(category.documents.all())
