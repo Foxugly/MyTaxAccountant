@@ -216,6 +216,32 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="modal_merge">
+    <div class="modal-dialog  modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 id='modal_split_title' class="modal-title"></h4>
+            </div>
+            <div id='modal-body' class="modal-body" style="text-align:center;">
+                <form id='form_merge' class="form-horizontal">
+                    <input type="hidden" id="modal_merge_doc_id" name="modal_merge_doc_id">
+                    <div class="row">
+                        <div id="dlb_merge" class="col-md-12 col-sm-12 text-center">
+                        <select id="dlb_documents" name="dlb_documents" multiple="multiple" data-title="documents" data-source="static/data.json"  data-value="index" data-text="name"></select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
+                <button id="document_merge" type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Merge" %}</button>
+            </div>
+        </div>
+    </div>
+</div>
 {%  endif %}
 {% endblock %}
 

@@ -49,6 +49,7 @@
         <script type="text/javascript" src='{% static select2_lang %}'></script>
         {% endwith %}
     {%  endif %}
+    <script src='{% static "duallistbox/dual-list-box.min.js" %}'></script>
     <script src='{% static "js/perso.js" %}'></script>
     {% block js %}
     {% endblock %}

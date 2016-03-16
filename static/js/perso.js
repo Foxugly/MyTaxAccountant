@@ -87,6 +87,8 @@ $(document).ready(function() {
 
     $('.select2-nosearch').select2({ width: 'resolve', minimumResultsForSearch: -1});
 
+    $("#dlb_documents").DualListBox();
+
     $('#confirm_yes_close').click(function(){
         $('#confirm_yes').hide();
     });
@@ -366,15 +368,22 @@ $(document).ready(function() {
     }
 
     function merge_modal(e){
+        console.log("merge_modal");
         var url = '/document/ajax/merge/' + e[0]['dataset'].id + '/';
+        $('#modal_merge_doc_id').val(e[0]['dataset'].id);
         $.ajax({
             url: url,
-            type: 'GET',
-            traditional: true,
-            dataType: 'json',
-            success: function(){
-                //$("#modal-title").text(result['name']);
-                //$("#modal-body").html(result['img']);
+            dataType: "text",
+            success: function(data) {
+                var ss = $('#dual-list-box-documents').find('select');
+                $('option', ss[0]).remove();
+                $('option', ss[1]).remove();
+                var json = $.parseJSON(data);
+                for (var i=0;i<json.length;++i) {
+                    $(ss[0]).append($('<option>', {value:json[i].id, text:json[i].name}));
+                }
+                $("#modal_merge").show();
+                $('#dual-list-box-documents').find('div')[1].children[3].click();
             }
         });
     }
@@ -399,7 +408,7 @@ $(document).ready(function() {
         lock += '</td>';
         if (data['complete']){
             out += '<a id="btn_sp_'+ data['id']+'" class="btn btn-xs btn-default split_modal" data-id="'+ data['id'] +'" title="Split" data-toggle="modal" data-target="#modal_split"><span class="glyphicon glyphicon-resize-full"></span></a>';
-            out += '<a id="btn_me_'+ data['id']+'" class="btn btn-xs btn-default merge_modal" data-id="'+ data['id'] +'" title="Merge" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-resize-small"></span></a>';
+            out += '<a id="btn_me_'+ data['id']+'" class="btn btn-xs btn-default merge_modal" data-id="'+ data['id'] +'" title="Merge" data-toggle="modal" data-target="#modal_merge"><span class="glyphicon glyphicon-resize-small"></span></a>';
             out += '<a id="btn_mv_'+ data['id']+'" class="btn btn-xs btn-default move_modal" data-id="'+ data['id'] +'" title="Move" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer"></span></a>';
             out += '<a id="btn_de_'+ data['id']+'" class="btn btn-xs btn-default del_modal" data-id="'+ data['id'] +'" title="Delete"><span class="glyphicon glyphicon-remove"></span></a>';
         }
@@ -591,6 +600,27 @@ $(document).ready(function() {
             url: url,
             type: 'GET',
             data: form.serialize(),
+            traditional: true,
+            dataType: 'json',
+            success: function(){
+                update_categories();
+            }
+        });
+    });
+
+    $('#document_merge').click(function() {
+        var data = $('#form_merge').serializeArray();
+        var l = [];
+        var select = $('#dual-list-box-documents').find('select')[1];
+        for (var i = 0 ; i < select.length ; i++){
+            l.push(select[i].value);
+        }
+        data.push({name: 'doc_ids', value: l});
+        var url = '/document/merge/';
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: data,
             traditional: true,
             dataType: 'json',
             success: function(){

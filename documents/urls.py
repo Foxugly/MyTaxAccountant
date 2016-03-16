@@ -10,7 +10,7 @@
 from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import login_required
 from documents.views import document_view, update_ajax, ajax_move, ajax_merge, ajax_split, ajax_move_doc, ajax_delete, \
-    ajax_img, split_doc
+    ajax_img, split_doc, merge_doc
 
 urlpatterns = patterns('documents.views',
                        # url(r'^update/$', login_required(update_ajax), name='document_update_ajax'),
@@ -26,4 +26,5 @@ urlpatterns = patterns('documents.views',
                            name='ajax_img'),
                        url(r'^ajax/delete/(?P<doc_id>[0-9]+)/$', login_required(ajax_delete), name='ajax_delete'),
                        url(r'^split/$', login_required(split_doc), name='doc_split'),
+                       url(r'^merge/$', login_required(merge_doc), name='doc_merge'),
                        )

@@ -64,15 +64,11 @@ def ajax_move(request, n):
 
 def ajax_merge(request, n):
     if request.is_ajax():
-        results = {}
         doc = Document.objects.get(pk=int(n))
-        cat = doc.refer_category
-        if cat.count_docs() > 0:
-            # TODO AJOUTER
-            results['valid'] = True
+        if doc.refer_category.count_docs() > 1:
+            return HttpResponse(json.dumps([d.as_json() for d in doc.refer_category.documents.exclude(id=doc.id)]))
         else:
-            results['valid'] = False
-        return HttpResponse(json.dumps(results))
+            return HttpResponse(json.dumps([]))
 
 
 def ajax_split(request, n):
@@ -131,7 +127,6 @@ def ajax_img(request, doc_id, num):
 def split_doc(request):
     if request.is_ajax():
         results = {}
-        print request.GET
         cut = int(request.GET['modal_split_cut'][0])
         doc = Document.objects.get(pk=int(request.GET['modal_split_doc_id']))
         doc.name = request.GET['modal_split_name']
@@ -150,5 +145,22 @@ def split_doc(request):
         doc.refer_category.documents.add(new_doc)
         doc.save()
         new_doc.save()
+        results['valid'] = True
+        return HttpResponse(json.dumps(results))
+
+
+def merge_doc(request):
+    if request.is_ajax():
+        results = {}
+        doc = Document.objects.get(pk=int(request.GET['modal_merge_doc_id']))
+        l = request.GET['doc_ids'].split(',')
+        for add_doc in l:
+            old_doc = Document.objects.get(pk=int(add_doc))
+            for p in old_doc.all_pages():
+                doc.pages.add(p)
+                old_doc.pages.remove(p)
+                doc.size += p.get_size()
+            old_doc.delete()
+        doc.save()
         results['valid'] = True
         return HttpResponse(json.dumps(results))
