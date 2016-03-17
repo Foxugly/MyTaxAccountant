@@ -11,6 +11,7 @@ from django.http import HttpResponse
 from documents.models import Document, DocumentAdminForm, DocumentForm
 from categories.models import Category
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 import json
 import os
 
@@ -162,5 +163,27 @@ def merge_doc(request):
                 doc.size += p.get_size()
             old_doc.delete()
         doc.save()
+        results['valid'] = True
+        return HttpResponse(json.dumps(results))
+
+
+def ajax_download(request, n):
+    print "download"
+    if request.is_ajax():
+        results = {}
+        doc = Document.objects.get(pk=int(n))
+        name = doc.name.replace(' ', '_')
+        if ".pdf" != doc.name[-4:]:
+            name += ".pdf"
+        output_abs = settings.MEDIA_ROOT + '/tmp/' + name
+        output_rel = settings.MEDIA_URL + 'tmp/' + name
+        cmd = "convert "
+        for p in doc.all_pages():
+            cmd += p.get_absolute_path() + " "
+        cmd += output_abs
+        if os.path.exists(output_abs):
+            os.system("rm " + output_abs)
+        os.system(cmd)
+        results['url'] = output_rel
         results['valid'] = True
         return HttpResponse(json.dumps(results))

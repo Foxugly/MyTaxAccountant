@@ -10,7 +10,7 @@
 from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import login_required
 from documents.views import document_view, update_ajax, ajax_move, ajax_merge, ajax_split, ajax_move_doc, ajax_delete, \
-    ajax_img, split_doc, merge_doc
+    ajax_img, split_doc, merge_doc, ajax_download
 
 urlpatterns = patterns('documents.views',
                        # url(r'^update/$', login_required(update_ajax), name='document_update_ajax'),
@@ -21,6 +21,7 @@ urlpatterns = patterns('documents.views',
                        url(r'^ajax/move/(?P<doc_id>[0-9]+)/(?P<cat_id>[0-9]+)/$', login_required(ajax_move_doc),
                            name='ajax_move'),
                        url(r'^ajax/merge/(?P<n>[0-9]+)/$', login_required(ajax_merge), name='ajax_merge_modal'),
+                       url(r'^ajax/download/(?P<n>[0-9]+)/$', login_required(ajax_download), name='ajax_download'),
                        url(r'^ajax/split/(?P<n>[0-9]+)/$', login_required(ajax_split), name='ajax_split_modal'),
                        url(r'^ajax/img/(?P<doc_id>[0-9]+)/(?P<num>[0-9]+)/$', login_required(ajax_img),
                            name='ajax_img'),

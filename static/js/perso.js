@@ -388,6 +388,20 @@ $(document).ready(function() {
         });
     }
 
+    function download(e){
+        var url = '/document/ajax/download/' + e[0]['dataset'].id + '/';
+        $.ajax({
+            url: url,
+            dataType: "json",
+             success: function(result){
+                 if (result["valid"]) {
+                     window.open(result['url'], '_blank');
+                 }
+            }
+        });
+    }
+
+
     function del_modal(e){
         var url = '/document/ajax/delete/' +e.currentTarget['dataset'].id + '/';
         $.ajax({
@@ -410,6 +424,7 @@ $(document).ready(function() {
             out += '<a id="btn_sp_'+ data['id']+'" class="btn btn-xs btn-default split_modal" data-id="'+ data['id'] +'" title="Split" data-toggle="modal" data-target="#modal_split"><span class="glyphicon glyphicon-resize-full"></span></a>';
             out += '<a id="btn_me_'+ data['id']+'" class="btn btn-xs btn-default merge_modal" data-id="'+ data['id'] +'" title="Merge" data-toggle="modal" data-target="#modal_merge"><span class="glyphicon glyphicon-resize-small"></span></a>';
             out += '<a id="btn_mv_'+ data['id']+'" class="btn btn-xs btn-default move_modal" data-id="'+ data['id'] +'" title="Move" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer"></span></a>';
+            out += '<a id="btn_dl_'+ data['id']+'" class="btn btn-xs btn-default" data-id="'+ data['id'] +'" title="Download"><span class="glyphicon glyphicon-download-alt"></span></a>';
             out += '<a id="btn_de_'+ data['id']+'" class="btn btn-xs btn-default del_modal" data-id="'+ data['id'] +'" title="Delete"><span class="glyphicon glyphicon-remove"></span></a>';
         }
         else{
@@ -421,6 +436,7 @@ $(document).ready(function() {
         $("#btn_mv_"+data['id']).click(function(){move_modal($(this));});
         $("#btn_me_"+data['id']).click(function(){merge_modal($(this));});
         $("#btn_sp_"+data['id']).click(function(){split_modal($(this));});
+        $("#btn_dl_"+data['id']).click(function(){download($(this));});
         $("#btn_de_"+data['id']).click(function(e){
             var btn = $('ul.nav-pills li.active a')[0];
             bootbox.confirm("Are you sure?", function(result) {
