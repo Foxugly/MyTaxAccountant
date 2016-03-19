@@ -21,6 +21,7 @@ class Year(models.Model):
     refer_company = models.ForeignKey('companies.Company', verbose_name=_('company'), related_name="back_company",
                                       blank=True, null=True)
     favorite = models.BooleanField(_('favorite'), default=False)
+    admin = models.BooleanField(_('admin'), default=False)
 
     def get_company(self):
         return self.refer_company

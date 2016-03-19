@@ -148,6 +148,17 @@ $(document).ready(function() {
                     $("ul.nav-pills li:eq(" + i + ") a").html(result['nav_list'][i]['name'] + ' <span class="badge">'+ result['nav_list'][i]['n'] +'</span>');
                     $("ul.nav-pills li:eq(" + i + ") a").attr( "data-id", result['nav_list'][i]['id']);
                 }
+                var size = $("ul.nav-pills")[0].childElementCount;
+                if (result['nav_list'].length == 1){
+                    for (var i = 1 ; i < size; i++){
+                        $("ul.nav-pills li:eq(" + i + ")").hide();
+                    }
+                }
+                else{
+                    for (var i = 1 ; i < size; i++){
+                        $("ul.nav-pills li:eq(" + i + ")").show();
+                    }
+                }
                 nav_click($('ul.nav-pills li.active a'));
             }
         });
@@ -224,6 +235,7 @@ $(document).ready(function() {
     function move_modal(e){
         /*console.log('move_modal');*/
         var url = '/document/ajax/move/' + e[0]['dataset'].id + '/';
+        /*console.log(url);*/
         $.ajax({
             url: url,
             type: 'GET',
@@ -268,18 +280,20 @@ $(document).ready(function() {
     function modal_trimesters(){
         /*console.log('modal_trimesters');*/
         var url = '/trimester/' + $('#modal_trimester').val() + '/list/';
+        /*console.log(url);*/
         $.ajax({
             url: url,
             type: 'GET',
             traditional: true,
             dataType: 'json',
             success: function(result){
-                /*console.log(result);*/
+                console.log(result);
                 $('#modal_category').empty();
                 for( var i = 0; i < result['nav_list'].length; i++ ) {
                     $('#modal_category').append('<option value="'+ result['nav_list'][i].id + '">'+ result['nav_list'][i].name +'</option>');
                 }
-                $('#modal_category').val(result['nav_list'][0].id); /*.trigger('change');*/
+                $('#modal_category').select2({ width: 'resolve', minimumResultsForSearch: -1});
+                $('#modal_category').val(result['nav_list'][0].id).trigger('change');
             }
         });
     }
@@ -287,26 +301,25 @@ $(document).ready(function() {
     function modal_years(){
         /*console.log('modal_years');*/
         var url = '/year/' + $('#modal_year').val() + '/list/';
+        /*console.log(url);*/
         $.ajax({
             url: url,
             type: 'GET',
             traditional: true,
             dataType: 'json',
             success: function(result){
-                /*console.log(result);*/
                 $('#modal_trimester').empty();
                 for( var i = 0; i < result['list'].length; i++ ) {
-                    $('#modal_trimester').append('<option value="'+ result['list'][i].id + '">'+ result['list'][i].name +'</option>');
+                    $('#modal_trimester').append('<option value="' + result['list'][i].id + '">' + result['list'][i].name + '</option>');
                 }
-                /*$('#modal_trimester').val(result['favorite'].id).trigger('change');*/
-                $('#modal_trimester').val(result['favorite'].id);
-                /*modal_trimesters();*/
+                $('#modal_trimester').select2({ width: 'resolve', minimumResultsForSearch: -1});
+                $('#modal_trimester').val(result['favorite'].id).trigger('change');
             }
         });
     }
 
     function modal_companies(){
-        /*console.log('modal_companies');*/
+        console.log('modal_companies');
         var url = '/company/' + $('#modal_company').val() + '/list/';
         $.ajax({
             url: url,
@@ -314,11 +327,12 @@ $(document).ready(function() {
             traditional: true,
             dataType: 'json',
             success: function(result){
-                /*console.log(result);*/
+                console.log(result);
                 $('#modal_year').empty();
                 for( var i = 0, len = result['list'].length; i < len; i++ ) {
                     $('#modal_year').append('<option value="'+ result['list'][i].id + '">'+ result['list'][i].name +'</option>');
                 }
+                $('#modal_year').select2({ width: 'resolve', minimumResultsForSearch: -1});
                 $('#modal_year').val(result['favorite'].id).trigger('change');
             }
         });

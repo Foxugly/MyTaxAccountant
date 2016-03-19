@@ -20,7 +20,7 @@ import os
 class Company(models.Model):
     name = models.TextField(_("Name of the company"))
     slug = models.SlugField(unique=True)
-    description = models.TextField(_("Description of the company"), null=True)
+    description = models.TextField(_("Description of the company"), blank=True, null=True)
     vat_number = models.CharField(_("TVA number"), unique=True, max_length=10, null=True)
     address_1 = models.CharField(_("address"), max_length=128, blank=True, null=True)
     address_2 = models.CharField(_("address cont'd"), max_length=128, blank=True, null=True)

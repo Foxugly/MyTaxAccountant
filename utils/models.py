@@ -27,7 +27,7 @@ class CountryForm(ModelForm):
 
 
 class FiscalYear(models.Model):
-    name = models.TextField(_("Fiscal year"), max_length=6)
+    name = models.TextField(_("Fiscal year"), max_length=20)
 
     def __str__(self):
         return self.name
