@@ -168,7 +168,6 @@ def merge_doc(request):
 
 
 def ajax_download(request, n):
-    print "download"
     if request.is_ajax():
         results = {}
         doc = Document.objects.get(pk=int(n))
