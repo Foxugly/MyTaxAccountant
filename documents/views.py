@@ -165,6 +165,7 @@ def merge_doc(request):
                 print doc.pages.all()
                 doc.pages.add(p)
                 print doc.pages.all()
+                doc.pages.save()
                 print old_doc.pages.all()
                 old_doc.pages.remove(p)
                 print old_doc.pages.all()
