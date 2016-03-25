@@ -155,11 +155,18 @@ def merge_doc(request):
         results = {}
         doc = Document.objects.get(pk=int(request.GET['modal_merge_doc_id']))
         l = request.GET['doc_ids'].split(',')
+        print l
         for add_doc in l:
+            print old_doc
             old_doc = Document.objects.get(pk=int(add_doc))
             for p in old_doc.all_pages():
+                print p
+                print doc.pages.all()
                 doc.pages.add(p)
+                print doc.pages.all()
+                print old_doc.pages.all()
                 old_doc.pages.remove(p)
+                print old_doc.pages.all()
                 doc.size += p.get_size()
             old_doc.delete()
         doc.save()

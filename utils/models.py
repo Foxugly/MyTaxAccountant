@@ -32,6 +32,9 @@ class FiscalYear(models.Model):
     def __str__(self):
         return self.name
 
+    def get_name(self):
+        return self.name.replace(' ', '_')
+
 
 class FiscalYearForm(ModelForm):
     class Meta:

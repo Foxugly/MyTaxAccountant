@@ -45,10 +45,10 @@ class Year(models.Model):
         return dict(id=self.id, name=self.get_name())
 
     def get_relative_path(self):
-        return os.path.join(self.refer_company.get_relative_path(), self.fiscal_year.name)
+        return os.path.join(self.refer_company.get_relative_path(), self.fiscal_year.get_name())
 
     def get_absolute_path(self):
-        return os.path.join(self.refer_company.get_absolute_path(), self.fiscal_year.name)
+        return os.path.join(self.refer_company.get_absolute_path(), self.fiscal_year.get_name())
 
     def save(self, *args, **kwargs):
         super(Year, self).save(*args, **kwargs)
