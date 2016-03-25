@@ -140,6 +140,8 @@ def split_doc(request):
             if i >= cut:
                 new_doc.pages.add(p)
                 new_doc.size += p.get_size()
+                p.refer_document = new_doc
+                p.save()
                 doc.size -= p.get_size()
                 doc.pages.remove(p)
             i += 1
