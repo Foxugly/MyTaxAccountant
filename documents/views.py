@@ -169,6 +169,7 @@ def merge_doc(request):
                 print old_doc.pages.all()
                 old_doc.pages.remove(p)
                 print old_doc.pages.all()
+                old_doc.pages.save()
                 doc.size += p.get_size()
             old_doc.delete()
         doc.save()
