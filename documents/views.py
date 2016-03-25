@@ -157,8 +157,9 @@ def merge_doc(request):
         l = request.GET['doc_ids'].split(',')
         print l
         for add_doc in l:
-            print old_doc
+            print add_doc
             old_doc = Document.objects.get(pk=int(add_doc))
+            print old_doc
             for p in old_doc.all_pages():
                 print p
                 print doc.pages.all()
