@@ -170,7 +170,7 @@ def merge_doc(request):
                 print old_doc.pages.all()
                 old_doc.save()
                 doc.size += p.get_size()
-            old_doc.delete()
+            # old_doc.delete()
         doc.save()
         results['valid'] = True
         return HttpResponse(json.dumps(results))
