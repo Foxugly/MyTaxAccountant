@@ -153,6 +153,7 @@ $(document).ready(function() {
                     for (var i = 1 ; i < size; i++){
                         $("ul.nav-pills li:eq(" + i + ")").hide();
                     }
+                    $("ul.nav-pills")[0].click();
                 }
                 else{
                     for (var i = 1 ; i < size; i++){
