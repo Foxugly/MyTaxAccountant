@@ -143,8 +143,11 @@
           	  <div class="col-md-6 col-md-offset-3" style="margin-top:20px"><p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://www.lieutenantguillaume.com/static/img/partner-of-success-stories.png"/></p></div>
               <div class="col-md-6 col-md-offset-3" style="margin-top:20px">
                 {% blocktrans %}
-                <p>Lieutenant Guillaume proposes you the opportunity of uploading your invoices, tax documents, bank documents and other. This plateform guarantees the backup of your documents and simplifies the transfert of your document to Lieutenant Guillaume.</p>
-                {% endblocktrans %}   
+                <p>Nous avons développé un service cloud pour faire bénéficier nos clients d'un espace de stockage gratuit et centralisé.</p>
+<p>Cet espace d’archivage est entièrement protégé et accessible 24h/24, 7j/7.</p>
+<p>Au même moment, ce canal de communication entre votre exploitation et notre cabinet nous permet de faciliter la synchronisation de vos données.</p>
+<p>En effet, dès que vos documents professionnels ont été numérisés et téléchargés par vos soins sur notre bureau virtuel, nous les traitons et vous soumettons un reporting mensuel.</p>
+                {% endblocktrans %}
           	  </div>
               <div class="col-md-4 col-md-offset-4" style="margin-top:20px">
                 <a href="{%  url 'login' %}" class="btn btn-success btn-lg btn-block">{% blocktrans %}Connexion{% endblocktrans %} </a>
