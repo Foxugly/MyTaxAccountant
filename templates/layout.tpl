@@ -93,7 +93,20 @@
                 </select>
               </div>
           </form>
+              {% if user.is_superuser %}
+              <ul class="nav navbar-nav navbar-left">
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></a>
+                  <ul class="dropdown-menu" style='background:black;color:white;'>
+                    <li><a href="{%  url 'years' %}">{% blocktrans %} years{% endblocktrans %}</a></li>
+                    <li><a href="{%  url 'trimesters' %}">{% blocktrans %} trimesters{% endblocktrans %} </a></li>
+                    <li><a href="{%  url 'companies' %}">{% blocktrans %} companies{% endblocktrans %} </a></li>
+                  </ul>
+                </li>
+              </ul>
+                  {% endif %}
           {% endif %}
+
           <ul class="nav navbar-nav navbar-right">
             <li>
                 <div class='navbar-form form-group'>

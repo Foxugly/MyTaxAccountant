@@ -15,4 +15,6 @@ from companies.views import *
 urlpatterns = patterns('companies.views',
 	url(r'^(?P<company_id>[0-9]+)/list/$', login_required(list_year), name='list_year'),
     url(r'^(?P<company_id>[0-9]+)/$', login_required(company_view), name='company_view'),
+    url(r'^$', login_required(admin_companies), name='companies'),
+    url(r'^add/$', login_required(add_company), name='add_company'),
 )

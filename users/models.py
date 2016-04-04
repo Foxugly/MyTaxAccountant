@@ -59,6 +59,8 @@ class UserForm(ModelForm):
 
 
 class UserProfileForm(ModelForm):
+    n = 'userprofileform'
+
     class Meta:
         model = UserProfile
         fields = ['language']

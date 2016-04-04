@@ -28,6 +28,8 @@ class CountryForm(ModelForm):
 
 class FiscalYear(models.Model):
     name = models.TextField(_("Fiscal year"), max_length=20)
+    init = models.BooleanField(default=False)
+    favorite = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -40,3 +42,13 @@ class FiscalYearForm(ModelForm):
     class Meta:
         model = FiscalYear
         fields = ['name']
+
+
+class TemplateTrimester(models.Model):
+    number = models.IntegerField(_('trimester number'), null=True)
+    year = models.ForeignKey(FiscalYear, null=True)
+    favorite = models.BooleanField(_('favorite'), default=False)
+    start_date = models.DateField(_('start date'), null=True)
+
+    def __str__(self):
+        return '%s - %s - %d' % (self.year, self.number, self.favorite)

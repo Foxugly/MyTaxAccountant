@@ -8,6 +8,7 @@
 # your option) any later version.
 
 from django.db import models
+from django.forms import ModelForm
 from trimesters.models import Trimester
 from utils.models import FiscalYear
 import os
@@ -60,3 +61,10 @@ class Year(models.Model):
             t.delete()
         os.rmdir(self.get_absolute_path())
         super(Year, self).delete(kwargs)
+
+
+class YearForm(ModelForm):
+    class Meta:
+        model = Year
+        exclude = ['refer_company', ]
+

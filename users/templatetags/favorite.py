@@ -54,7 +54,8 @@ def favorite_trimester(year):
 
 @register.filter()
 def categories(trimester):
-    return trimester.categories.filter(active=True)
+    t = trimester.categories.filter(active=True)
+    return t
 
 
 @register.filter()

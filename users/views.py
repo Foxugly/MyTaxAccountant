@@ -25,7 +25,6 @@ def home(request):
 
 @login_required
 def user_settings(request):
-    print request.user
     c = {'user_form': UserForm(instance=request.user),
          'userprofile_form': UserProfileForm(instance=request.user.userprofile),
          'password_change_form': PasswordChangeForm(user=request.user)}

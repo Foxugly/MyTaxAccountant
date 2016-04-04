@@ -8,7 +8,7 @@
 # your option) any later version.
 
 from django.contrib import admin
-from utils.models import Country, FiscalYear
+from utils.models import Country, FiscalYear, TemplateTrimester
 
 
 @admin.register(Country)
@@ -20,3 +20,7 @@ class CountryAdmin(admin.ModelAdmin):
 class FiscalYearAdmin(admin.ModelAdmin):
     pass
 
+
+@admin.register(TemplateTrimester)
+class TemplateTrimesterAdmin(admin.ModelAdmin):
+    pass

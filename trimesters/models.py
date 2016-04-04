@@ -10,13 +10,15 @@
 
 
 from django.db import models
+from django.forms import ModelForm
 from categories.models import Category, TypeCategory
 from django.utils.translation import ugettext_lazy as _
+from utils.models import TemplateTrimester
 import os
 
 
 class Trimester(models.Model):
-    number = models.IntegerField(_('trimester number'), null=True)
+    template = models.ForeignKey(TemplateTrimester, null=True, blank=True)
     start_date = models.DateField(_('start date'), null=True)
     end_date = models.DateField(_('end_date'), null=True, blank=True)
     active = models.BooleanField(_('active'), default=False)
@@ -41,11 +43,11 @@ class Trimester(models.Model):
 
     def get_name(self):
         t = _('trimester')
-        return u'%s %s (%s)' % (t, str(self.number), self.start_date)
+        return u'%s %s (%s)' % (t, str(self.template.number), self.start_date)
 
     def __str__(self):
         return u' %s - %s - %s' % (
-            str(self.refer_year.refer_company.get_name()), str(self.refer_year.get_name()), self.get_name())
+            str(self.refer_year.refer_company.get_name()), str(self.refer_year.get_name()), self.id)
 
     def as_json(self):
         return dict(id=self.id, name=self.get_name())
@@ -57,10 +59,10 @@ class Trimester(models.Model):
             self.categories.add(new_cat)
 
     def get_relative_path(self):
-        return os.path.join(self.refer_year.get_relative_path(), str(self.number))
+        return os.path.join(self.refer_year.get_relative_path(), str(self.template.number))
 
     def get_absolute_path(self):
-        return os.path.join(self.refer_year.get_absolute_path(), str(self.number))
+        return os.path.join(self.refer_year.get_absolute_path(), str(self.template.number))
 
     def save(self, *args, **kwargs):
         super(Trimester, self).save(*args, **kwargs)
@@ -72,3 +74,15 @@ class Trimester(models.Model):
             c.delete()
         os.rmdir(self.get_absolute_path())
         super(Trimester, self).delete()
+
+
+class TrimesterForm(ModelForm):
+    class Meta:
+        model = Trimester
+        exclude = ['refer_year', ]
+
+
+class TemplateTrimesterForm(ModelForm):
+    class Meta:
+        model = TemplateTrimester
+        fields = '__all__'

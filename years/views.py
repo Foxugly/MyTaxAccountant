@@ -8,7 +8,7 @@
 # your option) any later version.
 
 from django.http import HttpResponse
-from years.models import Year
+from years.models import Year, YearForm
 import json
 
 
@@ -30,6 +30,11 @@ def list_trimister(request, year_id):
             results = {'list': [t.as_json() for t in y.trimesters.filter(active=True)], 'return': True,
                        'favorite': favorite_trimester(y).as_json()}
         else:
-            results = {'list': [t.as_json() for t in y.trimesters.filter(active=True, admin=False)], 'return': True,
+            results = {'list': [t.as_json() for t in y.trimesters.filter(active=True)], 'return': True,
                        'favorite': favorite_trimester(y).as_json()}
         return HttpResponse(json.dumps(results))
+
+
+def admin_years(request):
+    # c = {'list': Year.objects.all(), 'form': YearForm()}
+    return HttpResponse("admin_years")
