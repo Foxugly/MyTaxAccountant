@@ -96,8 +96,8 @@
               {% if user.is_superuser %}
               <ul class="nav navbar-nav navbar-left">
                 <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></a>
-                  <ul class="dropdown-menu" style='background:black;color:white;'>
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
                     <li><a href="{%  url 'years' %}">{% blocktrans %} years{% endblocktrans %}</a></li>
                     <li><a href="{%  url 'trimesters' %}">{% blocktrans %} trimesters{% endblocktrans %} </a></li>
                     <li><a href="{%  url 'companies' %}">{% blocktrans %} companies{% endblocktrans %} </a></li>
@@ -126,7 +126,7 @@
             {% if user.is_authenticated %}
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span> {{user.first_name}} {{user.last_name}} <span class="caret"></span></a>
-              <ul class="dropdown-menu" style='background:black;color:white;'>
+              <ul class="dropdown-menu">
                 <li><a class="glyphicon glyphicon-cog" href="{%  url 'settings' %}">{% blocktrans %} Profil{% endblocktrans %} </a></li>
                 <li><a class="glyphicon glyphicon-off" href="{%  url 'logout' %}">{% blocktrans %} Déconnexion{% endblocktrans %} </a></li>
               </ul>
