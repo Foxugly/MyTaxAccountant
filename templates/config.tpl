@@ -11,7 +11,7 @@
 $(document).ready(function() {
     $('#btn_personal_data').click(function(){
         var form = $('#form_personal_data');
-        var url = '/doc/ajax/personal_data/';
+        var url = '/user/ajax/personal_data/';
         $.ajax({
             url: url,
             type: 'POST',
@@ -20,11 +20,16 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(result){
                 if (result['return']){
-                    $('#confirm_yes').show();
+                    $('#div_change_personal_data').html('<div class="alert alert-success" role="alert">Personal data changed !</div>');
+                    $('#div_change_personal_data').show().delay( 1000 ).fadeOut(1000);
                 }
                 else{
-                    $('#confirm_no_error').val(result['errors']);
-                    $('#confirm_no').show();
+                    var out = '';
+                    for (var key in result['errors']){
+                        out += result['errors'][key][0] + '<br>';
+                    }
+                    $('#div_change_personal_data').html('<div class="alert alert-danger" role="alert">' + out + '</div>');
+                    $('#div_change_personal_data').show();
                 }
             }
         });
@@ -45,13 +50,21 @@ $(document).ready(function() {
                     $('#id_old_password').val('');
                     $('#id_new_password1').val('');
                     $('#id_new_password2').val('');
-                    $('#confirm_yes').show();
+                    $('#div_change_pwd').html('<div class="alert alert-success" role="alert">Password changed !</div>');
+                    $('#div_change_pwd').show().delay( 1000 ).fadeOut(1000);
                 }
                 else{
-                    $('#confirm_no_error').val(result['errors']);
-                    $('#confirm_no').show();
+                    var out = '';
+                    for (var key in result['errors']){
+                        out += result['errors'][key][0] + '<br>';
+                    }
+                    $('#div_change_pwd').html('<div class="alert alert-danger" role="alert">' + out + '</div>');
+                    $('#div_change_pwd').show();
                 }
-            }
+            },
+        error: function() {
+          alert("There was an error. Try again please!");
+        }
         });
     });
 });
@@ -69,6 +82,7 @@ $(document).ready(function() {
     <div class="tab-content">
         <div id="div_personal_data" class="tab-pane in active">
              <div class="row row_space">
+                <div id="div_change_personal_data"> </div>
                 <form class="form-horizontal" id="form_personal_data" >
                     {% csrf_token %}
                     <fieldset>
@@ -91,6 +105,7 @@ $(document).ready(function() {
 
         <div id="div_password" class="tab-pane">
             <div class="row row_space">
+                <div id="div_change_pwd"> </div>
                 <form class="form-horizontal" id="form_password">
                     {% csrf_token %}
                     <fieldset>

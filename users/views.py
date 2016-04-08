@@ -42,7 +42,6 @@ def personal_data(request):
             userprofile_form.save()
             results['return'] = True
         else:
-            print
             results['errors'] = userprofile_form.errors + user_form.errors
             results['return'] = False
     else:
