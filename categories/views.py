@@ -17,7 +17,7 @@ from fileupload.models import FileUpload
 import shutil
 from PIL import Image
 import os
-from threading import Thread
+from threading import Timer
 from pyPdf import PdfFileReader
 import re
 
@@ -26,31 +26,60 @@ def category_view(request, category_id):
     return HttpResponse("category_view")
 
 
-def convert_pdf_to_jpg(cat, path, f, doc):
-    p = re.compile(r'.[Pp][Dd][Ff]$')
-    filename = p.sub('.jpg', f)
-    new_path = cat.get_absolute_path() + '/' + str(doc.id) + '_' + '%03d' + '_' + filename
-    cmd = 'convert -density 600 ' + path + ' ' + new_path
-    os.system(cmd)
-    pdf = PdfFileReader(open(path, 'rb'))
-    n = pdf.getNumPages()
-    for i in range(0, n):
-        name_page = str(doc.id) + '_' + "%03d" % i + '_' + filename
-        path_page = cat.get_absolute_path() + '/' + name_page
-        im = Image.open(path_page)
-        w, h = im.size
-        doc.add_page(doc.get_npages() + 1, name_page, w, h)
-    for fu in FileUpload.objects.all():
-        if fu.file.path == path:
-            fu.delete()
-    doc.complete = True
-    doc.save()
+def remove_fileupload(liste):
+    for path in liste:
+        for fu in FileUpload.objects.all():
+            if fu.file.path == path:
+                os.remove(path)
+                fu.delete()
+
+
+def convert_pdf_to_jpg(l):
+    for (cat, path, f, doc) in l:
+        cat = cat[0]
+        doc = doc[0]
+        p = re.compile(r'.[Pp][Dd][Ff]$')
+        filename = p.sub('.jpg', f)
+        new_path = cat.get_absolute_path() + '/' + str(doc.id) + '_' + '%03d' + '_' + filename
+        cmd = 'convert -density 600 ' + path + ' ' + new_path
+        os.system(cmd)
+        pdf = PdfFileReader(open(path, 'rb'))
+        n = pdf.getNumPages()
+        for i in range(0, n):
+            name_page = str(doc.id) + '_' + "%03d" % i + '_' + filename
+            path_page = cat.get_absolute_path() + '/' + name_page
+            im = Image.open(path_page)
+            w, h = im.size
+            doc.add_page(doc.get_npages() + 1, name_page, w, h)
+        doc.complete = True
+        doc.save()
+
+
+def manage_convert_doc_to_pdf(cmds, paths, liste):
+    for c in cmds:
+        os.system(c)
+    convert_pdf_to_jpg(liste)
+    remove_fileupload(paths)
+    for (c, path, f, d) in liste:
+        os.remove(path)
+
+
+def manage_convert_pdf_to_jpg(liste):
+    convert_pdf_to_jpg(liste)
+    l_path = []
+    for (cat, path, f, doc) in liste:
+        l_path.append(path)
+    remove_fileupload(l_path)
 
 
 def add_documents(request, category_id):
     if request.is_ajax():
         files = request.GET.getlist('files', False)
         cat = Category.objects.get(id=category_id)
+        l_doc = []
+        l_pdf = []
+        cmds = []
+        paths = []
         for f in list(files):
             mime = MimeTypes()
             path = os.path.join(settings.MEDIA_ROOT, settings.UPLOAD_DIR, f)
@@ -59,8 +88,7 @@ def add_documents(request, category_id):
             d.save()
             cat.add_doc(d)
             if m == 'application/pdf':
-                thread = Thread(target=convert_pdf_to_jpg, args=(cat, path, f, d))
-                thread.start()
+                l_pdf.append(([cat], path, f, [d]))
             elif m in ['image/png', 'image/jpeg', 'image/bmp']:
                 im = Image.open(path)
                 w, h = im.size
@@ -78,11 +106,17 @@ def add_documents(request, category_id):
                 new_f = p.sub('.pdf', f)
                 new_path = path.replace(f, new_f)
                 cmd = 'soffice --headless --convert-to pdf  %s --outdir %s/upload' % (path, settings.MEDIA_ROOT)
-                os.system(cmd)
-                thread = Thread(target=convert_pdf_to_jpg, args=(cat, new_path, new_f, d))
-                thread.start()
+                cmds.append(cmd)
+                paths.append(path)
+                l_doc.append(([cat], new_path, new_f, [d]))
             else:
                 print 'ERREUR FORMAT FICHIER'
+        if len(l_doc):
+            thread1 = Timer(0, manage_convert_doc_to_pdf, (cmds, paths, l_doc,))
+            thread1.start()
+        if len(l_pdf):
+            thread = Timer(0, manage_convert_pdf_to_jpg, (l_pdf,))
+            thread.start()
         results = {'doc_list': [d.as_json() for d in cat.get_docs()], 'n': cat.count_docs()}
         return HttpResponse(json.dumps(results))
 

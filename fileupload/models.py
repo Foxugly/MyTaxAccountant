@@ -11,6 +11,7 @@
 from django.db import models
 from django.conf import settings
 
+
 class FileUpload(models.Model):
     file = models.FileField(upload_to=settings.UPLOAD_DIR)
     slug = models.SlugField(max_length=50, blank=True)
