@@ -14,6 +14,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.http import HttpResponse
 import json
 from users.models import UserForm, UserProfileForm
+from companies.models import CompanyForm
 # Create your views here.
 
 
@@ -25,9 +26,15 @@ def home(request):
 
 @login_required
 def user_settings(request):
+    companies = request.user.userprofile.companies.all()
+    companiesForm = [(c.id, CompanyForm(instance=c)) for c in companies]
     c = {'user_form': UserForm(instance=request.user),
          'userprofile_form': UserProfileForm(instance=request.user.userprofile),
-         'password_change_form': PasswordChangeForm(user=request.user)}
+         'password_change_form': PasswordChangeForm(user=request.user),
+         'companies': companies,
+         'companiesForm': companiesForm
+
+         }
     return render(request, 'config.tpl', c)
 
 
@@ -42,7 +49,9 @@ def personal_data(request):
             userprofile_form.save()
             results['return'] = True
         else:
-            results['errors'] = userprofile_form.errors + user_form.errors
+            combo = userprofile_form.errors
+            combo.update(user_form.errors)
+            results['errors'] = combo
             results['return'] = False
     else:
         results['return'] = False

@@ -14,6 +14,7 @@ from companies.models import Company
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.forms import ModelForm
+from django.core.validators import RegexValidator
 
 
 class UserCreateForm(UserCreationForm):
@@ -32,6 +33,9 @@ class UserCreateForm(UserCreationForm):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, verbose_name=_('user'))
     language = models.CharField(verbose_name=_(u'language'), max_length=8, choices=settings.LANGUAGES, default=1)
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    phone_number = models.CharField(validators=[phone_regex], blank=True, max_length=16)  # validators should be a list
+    birth_date = models.DateField(blank=True, null=True)
     companies = models.ManyToManyField(Company, verbose_name=_('companies'), blank=True)
     
     def get_favorites(self):
@@ -63,8 +67,9 @@ class UserProfileForm(ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = ['language']
+        fields = ['phone_number', 'birth_date', 'language']
 
     def __init__(self, *args, **kw):
         super(UserProfileForm, self).__init__(*args, **kw)
         self.fields['language'].widget.attrs['class'] = 'select2-nosearch'
+        self.fields['birth_date'].widget.attrs['class'] = 'datepicker'

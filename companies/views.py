@@ -90,3 +90,18 @@ def add_company(request):
     else:
         c = {'view_form': True, 'list': Company.objects.all(), 'form': [form1(), form2(), form3()]}
         return render(request, 'list.tpl', c)
+
+
+def update_company(request, company_id):
+    results = {}
+    if request.is_ajax():
+        company_form = CompanyForm(request.POST, instance=Company.objects.get(id=company_id))
+        if company_form.is_valid():
+            company_form.save()
+            results['return'] = True
+        else:
+            results['errors'] = company_form.errors
+            results['return'] = False
+    else:
+        results['return'] = False
+    return HttpResponse(json.dumps(results))

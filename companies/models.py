@@ -10,6 +10,7 @@
 
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
+from django import forms
 from django.forms import ModelForm
 from utils.models import Country
 from years.models import Year
@@ -63,11 +64,13 @@ class Company(models.Model):
 
 class CompanyForm(ModelForm):
     n = 'companyform'
+    name = forms.CharField()
 
     class Meta:
         model = Company
-        fields = ['name', 'slug', 'description', 'vat_number', 'address_1', 'address_2', 'zip_code', 'city', 'country']
+        fields = ['name', 'description', 'vat_number', 'address_1', 'address_2', 'zip_code', 'city', 'country']
 
     def __init__(self, *args, **kw):
         super(CompanyForm, self).__init__(*args, **kw)
         self.fields['country'].widget.attrs['class'] = 'select2-nosearch'
+        self.fields['description'].widget.attrs['rows'] = 2

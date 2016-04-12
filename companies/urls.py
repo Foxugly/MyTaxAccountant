@@ -17,4 +17,5 @@ urlpatterns = patterns('companies.views',
     url(r'^(?P<company_id>[0-9]+)/$', login_required(company_view), name='company_view'),
     url(r'^$', login_required(admin_companies), name='companies'),
     url(r'^add/$', login_required(add_company), name='add_company'),
+    url(r'^ajax/update/(?P<company_id>[0-9]+)/$', login_required(update_company), name='update_company'),
 )

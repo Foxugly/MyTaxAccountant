@@ -29,11 +29,13 @@
     <link rel="stylesheet" href=" {% static "upload/css/style.css" %} ">
     <link rel="stylesheet" href=" {% static "upload/css/jquery.fileupload-ui.css" %}" >
     <link href='{% static "select2-4.0.1/dist/css/select2.min.css" %}' rel='stylesheet' />
+   <link href='{% static "bootstrap-datetimepicker-master/build/css/bootstrap-datetimepicker.min.css" %}' rel="stylesheet"/>
     {% block css %}
     {% endblock %}
     <link href='{% static "css/perso.css" %}' rel='stylesheet' />
     <!--  JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="http://momentjs.com/downloads/moment-with-locales.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="http://cdn.datatables.net/1.10.9/js/jquery.dataTables.js"></script>
     <script type="text/javascript" src="http://cdn.datatables.net/1.10.9/js/dataTables.bootstrap.min.js"></script>
@@ -50,6 +52,8 @@
         {% endwith %}
     {%  endif %}
     <script src='{% static "duallistbox/dual-list-box.min.js" %}'></script>
+
+    <script type="text/javascript" src='{% static "bootstrap-datetimepicker-master/build/js/bootstrap-datetimepicker.min.js" %}'></script>
     <script src='{% static "js/perso.js" %}'></script>
     {% block js %}
     {% endblock %}
