@@ -98,9 +98,9 @@ class CompanyForm(ModelForm):
 
     def __init__(self, *args, **kw):
         super(CompanyForm, self).__init__(*args, **kw)
-        self.fields['country'].widget.attrs['class'] = 'select2-nosearch'
-        self.fields['sales_revenue'].widget.attrs['class'] = 'select2-nosearch'
-        self.fields['number_employees'].widget.attrs['class'] = 'select2-nosearch'
+        self.fields['country'].widget.attrs['class'] = 'select2100-nosearch'
+        self.fields['sales_revenue'].widget.attrs['class'] = 'select2100-nosearch'
+        self.fields['number_employees'].widget.attrs['class'] = 'select2100-nosearch'
         self.fields['creation_date'].widget.attrs['class'] = 'datepicker'
         self.fields['description'].widget.attrs['rows'] = 2
 

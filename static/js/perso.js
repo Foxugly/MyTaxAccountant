@@ -85,8 +85,10 @@ $(document).ready(function() {
 
     $('.select2').select2({width: 'resolve'});
 
-    $('.select2-nosearch').select2({ width: 'resolve', minimumResultsForSearch: -1});
 
+    $('.select2100').select2({ width: '100%' });
+    $('.select2-nosearch').select2({ width: 'resolve', minimumResultsForSearch: -1});
+    $('.select2100-nosearch').select2({ width: '100%', minimumResultsForSearch: -1});
     $("#dlb_documents").DualListBox();
 
     $('#confirm_yes_close').click(function(){
