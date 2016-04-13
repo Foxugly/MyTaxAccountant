@@ -15,7 +15,7 @@
 <!DOCTYPE HTML>
 <html lang="en">
   <head>
-    <title>MyTaxAccountant</title>
+    <title>MyLieutenantGuillaume</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -70,7 +70,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/">MyTaxAccoutant</a>
+          <a class="navbar-brand" href="/"><span class="glyphicon glyphicon-home"> MyLieutenantGuillaume</span></a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           {% if user.is_authenticated %}
