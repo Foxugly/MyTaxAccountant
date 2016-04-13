@@ -29,6 +29,25 @@ class Company(models.Model):
     zip_code = models.CharField(_("zip code"), max_length=5, blank=True, null=True)
     city = models.CharField(_("city"), max_length=128, blank=True, null=True)
     country = models.ForeignKey(Country, blank=True)
+    sales_revenue = models.IntegerField(_("Sales revenue"),
+                                        choices=(
+                                            (1, _("Lower than 50.000 euros")),
+                                            (2, _("Between 50.000 euros and 250.000 euros")),
+                                            (3, _("Between 250.000 euros and 700.000 euros")),
+                                            (4, _("Between 700.000 euros and 4.500.000 euros")),
+                                            (5, _("More than 4.500.000 euros"))
+                                        ),
+                                        default=1)
+    number_employees = models.IntegerField(_("Number of employees"),
+                                           choices=(
+                                               (1, _("1")),
+                                               (2, _("Between 1 and 10")),
+                                               (3, _("Between 10 and 50")),
+                                               (4, _("More than 50"))
+                                           ),
+                                           default=1)
+    creation_date = models.DateField(_("Creation date"), blank=True, null=True)
+    website = models.URLField(_("Website"), blank=True, null=True)
     years = models.ManyToManyField(Year, blank=True)
     active = models.BooleanField(_('active'), default=False)
     favorite = models.BooleanField(_('favorite'), default=False)
@@ -74,11 +93,13 @@ class CompanyForm(ModelForm):
 
     class Meta:
         model = Company
-        fields = ['name', 'description', 'vat_number', 'address_1', 'address_2', 'zip_code', 'city', 'country']
+        fields = ['name', 'description', 'vat_number', 'creation_date', 'sales_revenue', 'number_employees',
+                  'address_1', 'address_2', 'zip_code', 'city', 'country']
 
     def __init__(self, *args, **kw):
         super(CompanyForm, self).__init__(*args, **kw)
         self.fields['country'].widget.attrs['class'] = 'select2-nosearch'
+        self.fields['creation_date'].widget.attrs['class'] = 'datepicker'
         self.fields['description'].widget.attrs['rows'] = 2
 
     def save(self):
