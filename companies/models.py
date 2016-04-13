@@ -15,6 +15,7 @@ from django.forms import ModelForm
 from utils.models import Country
 from years.models import Year
 from django.conf import settings
+from django.utils.text import slugify
 import os
 
 
@@ -22,7 +23,7 @@ class Company(models.Model):
     name = models.TextField(_("Name of the company"))
     slug = models.SlugField(unique=True)
     description = models.TextField(_("Description of the company"), blank=True, null=True)
-    vat_number = models.CharField(_("TVA number"), unique=True, max_length=10, null=True)
+    vat_number = models.CharField(_("TVA number"), unique=True, max_length=10, blank=True, null=True)
     address_1 = models.CharField(_("address"), max_length=128, blank=True, null=True)
     address_2 = models.CharField(_("address cont'd"), max_length=128, blank=True, null=True)
     zip_code = models.CharField(_("zip code"), max_length=5, blank=True, null=True)
@@ -50,10 +51,15 @@ class Company(models.Model):
     def get_absolute_path(self):
         return os.path.join(settings.MEDIA_ROOT, settings.STOCK_DIR, self.slug)
 
-    def save(self, *args, **kwargs):
-        super(Company, self).save(*args, **kwargs)
+    def create_directory(self):
         if not os.path.isdir(self.get_absolute_path()):
             os.mkdir(self.get_absolute_path(), 0711)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(Company, self).save(*args, **kwargs)
+        self.create_directory()
 
     def delete(self, **kwargs):
         for y in self.years.all():
@@ -74,3 +80,9 @@ class CompanyForm(ModelForm):
         super(CompanyForm, self).__init__(*args, **kw)
         self.fields['country'].widget.attrs['class'] = 'select2-nosearch'
         self.fields['description'].widget.attrs['rows'] = 2
+
+    def save(self):
+        instance = super(CompanyForm, self).save(commit=False)
+        instance.slug = slugify(instance.name)
+        instance.save()
+        return instance

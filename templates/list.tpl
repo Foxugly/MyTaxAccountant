@@ -10,12 +10,21 @@
 {% if user.is_superuser %}
 <div class="row">
     <div class="col-md-12">
+        {%  if return %}
+        <div class="alert alert-success" role="alert">User and company added</div>
+        {%  endif %}
         <form class="form-horizontal" method="post" action="{{url}}">
         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
         {%  for f in form %}
             {% bootstrap_form f layout="horizontal"%}
         {%  endfor %}
-        <input type="submit" class="btn btn-primary" value="Add" />
+        <div class="row">
+            <div class="form_group">
+                <div class="col-md-9 col-md-offset-3">
+                    <input type="submit" class="btn btn-primary" value="Add" />
+                </div>
+            </div>
+        </div>
         </form>
     </div>
 </div>

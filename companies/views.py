@@ -53,6 +53,8 @@ def add_company(request):
         up = form1.save(commit=False)
         c = form3.save()
         c.active = True
+        c.favorite = True
+        c.save()
         u = form2.save()
         up.user = u
         up.save()
@@ -80,13 +82,12 @@ def add_company(request):
         tri_fav = Trimester(template=tt_fav, start_date=tt_fav.start_date, active=True, refer_year=y_fav, favorite=True)
         tri_fav.save()
         y_fav.trimesters.add(tri_fav)
-        first = True
         for tp in TypeCategory.objects.filter(priority__lt=10).order_by('priority'):
-            cat_fav = Category(cat=tp, refer_trimester=tri_fav, active=True, favorite=first)
-            first = False
+            cat_fav = Category(cat=tp, refer_trimester=tri_fav, active=True)
             cat_fav.save()
             tri_fav.categories.add(cat_fav)
-        return redirect('companies')
+        c = {'return': True, 'list': Company.objects.all(), 'form': [UserProfileForm(), UserCreateForm(), CompanyForm()], 'url': '/company/add/'}
+        return render(request, 'list.tpl', c)
     else:
         c = {'view_form': True, 'list': Company.objects.all(), 'form': [form1(), form2(), form3()]}
         return render(request, 'list.tpl', c)
