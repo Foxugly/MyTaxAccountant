@@ -33,7 +33,7 @@ class UserCreateForm(UserCreationForm):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, verbose_name=_('user'))
     language = models.CharField(verbose_name=_(u'language'), max_length=8, choices=settings.LANGUAGES, default=1)
-    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message=_("Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."))
     phone_number = models.CharField(validators=[phone_regex], blank=True, max_length=16)  # validators should be a list
     birth_date = models.DateField(blank=True, null=True)
     companies = models.ManyToManyField(Company, verbose_name=_('companies'), blank=True)

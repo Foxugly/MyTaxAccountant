@@ -17,6 +17,7 @@ from utils.models import FiscalYear, TemplateTrimester
 from years.models import Year
 from trimesters.models import Trimester
 from categories.models import Category, TypeCategory
+from django.contrib.auth.models import User
 
 
 def favorite_year(company):
@@ -59,7 +60,9 @@ def add_company(request):
         up.user = u
         up.save()
         up.companies.add(c)
-        request.user.userprofile.companies.add(c)
+        for user in User.objects.filter(is_superuser=True):
+            user.userprofile.companies.add(c)
+            user.userprofile.save()
         # add dossier global
         fy_init = FiscalYear.objects.filter(init=True)[0]
         y_init = Year(fiscal_year=fy_init, active=True, refer_company=c, favorite=False)

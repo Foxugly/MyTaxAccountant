@@ -14,6 +14,7 @@ from django import forms
 from django.contrib.auth.models import User
 import os
 from django.utils import timezone
+from django.core.validators import RegexValidator
 
 
 class Page(models.Model):
@@ -54,7 +55,8 @@ class Document(models.Model):
     pages = models.ManyToManyField(Page, blank=True)
     date = models.DateTimeField(_('date'), default=timezone.now, null=False)
     description = models.TextField(_('description'), blank=True, null=True)
-    fiscal_id = models.CharField(_('Fiscal ID'), max_length=100, blank=True, null=True)
+    fiscal_regex = RegexValidator(regex=r'^\d{8}$', message=_("Fiscal ID must be entered in the format: 'YYYYNNNN' where YYYY is the year and NNNN the id. Only 8 digits allowed."))
+    fiscal_id = models.CharField(_('Fiscal ID'), validators=[fiscal_regex], max_length=100, blank=True, null=True)
     complete = models.BooleanField(_('complete'), default=False)
     lock = models.BooleanField(_('locked'), default=False)
 
