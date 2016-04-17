@@ -29,6 +29,7 @@ def document_view(request, document_id):
 
 
 def update_ajax(request, document_id):
+    results = {}
     if request.is_ajax():
         doc = Document.objects.get(id=document_id)
         if request.user.is_superuser:
@@ -37,9 +38,11 @@ def update_ajax(request, document_id):
             form = DocumentForm(request.GET, instance=doc)
         if form.is_valid():
             form.save()
-            return HttpResponse(json.dumps('OK'))
+            results['return'] = True
         else:
-            return HttpResponse(json.dumps('ERROR'))
+            results['return'] = False
+            results['errors'] = form.errors
+        return HttpResponse(json.dumps(results))
 
 
 def ajax_move(request, n):

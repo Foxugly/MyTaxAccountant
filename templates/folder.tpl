@@ -93,6 +93,7 @@
     <div class="col-md-6">
         <div id="div_info" width="100%" style="min-height:55px;">
             <div id="alert_save_saved" class="alert alert-success" role="alert">{% blocktrans %} Saved !{% endblocktrans %}</div>
+            <div id="alert_save_error" class="alert alert-danger" role="alert"></div>
         </div>
         <div id="div_form" width="100%"></div>
         <div id="div_pager" width="100%" style="text-align:center;">

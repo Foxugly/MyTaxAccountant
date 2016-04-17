@@ -15,6 +15,8 @@ from django.contrib.auth.models import User
 import os
 from django.utils import timezone
 from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
+import re
 
 
 class Page(models.Model):
@@ -55,7 +57,7 @@ class Document(models.Model):
     pages = models.ManyToManyField(Page, blank=True)
     date = models.DateTimeField(_('date'), default=timezone.now, null=False)
     description = models.TextField(_('description'), blank=True, null=True)
-    fiscal_regex = RegexValidator(regex=r'^\d{8}$', message=_("Fiscal ID must be entered in the format: 'YYYYNNNN' where YYYY is the year and NNNN the id. Only 8 digits allowed."))
+    fiscal_regex = RegexValidator(regex=r'^[0-9]{8}$', message=_("Fiscal ID must be entered in the format: 'YYYYNNNN' where YYYY is the year and NNNN the id. Only 8 digits allowed."), code='invalid_ID_fiscal')
     fiscal_id = models.CharField(_('Fiscal ID'), validators=[fiscal_regex], max_length=100, blank=True, null=True)
     complete = models.BooleanField(_('complete'), default=False)
     lock = models.BooleanField(_('locked'), default=False)
@@ -119,7 +121,7 @@ class DocumentAdminForm(ModelForm):
         for f in self:
             txt += '<div class="form-group">\n'
             txt += f.label_tag().replace('<label ', '<label class="col-md-4 control-label" ') + '\n'
-            txt += '<div class="col-md-8">' + str(f) + '</div>\n<span class="help-block"></span>\n'
+            txt += '<div class="col-md-8">' + unicode(f) + '</div>\n<span class="help-block"></span>\n'
             txt += '</div>\n'
         txt += '<div class="form-group">\n'
         txt += '<div class="col-md-offset-2 col-md-8">\n'

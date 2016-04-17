@@ -54,12 +54,14 @@ $(document).ready(function() {
             url: url,
             crossDomain: false,
             beforeSend: function(xhr, settings) {
+                console.log('beforeSend');
                 if (!csrfSafeMethod(settings.type)) {
                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
                 }
             },
             dataType: 'json',
             done: function (e, data) {
+                console.log('done');
                 $("#fileupload_list" ).removeClass( "hide" );
                 $.each(data.result.files, function (index, file) {
                     $("#files-group").append('\n<li class="list-group-item list-group-item-success"><span>' + file.name + '</span><button id="' + file.id + '" type="button" class="close close_fileupload">&times;</button></li>\n');
@@ -467,6 +469,7 @@ $(document).ready(function() {
     }
 
     function save_form(){
+        $('#alert_save_error').hide();
         var form = $('#div_form form');
         var id = $('#doc_id').val();
         var url = '/document/' + id + '/update/';
@@ -476,8 +479,19 @@ $(document).ready(function() {
             data: form.serialize(),
             traditional: true,
             dataType: 'json',
-            success: function(){
-                $('#alert_save_saved').show().delay( 1000 ).fadeOut(1000);
+            success: function(result){
+                if (result['return']){
+                    $('#alert_save_saved').show().delay( 1000 ).fadeOut(1000);
+                }
+                else{;
+                    var out = '';
+                    for (var key in result['errors']){
+                        out += result['errors'][key][0] + '<br>';
+                    }
+                    $('#alert_save_error').html(out);
+                    $('#alert_save_error').show();
+                }
+
                 update_data(false);
             }
         });
@@ -598,11 +612,13 @@ $(document).ready(function() {
             $("#div_list").show();
             $("#div_img_form").hide();
             $('#alert_save_saved').hide();
+            $('#alert_save_error').hide();
         }
         else if (view == 'form'){
             $("#div_list").hide();
             $("#div_img_form").show();
             $('#alert_save_saved').hide();
+            $('#alert_save_error').hide();
             get_form_data(1);
         }
     });
