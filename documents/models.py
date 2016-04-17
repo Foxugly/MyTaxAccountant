@@ -147,3 +147,13 @@ class DocumentReadOnlyForm(DocumentAdminForm):
             self.fields[field].widget.attrs.update({'class': 'form-control'})
             self.fields[field].widget.attrs['readonly'] = True
             self.fields[field].widget.attrs['disabled'] = 'disabled'
+
+    def as_div(self):
+        txt = '<form class="form-horizontal">\n<fieldset>\n<legend>' + str(_('Document')) + '</legend>'
+        for f in self:
+            txt += '<div class="form-group">\n'
+            txt += f.label_tag().replace('<label ', '<label class="col-md-4 control-label" ') + '\n'
+            txt += '<div class="col-md-8">' + unicode(f) + '</div>\n<span class="help-block"></span>\n'
+            txt += '</div>\n'
+        txt += '</fieldset>\n</form>'
+        return txt
