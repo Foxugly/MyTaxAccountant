@@ -5,13 +5,14 @@
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU Affero General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or (at
-# your option) any later version.
+# your option) any later veron.
 
-from django.shortcuts import render_to_response
+
 from django.http import HttpResponse
-from users.models import UserProfile
+from django.shortcuts import render_to_response, render, redirect
 from trimesters.models import Trimester
-from documents.models import DocumentForm, DocumentAdminForm, DocumentReadOnlyForm
+from utils.models import TemplateTrimesterForm, TemplateTrimester
+from companies.models import Company
 import json
 
 
@@ -35,4 +36,17 @@ def list_categories(request, trimester_id):
 
 
 def admin_trimesters(request):
-    return HttpResponse("admin_trimesters")
+    c = {'list': TemplateTrimester.objects.all(), 'form': [TemplateTrimesterForm()], 'url': '/trimesters/template/add/'}
+    return render(request, 'list.tpl', c)
+
+
+def add_templatetrimester(request):
+    form = TemplateTrimesterForm(request.POST)
+    if form.is_valid():
+        tt = form.save()
+
+
+def apply_templatetrimester(request, tt_id):
+    tt = TemplateTrimester.objects.get(id=tt_id)
+    for c in Company.objects.filter(active=True):
+        t = Trimester()

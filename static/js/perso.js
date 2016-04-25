@@ -292,7 +292,7 @@ $(document).ready(function() {
             traditional: true,
             dataType: 'json',
             success: function(result){
-                console.log(result);
+                /*console.log(result);*/
                 $('#modal_category').empty();
                 for( var i = 0; i < result['nav_list'].length; i++ ) {
                     $('#modal_category').append('<option value="'+ result['nav_list'][i].id + '">'+ result['nav_list'][i].name +'</option>');
@@ -324,7 +324,7 @@ $(document).ready(function() {
     }
 
     function modal_companies(){
-        console.log('modal_companies');
+        /*console.log('modal_companies');*/
         var url = '/company/' + $('#modal_company').val() + '/list/';
         $.ajax({
             url: url,
@@ -332,7 +332,7 @@ $(document).ready(function() {
             traditional: true,
             dataType: 'json',
             success: function(result){
-                console.log(result);
+                /*console.log(result);*/
                 $('#modal_year').empty();
                 for( var i = 0, len = result['list'].length; i < len; i++ ) {
                     $('#modal_year').append('<option value="'+ result['list'][i].id + '">'+ result['list'][i].name +'</option>');
@@ -387,7 +387,7 @@ $(document).ready(function() {
     }
 
     function merge_modal(e){
-        console.log("merge_modal");
+        /*console.log("merge_modal");*/
         var url = '/document/ajax/merge/' + e[0]['dataset'].id + '/';
         $('#modal_merge_doc_id').val(e[0]['dataset'].id);
         $.ajax({
@@ -433,6 +433,7 @@ $(document).ready(function() {
     }
 
     function update_datatable(data){
+        /*console.log('update_datatable');*/
         var out = '<td>';
         var lock = '<td>';
         if (data['lock']){
@@ -469,6 +470,7 @@ $(document).ready(function() {
     }
 
     function save_form(){
+        /*console.log('save_form');*/
         $('#alert_save_error').hide();
         var form = $('#div_form form');
         var id = $('#doc_id').val();
@@ -491,13 +493,13 @@ $(document).ready(function() {
                     $('#alert_save_error').html(out);
                     $('#alert_save_error').show();
                 }
-
                 update_data(false);
             }
         });
     }
 
     function view_form(valid, img, form,doc_id){
+        /*console.log('view_form');*/
         if (valid == true){
             $('#div_img').html(img);
             $('#div_form').html('<input id="doc_id" type="hidden" name="doc_id" value="' + doc_id + '">' +form);
@@ -514,8 +516,10 @@ $(document).ready(function() {
         }
     }
 
-    function update_data(){
-        var url = '/category/'+ $('ul.nav-pills li.active a').attr("data-id") + '/list/';
+    function update_data(option){
+        /*console.log('update_data');*/
+        var pagnum = $('#pagination').bootpag().find('.active').data()['lp'];
+        var url = '/category/'+ $('ul.nav-pills li.active a').attr("data-id") + '/list/' +  pagnum + '/';
         $.ajax({
             url: url,
             type: 'GET',
@@ -523,22 +527,29 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(result){
                 $('#datatable').dataTable().fnClearTable();
+                var numpage = 1;
                 for (var i = 0; i < result['doc_list'].length; i++) {
                     update_datatable(result['doc_list'][i]);
+                    if ($('#doc_id').val() == result['doc_list'][i]['id']){
+                        numpage = i + 1 ;
+                    }
                 }
-                $('#pagination').bootpag({total: result['n'], page: 1});
-                if (result['doc'] == null){
-                    view_form(result['valid'], null, null, 0);
+                if (option){
+                        $('#pagination').bootpag({total: result['n'], page: numpage});
+                    if (result['doc'] == null){
+                        view_form(result['valid'], null, null, 0);
+                    }
+                    else{
+                        view_form(result['valid'], result['doc']['img'],result['form'], $('#doc_id').val());
+                    }
+                    $('ul.nav-pills li.active a').click();
                 }
-                else{
-                    view_form(result['valid'], result['doc']['img'],result['form'], result['doc']['id']);
-                }
-                $('ul.nav-pills li.active a').click();
             }
         });
     }
 
     function get_form_data(i){
+        /*console.log('get_form_data');*/
         var url = '/category/' + $('ul.nav-pills li.active a').attr("data-id") + '/form/' + i + '/';
         $.ajax({
             url: url,
@@ -586,7 +597,7 @@ $(document).ready(function() {
         $('ul.nav-pills li.active').removeClass('active');
         e.parent('li').addClass('active');
         var cat_id = $('ul.nav-pills li.active a').attr("data-id");
-        var url = '/category/' + cat_id + '/list/';
+        var url = '/category/' + cat_id + '/list/1/';
         $.ajax({
             url: url,
             type: 'GET',
@@ -601,7 +612,6 @@ $(document).ready(function() {
                 $('#pagination').bootpag({total: n,page: 1}).on("page", function(event, num){
                     get_form_data(num);
                 });
-                get_form_data(1);
             }
         });
     }
@@ -619,7 +629,7 @@ $(document).ready(function() {
             $("#div_img_form").show();
             $('#alert_save_saved').hide();
             $('#alert_save_error').hide();
-            get_form_data(1);
+            get_form_data($('#pagination').bootpag().find('.active').data()['lp']);
         }
     });
 

@@ -52,3 +52,9 @@ class TemplateTrimester(models.Model):
 
     def __str__(self):
         return '%s - %s - %d' % (self.year, self.number, self.favorite)
+
+
+class TemplateTrimesterForm(ModelForm):
+    class Meta:
+        model = TemplateTrimester
+        fields = '__all__'

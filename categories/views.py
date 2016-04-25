@@ -121,14 +121,14 @@ def add_documents(request, category_id):
         return HttpResponse(json.dumps(results))
 
 
-def list_documents(request, category_id):
+def list_documents(request, category_id, n):
     if request.is_ajax():
         cat = Category.objects.get(id=category_id)
         if cat.count_docs() == 0:
             docjson = None
             form = None
         else:
-            doc = cat.get_docs()[0]
+            doc = cat.get_docs()[int(n)-1]
             docjson = doc.as_json()
             if request.user.is_superuser:
                 form = DocumentAdminForm(instance=doc).as_div()
