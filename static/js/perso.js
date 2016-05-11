@@ -483,6 +483,7 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(result){
                 if (result['return']){
+                    bootbox.alert("Saved!", function(){});
                     $('#alert_save_saved').show().delay( 1000 ).fadeOut(1000);
                 }
                 else{;
