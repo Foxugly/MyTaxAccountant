@@ -100,7 +100,7 @@
               {% if user.is_superuser %}
               <ul class="nav navbar-nav navbar-left">
                 <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span><span class="caret"></span></a>
                   <ul class="dropdown-menu">
                     <li><a href="{%  url 'years' %}">{% blocktrans %} years{% endblocktrans %}</a></li>
                     <li><a href="{%  url 'trimesters' %}">{% blocktrans %} trimesters{% endblocktrans %} </a></li>
@@ -120,7 +120,7 @@
                         {% get_language_info_list for LANGUAGES as languages %}
                         {% for language in languages %}
                             <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected="selected"{% endif %}>
-                                {{ language.name_local|capfirst }} ({{ language.code }})
+                                {{ language.name_local|capfirst }}
                             </option>
                         {% endfor %}
                     </select>
