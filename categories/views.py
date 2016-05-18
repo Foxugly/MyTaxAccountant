@@ -27,6 +27,7 @@ def category_view(request, category_id):
 
 
 def remove_fileupload(liste):
+    print 'remove_fileupload'
     for path in liste:
         for fu in FileUpload.objects.all():
             if fu.file.path == path:
@@ -97,6 +98,7 @@ def add_documents(request, category_id):
                 new_filename = str(d.id) + '_' + f
                 new_path = os.path.join(cat.get_absolute_path(), new_filename)
                 shutil.copy2(path, new_path)
+                print 'copy %s %s' % (path, new_path)
                 d.add_page(d.get_npages() + 1, new_filename, w, h)
                 for fu in FileUpload.objects.all():
                     if fu.file.path == path:
