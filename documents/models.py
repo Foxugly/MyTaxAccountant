@@ -135,7 +135,7 @@ class DocumentForm(DocumentAdminForm):
         super(DocumentForm, self).__init__(*args, **kwargs)
         for field in iter(self.fields):
             self.fields[field].widget.attrs.update({'class': 'form-control'})
-            if str(field) == 'lock':
+            if str(field) == 'lock' or str(field) == 'owner':
                 self.fields[field].widget.attrs['readonly'] = True
                 self.fields[field].widget.attrs['disabled'] = 'disabled'
 
