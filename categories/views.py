@@ -35,6 +35,7 @@ def remove_fileupload(liste):
 
 
 def convert_pdf_to_jpg(l):
+    print "convert_pdf_to_jpg"
     for (cat, path, f, doc) in l:
         cat = cat[0]
         doc = doc[0]
@@ -43,6 +44,7 @@ def convert_pdf_to_jpg(l):
         new_path = cat.get_absolute_path() + '/' + str(doc.id) + '_' + '%03d' + '_' + filename
         cmd = 'convert -density 600 ' + path + ' ' + new_path
         os.system(cmd)
+        print cmd
         pdf = PdfFileReader(open(path, 'rb'))
         n = pdf.getNumPages()
         for i in range(0, n):
