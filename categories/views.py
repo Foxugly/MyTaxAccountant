@@ -58,7 +58,7 @@ def convert_pdf_to_jpg(l):
         print "APRES transfo"
         pdf = PdfFileReader(open(path, 'rb'))
         n = pdf.getNumPages()
-        for i in range(0, n):
+        for i in range(1, n+1):
             name_page = str(doc.id) + '_' + "%03d" % i + '_' + filename
             path_page = cat.get_absolute_path() + '/' + name_page
             im = Image.open(path_page)
@@ -69,6 +69,7 @@ def convert_pdf_to_jpg(l):
 
 
 def manage_convert_doc_to_pdf(cmds, paths, liste):
+    print 'manage_convert_doc_to_pdf'
     for c in cmds:
         os.system(c)
     convert_pdf_to_jpg(liste)
@@ -78,6 +79,7 @@ def manage_convert_doc_to_pdf(cmds, paths, liste):
 
 
 def manage_convert_pdf_to_jpg(liste):
+    print 'manage_convert_pdf_to_jpeg'
     convert_pdf_to_jpg(liste)
     l_path = []
     for (cat, path, f, doc) in liste:
