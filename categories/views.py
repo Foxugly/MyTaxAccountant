@@ -125,6 +125,14 @@ def add_documents(request, category_id):
                 cmds.append(cmd)
                 paths.append(path)
                 l_doc.append(([cat], new_path, new_f, [d]))
+            elif m in ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']:
+                p = re.compile(r'.[Xx][Ll][Ss][xX]?$')
+                new_f = p.sub('.pdf', f)
+                new_path = path.replace(f, new_f)
+                cmd = 'soffice --headless --convert-to pdf  %s --outdir %s/upload' % (path, settings.MEDIA_ROOT)
+                cmds.append(cmd)
+                paths.append(path)
+                l_doc.append(([cat], new_path, new_f, [d]))
             else:
                 print 'ERREUR FORMAT FICHIER'
         if len(l_doc):
