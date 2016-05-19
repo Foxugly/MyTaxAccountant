@@ -20,6 +20,7 @@ import os
 from threading import Timer
 from pyPdf import PdfFileReader
 import re
+import subprocess
 
 
 def category_view(request, category_id):
@@ -48,6 +49,12 @@ def convert_pdf_to_jpg(l):
         cmd = 'gs -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600x600 -sOutputFile=%s %s' % (new_path, path)
         os.system(cmd)
         print cmd
+        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        for line in p.stdout.readlines():
+            print line,
+        print 'before wait'
+        print p.wait()
+
         print "APRES transfo"
         pdf = PdfFileReader(open(path, 'rb'))
         n = pdf.getNumPages()
