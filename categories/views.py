@@ -43,10 +43,12 @@ def convert_pdf_to_jpg(l):
         p = re.compile(r'.[Pp][Dd][Ff]$')
         filename = p.sub('.jpg', f)
         new_path = cat.get_absolute_path() + '/' + str(doc.id) + '_' + '%03d' + '_' + filename
-        cmd = 'convert -density 600 ' + path + ' ' + new_path
-        #cmd = 'gs -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600x600 -sOutputFile=%s %s' % (new_path, path)
+        #cmd = 'convert -density 600 ' + path + ' ' + new_path
+        print "AVANT transfo"
+        cmd = 'gs -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600x600 -sOutputFile=%s %s' % (new_path, path)
         os.system(cmd)
         print cmd
+        print "APRES transfo"
         pdf = PdfFileReader(open(path, 'rb'))
         n = pdf.getNumPages()
         for i in range(0, n):
