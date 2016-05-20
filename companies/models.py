@@ -75,8 +75,9 @@ class Company(models.Model):
     def get_absolute_path(self):
         if not self.random:
             self.save()
-            os.rename(os.path.join(settings.MEDIA_ROOT, settings.STOCK_DIR, '%s' % (self.slug)), os.path.join(settings.MEDIA_ROOT, settings.STOCK_DIR, '%s_%s' % (self.slug, self.random)))
-        path = os.path.join(settings.MEDIA_ROOT, settings.STOCK_DIR, '%s_%s' % (self.slug, self.random))
+            os.rename(os.path.join(settings.MEDIA_ROOT, settings.STOCK_DIR, self.slug), os.path.join(settings.MEDIA_ROOT, settings.STOCK_DIR, self.slug + '_' + self.random))
+        path = os.path.join(settings.MEDIA_ROOT, settings.STOCK_DIR, self.slug + '_' + self.random)
+        print path
         if os.path.exists(path):
             return path
         else:
@@ -84,7 +85,9 @@ class Company(models.Model):
 
     def get_relative_path(self):
         if self.get_absolute_path():
-            return os.path.join(settings.MEDIA_URL, settings.STOCK_DIR, '%s_%s' % (self.slug, self.random))
+            path = os.path.join(settings.MEDIA_URL, settings.STOCK_DIR, self.slug + '_' + self.random)
+            print path
+            return path
         else:
             return None
 
