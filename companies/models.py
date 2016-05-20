@@ -73,7 +73,9 @@ class Company(models.Model):
     #    return os.path.join(settings.MEDIA_ROOT, settings.STOCK_DIR, self.slug)
 
     def get_absolute_path(self):
+        print "COMPANIES get_absolute_path"
         path = os.path.join(settings.MEDIA_ROOT, settings.STOCK_DIR, self.slug + '_' + self.random)
+        print path
         if not os.path.exists(path):
             return path
         else:
