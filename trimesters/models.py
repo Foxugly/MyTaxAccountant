@@ -61,25 +61,17 @@ class Trimester(models.Model):
             self.categories.add(new_cat)
 
     def get_absolute_path(self):
-        path = os.path.join(self.refer_year.get_absolute_path(), str(self.template.number))
-        print path
-        if os.path.exists(path):
-            return path
-        else:
-            return None
+        return os.path.join(self.refer_year.get_absolute_path(), str(self.template.number))
 
     def get_relative_path(self):
-        if self.get_absolute_path():
-            return os.path.join(self.refer_year.get_relative_path(), str(self.template.number))
-        else:
-            return None
+        return os.path.join(self.refer_year.get_relative_path(), str(self.template.number))
 
     def save(self, *args, **kwargs):
         if not self.random:
             self.random = str(uuid.uuid4().get_hex().upper()[0:16])
         super(Trimester, self).save(*args, **kwargs)
-        #if not os.path.isdir(self.get_absolute_path()):
-        #    os.mkdir(self.get_absolute_path(), 0711)
+        if not os.path.isdir(self.get_absolute_path()):
+            os.mkdir(self.get_absolute_path(), 0711)
 
     def delete(self, **kwargs):
         for c in self.categories.all():
