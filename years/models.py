@@ -48,10 +48,10 @@ class Year(models.Model):
         return dict(id=self.id, name=self.get_name())
 
     def get_relative_path(self):
-        return os.path.join(self.refer_company.get_relative_path(), self.fiscal_year.get_name())
+        return os.path.join(self.refer_company.get_relative_path(), self.fiscal_year.get_name() + '_' + self.random)
 
     def get_absolute_path(self):
-        return os.path.join(self.refer_company.get_absolute_path(), self.fiscal_year.get_name())
+        return os.path.join(self.refer_company.get_absolute_path(), self.fiscal_year.get_name() + '_' + self.random)
 
     def save(self, *args, **kwargs):
         if not self.random:
