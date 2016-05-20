@@ -11,6 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from documents.models import Document
 import os
+import uuid
 
 
 class TypeCategory(models.Model):
@@ -28,6 +29,7 @@ class Category(models.Model):
     refer_trimester = models.ForeignKey('trimesters.Trimester', verbose_name=_('trimester'),
                                         related_name="back_trimester", null=True)
     active = models.BooleanField(_('active'), default=True)
+    random = models.CharField(max_length=24, blank=True, null=True)
 
     def get_name(self):
         return u'%s' % self.cat.name
@@ -57,6 +59,8 @@ class Category(models.Model):
         return os.path.join(self.refer_trimester.get_absolute_path(), self.cat.name)
 
     def save(self, *args, **kwargs):
+        if not self.random:
+            self.random = str(uuid.uuid4().get_hex().upper()[0:24])
         super(Category, self).save(*args, **kwargs)
         os.mkdir(self.get_absolute_path(), 0711)
 
