@@ -61,10 +61,10 @@ class Trimester(models.Model):
             self.categories.add(new_cat)
 
     def get_absolute_path(self):
-        return os.path.join(self.refer_year.get_absolute_path(), str(self.template.number))
+        return os.path.join(self.refer_year.get_absolute_path(), str(self.template.number) + "_" + self.random)
 
     def get_relative_path(self):
-        return os.path.join(self.refer_year.get_relative_path(), str(self.template.number))
+        return os.path.join(self.refer_year.get_relative_path(), str(self.template.number) + "_" + self.random)
 
     def save(self, *args, **kwargs):
         if not self.random:
