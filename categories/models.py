@@ -62,7 +62,8 @@ class Category(models.Model):
         if not self.random:
             self.random = str(uuid.uuid4().get_hex().upper()[0:24])
         super(Category, self).save(*args, **kwargs)
-        os.mkdir(self.get_absolute_path(), 0711)
+        if not os.path.isdir(self.get_absolute_path()):
+            os.mkdir(self.get_absolute_path(), 0711)
 
     def delete(self, **kwargs):
         for d in self.documents.all():
