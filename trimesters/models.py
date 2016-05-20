@@ -63,6 +63,7 @@ class Trimester(models.Model):
     def get_absolute_path(self):
         if not self.random:
             self.save()
+            os.rename(os.path.join(self.refer_year.get_absolute_path(), u'%s' % (str(self.template.number))), os.path.join(self.refer_year.get_absolute_path(), u'%s_%s' % (str(self.template.number), self.random)))
         path = os.path.join(self.refer_year.get_absolute_path(), u'%s_%s' % (str(self.template.number), self.random))
         if os.path.exists(path):
             return path
