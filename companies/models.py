@@ -74,7 +74,7 @@ class Company(models.Model):
 
     def get_absolute_path(self):
         path = os.path.join(settings.MEDIA_ROOT, settings.STOCK_DIR, self.slug + '_' + self.random)
-        if os.path.exists(path):
+        if not os.path.exists(path):
             return path
         else:
             return None
@@ -98,8 +98,8 @@ class Company(models.Model):
             self.slug = slugify(self.name)
             create = False
         super(Company, self).save(*args, **kwargs)
-        #if create:
-        #    self.create_directory()
+        if create:
+            self.create_directory()
 
     def delete(self, **kwargs):
         for y in self.years.all():
