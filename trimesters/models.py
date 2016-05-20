@@ -61,9 +61,9 @@ class Trimester(models.Model):
             self.categories.add(new_cat)
 
     def get_absolute_path(self):
-        if not self.random:
-            self.save()
-            os.rename(os.path.join(self.refer_year.get_absolute_path(), str(self.template.number)), os.path.join(self.refer_year.get_absolute_path(), '%s_%s' % (str(self.template.number), self.random)))
+        #if not self.random:
+        #    self.save()
+        #    os.rename(os.path.join(self.refer_year.get_absolute_path(), str(self.template.number)), os.path.join(self.refer_year.get_absolute_path(), '%s_%s' % (str(self.template.number), self.random)))
         path = os.path.join(self.refer_year.get_absolute_path(), '%s_%s' % (str(self.template.number), self.random))
         if os.path.exists(path):
             return path
