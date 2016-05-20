@@ -355,7 +355,7 @@ $(document).ready(function() {
                     for( var i = 1; i < result['size']; i++ ) {
                         $('#modal_split_cut').append('<option value="' + i + '">' + 'Page ' + i + ' and ' + (i+1) + '</option>');
                     }
-                    $('#modal_pagination').bootpag({total: result['size'], page: 1}).on("page", function(event, num){
+                    $('#modal_pagination').bootpag({total: result['size'], page: 1, maxVisible: 10}).on("page", function(event, num){
                         modal_update_img(result['doc_id'], num);
                     });
 
@@ -536,7 +536,7 @@ $(document).ready(function() {
                     }
                 }
                 if (option){
-                        $('#pagination').bootpag({total: result['n'], page: numpage});
+                        $('#pagination').bootpag({total: result['n'], page: numpage, maxVisible: 10,});
                     if (result['doc'] == null){
                         view_form(result['valid'], null, null, 0);
                     }
@@ -610,7 +610,7 @@ $(document).ready(function() {
                     update_datatable(result['doc_list'][i]);
                 }
                 var n = parseInt(result['n']);
-                $('#pagination').bootpag({total: n,page: 1}).on("page", function(event, num){
+                $('#pagination').bootpag({total: n, page: 1, maxVisible: 10}).on("page", function(event, num){
                     get_form_data(num);
                 });
             }
@@ -637,7 +637,7 @@ $(document).ready(function() {
     $('#pagination').bootpag({
             total: 1,
             page: 1,
-            maxVisible: 5,
+            maxVisible: 10,
             leaps: true,
             firstLastUse: true,
             first: '←',

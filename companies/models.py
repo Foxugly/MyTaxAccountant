@@ -17,6 +17,7 @@ from years.models import Year
 from django.conf import settings
 from django.utils.text import slugify
 import os
+import uuid
 
 
 class Company(models.Model):
@@ -29,6 +30,7 @@ class Company(models.Model):
     zip_code = models.CharField(_("zip code"), max_length=5, blank=True, null=True)
     city = models.CharField(_("city"), max_length=128, blank=True, null=True)
     country = models.ForeignKey(Country, blank=True)
+    random = models.CharField(max_length=16, blank=True, null=True)
     sales_revenue = models.IntegerField(_("Sales revenue"),
                                         choices=(
                                             (1, _("Lower than 50.000 euros")),
@@ -64,21 +66,41 @@ class Company(models.Model):
     def __str__(self):
         return '%s' % self.get_name()
 
-    def get_relative_path(self):
-        return os.path.join(settings.MEDIA_URL, settings.STOCK_DIR, self.slug)
+    #def get_relative_path(self):
+    #    return os.path.join(settings.MEDIA_URL, settings.STOCK_DIR, self.slug)
+
+    #def get_absolute_path(self):
+    #    return os.path.join(settings.MEDIA_ROOT, settings.STOCK_DIR, self.slug)
 
     def get_absolute_path(self):
-        return os.path.join(settings.MEDIA_ROOT, settings.STOCK_DIR, self.slug)
+        if not self.random:
+            self.save()
+        path = os.path.join(settings.MEDIA_ROOT, settings.STOCK_DIR, u'%s_%s' % (self.slug, self.random))
+        if os.path.exists(path):
+            return path
+        else:
+            return None
+
+    def get_relative_path(self):
+        if self.get_absolute_path():
+            return os.path.join(settings.MEDIA_URL, settings.STOCK_DIR, u'%s_%s' % (self.slug, self.random))
+        else:
+            return None
 
     def create_directory(self):
         if not os.path.isdir(self.get_absolute_path()):
             os.mkdir(self.get_absolute_path(), 0711)
 
     def save(self, *args, **kwargs):
+        if not self.random:
+            self.random = str(uuid.uuid4().get_hex().upper()[0:16])
+        create = True
         if not self.slug:
             self.slug = slugify(self.name)
+            create = False
         super(Company, self).save(*args, **kwargs)
-        self.create_directory()
+        if create:
+            self.create_directory()
 
     def delete(self, **kwargs):
         for y in self.years.all():
@@ -106,6 +128,7 @@ class CompanyForm(ModelForm):
 
     def save(self):
         instance = super(CompanyForm, self).save(commit=False)
-        instance.slug = slugify(instance.name)
+        if not instance.slug:
+            instance.slug = slugify(instance.name)
         instance.save()
         return instance

@@ -15,6 +15,7 @@ from categories.models import Category, TypeCategory
 from django.utils.translation import ugettext_lazy as _
 from utils.models import TemplateTrimester
 import os
+import uuid
 
 
 class Trimester(models.Model):
@@ -25,6 +26,7 @@ class Trimester(models.Model):
     categories = models.ManyToManyField(Category, verbose_name=_('categories'), blank=True)
     refer_year = models.ForeignKey('years.Year', verbose_name=_('year'), related_name="back_year", null=True)
     favorite = models.BooleanField(_('favorite'), default=False)
+    random = models.CharField(max_length=16, blank=True, null=True)
 
     def get_docs(self):
         out = []
@@ -58,13 +60,24 @@ class Trimester(models.Model):
             new_cat.save()
             self.categories.add(new_cat)
 
-    def get_relative_path(self):
-        return os.path.join(self.refer_year.get_relative_path(), str(self.template.number))
-
     def get_absolute_path(self):
-        return os.path.join(self.refer_year.get_absolute_path(), str(self.template.number))
+        if not self.random:
+            self.save()
+        path = os.path.join(self.refer_year.get_absolute_path(), u'%s_%s' % (str(self.template.number), self.random))
+        if os.path.exists(path):
+            return path
+        else:
+            return None
+
+    def get_relative_path(self):
+        if self.get_absolute_path():
+            return os.path.join(self.refer_year.get_relative_path(), u'%s_%s' % (str(self.template.number), self.random))
+        else:
+            return None
 
     def save(self, *args, **kwargs):
+        if not self.random:
+            self.random = str(uuid.uuid4().get_hex().upper()[0:16])
         super(Trimester, self).save(*args, **kwargs)
         if not os.path.isdir(self.get_absolute_path()):
             os.mkdir(self.get_absolute_path(), 0711)
