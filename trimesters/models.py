@@ -80,8 +80,8 @@ class Trimester(models.Model):
         if not self.random:
             self.random = str(uuid.uuid4().get_hex().upper()[0:16])
         super(Trimester, self).save(*args, **kwargs)
-        if not os.path.isdir(self.get_absolute_path()):
-            os.mkdir(self.get_absolute_path(), 0711)
+        #if not os.path.isdir(self.get_absolute_path()):
+        #    os.mkdir(self.get_absolute_path(), 0711)
 
     def delete(self, **kwargs):
         for c in self.categories.all():

@@ -98,8 +98,8 @@ class Company(models.Model):
             self.slug = slugify(self.name)
             create = False
         super(Company, self).save(*args, **kwargs)
-        if create:
-            self.create_directory()
+        #if create:
+        #    self.create_directory()
 
     def delete(self, **kwargs):
         for y in self.years.all():
