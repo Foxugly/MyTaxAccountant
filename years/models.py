@@ -13,6 +13,7 @@ from trimesters.models import Trimester
 from utils.models import FiscalYear
 import os
 from django.utils.translation import ugettext_lazy as _
+import uuid
 
 
 class Year(models.Model):
@@ -22,6 +23,7 @@ class Year(models.Model):
     refer_company = models.ForeignKey('companies.Company', verbose_name=_('company'), related_name="back_company",
                                       blank=True, null=True)
     favorite = models.BooleanField(_('favorite'), default=False)
+    random = models.CharField(max_length=16, blank=True, null=True)
     admin = models.BooleanField(_('admin'), default=False)
 
     def get_company(self):
@@ -52,6 +54,8 @@ class Year(models.Model):
         return os.path.join(self.refer_company.get_absolute_path(), self.fiscal_year.get_name())
 
     def save(self, *args, **kwargs):
+        if not self.random:
+            self.random = str(uuid.uuid4().get_hex().upper()[0:16])
         super(Year, self).save(*args, **kwargs)
         if not os.path.isdir(self.get_absolute_path()):
             os.mkdir(self.get_absolute_path(), 0711)
