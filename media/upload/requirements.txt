@@ -1,0 +1,9 @@
+django==1.8.5
+pypdf
+django-bootstrap3
+django-colorfield
+django-address==0.1.4
+django-timezone-field
+icalendar
+pillow==2.9.0
+reportlab

@@ -451,7 +451,7 @@ $(document).ready(function() {
             out += '<a class="btn btn-xs btn-default"><span class="glyphicon glyphicon-refresh"></span> </a>';
         }
         out += '</td>';
-        $('#datatable').dataTable().fnAddData([data['fiscal_id'], "<a id='" + data['id'] + "' class='img_modal' data_id='"+ data['id'] +"' data-toggle='modal' data-target='#myModal'>" + data['name'] + "</a>", data['date'], data['description'], lock, out]);
+        $('#datatable').dataTable().fnAddData([data['fiscal_id'], "<a id='" + data['id'] + "' class='img_modal' data-id='"+ data['id'] +"' data-toggle='modal' data-target='#myModal'>" + data['name'] + "</a>", data['date'], data['description'], lock, out]);
         $("#"+data['id']).click(function(){img_modal($(this));});
         $("#btn_mv_"+data['id']).click(function(){move_modal($(this));});
         $("#btn_me_"+data['id']).click(function(){merge_modal($(this));});
@@ -518,7 +518,7 @@ $(document).ready(function() {
     }
 
     function update_data(option){
-        /*console.log('update_data');*/
+        console.log('update_data');
         var pagnum = $('#pagination').bootpag().find('.active').data()['lp'];
         var url = '/category/'+ $('ul.nav-pills li.active a').attr("data-id") + '/list/' +  pagnum + '/';
         $.ajax({
@@ -550,7 +550,7 @@ $(document).ready(function() {
     }
 
     function get_form_data(i){
-        /*console.log('get_form_data');*/
+        console.log('get_form_data ');
         var url = '/category/' + $('ul.nav-pills li.active a').attr("data-id") + '/form/' + i + '/';
         $.ajax({
             url: url,
@@ -611,7 +611,13 @@ $(document).ready(function() {
                 }
                 var n = parseInt(result['n']);
                 $('#pagination').bootpag({total: n, page: 1, maxVisible: 10}).on("page", function(event, num){
-                    get_form_data(num);
+                    console.log('nav_click');
+                    var table = $('#datatable').dataTable();
+                    console.log(table);
+                    var a = table.children().children()[1 + num].children[1];
+                    var id = $(a).find("a")[0].id;
+                    get_form_data(id);
+
                 });
             }
         });

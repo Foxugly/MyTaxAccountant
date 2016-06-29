@@ -170,7 +170,7 @@ def form_document(request, category_id, n):
     if request.is_ajax():
         cat = Category.objects.get(pk=category_id)
         if cat.count_docs() > 0:
-            doc = cat.get_docs()[int(n)-1]
+            doc = Document.objects.get(pk=n)
             if request.user.is_superuser:
                 form = DocumentAdminForm(instance=doc).as_div()
             else:
