@@ -614,6 +614,7 @@ $(document).ready(function() {
                 for (var i = 0; i < result['doc_list'].length; i++) {
                     update_datatable(result['doc_list'][i]);
                 }
+                view_form(false, null, "", 0);
                 var n = parseInt(result['n']);
                 $('#pagination').bootpag({total: n, page: 1, maxVisible: 10}).on("page", function(event, num){
                     var table = $('#datatable').DataTable().data();
