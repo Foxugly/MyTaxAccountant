@@ -615,7 +615,7 @@ $(document).ready(function() {
                 }
                 var n = parseInt(result['n']);
                 $('#pagination').bootpag({total: n, page: 1, maxVisible: 10}).on("page", function(event, num){
-                    var table = $('#datatable').dataTable();
+                    var table = $('#datatable').DataTable();
                     var a = table.children().children()[1 + num].children[1];
                     var find = $(a).find("a");
                     console.log(table.data().count());
@@ -645,7 +645,7 @@ $(document).ready(function() {
             $('#alert_save_saved').hide();
             $('#alert_save_error').hide();
             var num = $('#pagination').bootpag().find('.active').data()['lp'];
-            var table = $('#datatable').dataTable();
+            var table = $('#datatable').DataTable();
             var a = table.children().children()[1 + num].children[1];
             var find = $(a).find("a");
             console.log(table.data().count());
