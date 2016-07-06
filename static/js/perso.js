@@ -292,7 +292,6 @@ $(document).ready(function() {
             traditional: true,
             dataType: 'json',
             success: function(result){
-                /*console.log(result);*/
                 $('#modal_category').empty();
                 for( var i = 0; i < result['nav_list'].length; i++ ) {
                     $('#modal_category').append('<option value="'+ result['nav_list'][i].id + '">'+ result['nav_list'][i].name +'</option>');
@@ -332,7 +331,6 @@ $(document).ready(function() {
             traditional: true,
             dataType: 'json',
             success: function(result){
-                /*console.log(result);*/
                 $('#modal_year').empty();
                 for( var i = 0, len = result['list'].length; i < len; i++ ) {
                     $('#modal_year').append('<option value="'+ result['list'][i].id + '">'+ result['list'][i].name +'</option>');
@@ -475,7 +473,6 @@ $(document).ready(function() {
         var form = $('#div_form form');
         var id = $('#doc_id').val();
         var url = '/document/' + id + '/update/';
-        console.log(url);
         $.ajax({
             url: url,
             type: 'GET',
@@ -598,7 +595,7 @@ $(document).ready(function() {
 
     function nav_click(e){
         //console.log("caller is " + arguments.callee.caller);
-        console.log('nav_click');
+        //console.log('nav_click');
         $('ul.nav-pills li.active').removeClass('active');
         e.parent('li').addClass('active');
         var cat_id = $('ul.nav-pills li.active a').attr("data-id");
