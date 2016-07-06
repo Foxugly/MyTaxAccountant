@@ -41,9 +41,7 @@ def update_ajax(request, document_id):
             results['return'] = True
         else:
             results['return'] = False
-            results['errors'] = []
-            for field in form:
-                results['errors'] = "%s : %s" % (field, field.error)
+            results['errors'] = str(form.errors) + form
         return HttpResponse(json.dumps(results))
 
 
