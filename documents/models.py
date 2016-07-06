@@ -152,8 +152,16 @@ class DocumentReadOnlyForm(DocumentAdminForm):
         super(DocumentReadOnlyForm, self).__init__(*args, **kwargs)
         for field in iter(self.fields):
             self.fields[field].widget.attrs.update({'class': 'form-control'})
-            self.fields[field].widget.attrs['readonly'] = True
-            self.fields[field].widget.attrs['disabled'] = 'disabled'
+            if str(field) is not 'description':
+                self.fields[field].widget.attrs['readonly'] = True
+                self.fields[field].widget.attrs['disabled'] = 'disabled'
+
+    class Meta:
+        model = Document
+        fields = ['owner', 'name', 'date', 'description', 'fiscal_id', 'lock']
+        widgets = {
+            'description': forms.Textarea(attrs={'cols': 40, 'rows': 4}),
+        }
 
     def as_div(self):
         txt = '<form class="form-horizontal">\n<fieldset>\n<legend>' + str(_('Document')) + '</legend>'
