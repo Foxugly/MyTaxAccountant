@@ -41,7 +41,8 @@ def update_ajax(request, document_id):
             results['return'] = True
         else:
             results['return'] = False
-            results['errors'] = str(form.errors) + form
+            results['errors'] = str(form.errors)
+            print form.errors
         return HttpResponse(json.dumps(results))
 
 
