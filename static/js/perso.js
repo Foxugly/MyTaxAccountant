@@ -518,7 +518,7 @@ $(document).ready(function() {
     }
 
     function update_data(option){
-        console.log('update_data');
+        //console.log('update_data');
         var pagnum = $('#pagination').bootpag().find('.active').data()['lp'];
         var url = '/category/'+ $('ul.nav-pills li.active a').attr("data-id") + '/list/' +  pagnum + '/';
         $.ajax({
@@ -535,7 +535,6 @@ $(document).ready(function() {
                         numpage = i + 1 ;
                     }
                 }
-                console.log("option : " + option);
                 if (option){
                         $('#pagination').bootpag({total: result['n'], page: numpage, maxVisible: 10,});
                     if (result['doc'] == null){
@@ -598,7 +597,7 @@ $(document).ready(function() {
 
     function nav_click(e){
         //console.log("caller is " + arguments.callee.caller);
-        console.log('nav_click');
+        //console.log('nav_click');
         $('ul.nav-pills li.active').removeClass('active');
         e.parent('li').addClass('active');
         var cat_id = $('ul.nav-pills li.active a').attr("data-id");
