@@ -538,7 +538,7 @@ $(document).ready(function() {
                 if (option){
                         $('#pagination').bootpag({total: result['n'], page: numpage, maxVisible: 10,});
                     if (result['doc'] == null){
-                        view_form(result['valid'], null, null, 0);
+                        view_form(result['valid'], null, "", 0);
                     }
                     else{
                         view_form(result['valid'], result['doc']['img'],result['form'], $('#doc_id').val());
@@ -640,8 +640,15 @@ $(document).ready(function() {
             var num = $('#pagination').bootpag().find('.active').data()['lp'];
             var table = $('#datatable').dataTable();
             var a = table.children().children()[1 + num].children[1];
-            var id = $(a).find("a")[0].id;
-            get_form_data(id);
+            var find = $(a).find("a");
+            console.log(find);
+            if (find.length > 0){
+                var id = find[0].id;
+                get_form_data(id);
+            }else{
+                view_form(result['valid'], null, "", 0);
+            }
+
         }
     });
 
