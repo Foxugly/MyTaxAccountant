@@ -625,7 +625,7 @@ $(document).ready(function() {
                 $('#pagination').bootpag({total: n, page: 1, maxVisible: 10}).on("page", function(event, num){
                     var table = $('#datatable').DataTable().data();
                     if (table.rows().count() > 0){
-                        var a = table.rows().data()[num][1];
+                        var a = table.rows().data()[num-1][1];
                         get_form_data($(a).data().id);
                     }else{
                         view_form(false, null, "", 0);
@@ -652,7 +652,7 @@ $(document).ready(function() {
             var num = $('#pagination').bootpag().find('.active').data()['lp'];
             var table = $('#datatable').DataTable().data();
             if (table.rows().count() > 0){
-                var a = table.rows().data()[num][1];
+                var a = table.rows().data()[num-1][1];
                 get_form_data($(a).data().id);
             }else{
                 view_form(false, null, "", 0);
