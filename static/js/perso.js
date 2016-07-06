@@ -618,8 +618,8 @@ $(document).ready(function() {
                     var table = $('#datatable').dataTable();
                     var a = table.children().children()[1 + num].children[1];
                     var find = $(a).find("a");
-                    console.log(find);
-                    if (find.length > 0){
+                    console.log(table.data().count());
+                    if (table.data().count() > 0){
                         var id = find[0].id;
                         get_form_data(id);
                     }else{
@@ -648,8 +648,8 @@ $(document).ready(function() {
             var table = $('#datatable').dataTable();
             var a = table.children().children()[1 + num].children[1];
             var find = $(a).find("a");
-            console.log(find);
-            if (find.length > 0){
+            console.log(table.data().count());
+            if (table.data().count() > 0){
                 var id = find[0].id;
                 get_form_data(id);
             }else{
