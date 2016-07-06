@@ -630,6 +630,7 @@ $(document).ready(function() {
             $("#div_img_form").hide();
             $('#alert_save_saved').hide();
             $('#alert_save_error').hide();
+            view_form(false, null, null, null);
         }
         else if (view == 'form'){
             $("#div_list").hide();
