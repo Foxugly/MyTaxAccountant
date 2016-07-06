@@ -475,6 +475,7 @@ $(document).ready(function() {
         var form = $('#div_form form');
         var id = $('#doc_id').val();
         var url = '/document/' + id + '/update/';
+        console.log(url);
         $.ajax({
             url: url,
             type: 'GET',
