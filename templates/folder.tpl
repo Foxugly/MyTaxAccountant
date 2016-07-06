@@ -14,7 +14,7 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <ul class="nav nav-tabs nav-pills" role="tablist">
+        <ul id="nav_category" class="nav nav-tabs nav-pills" role="tablist">
             {% for c in user|favorite_company|favorite_year|favorite_trimester|categories %}
                 {%if forloop.first %}
                     <li role="presentation" class="active"><a data-target="#" data-id="{{c.id}}" data-toggle="pill" id="nav_{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>

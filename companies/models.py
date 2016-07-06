@@ -67,8 +67,6 @@ class Company(models.Model):
         return '%s' % self.get_name()
 
     def get_absolute_path(self):
-        print self.slug
-        print self.random
         return os.path.join(settings.MEDIA_ROOT, settings.STOCK_DIR, self.slug + '_' + self.random)
 
     def get_relative_path(self):

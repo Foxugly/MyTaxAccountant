@@ -28,7 +28,6 @@ def category_view(request, category_id):
 
 
 def remove_fileupload(liste):
-    print 'remove_fileupload'
     for path in liste:
         for fu in FileUpload.objects.all():
             if fu.file.path == path:
@@ -37,7 +36,6 @@ def remove_fileupload(liste):
 
 
 def convert_pdf_to_jpg(l):
-    print "convert_pdf_to_jpg"
     for (cat, path, f, doc) in l:
         cat = cat[0]
         doc = doc[0]
@@ -45,17 +43,10 @@ def convert_pdf_to_jpg(l):
         filename = p.sub('.jpg', f)
         new_path = cat.get_absolute_path() + '/' + str(doc.id) + '_' + '%03d' + '_' + filename
         #cmd = 'convert -density 600 ' + path + ' ' + new_path
-        print "AVANT transfo"
         cmd = 'gs -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600x600 -sOutputFile=%s %s' % (new_path, path)
         os.system(cmd)
-        print cmd
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        for line in p.stdout.readlines():
-            print line,
-        print 'before wait'
-        print p.wait()
-
-        print "APRES transfo"
+        p.wait()
         pdf = PdfFileReader(open(path, 'rb'))
         n = pdf.getNumPages()
         for i in range(1, n+1):
@@ -69,7 +60,6 @@ def convert_pdf_to_jpg(l):
 
 
 def manage_convert_doc_to_pdf(cmds, paths, liste):
-    print 'manage_convert_doc_to_pdf'
     for c in cmds:
         os.system(c)
     convert_pdf_to_jpg(liste)
@@ -79,7 +69,6 @@ def manage_convert_doc_to_pdf(cmds, paths, liste):
 
 
 def manage_convert_pdf_to_jpg(liste):
-    print 'manage_convert_pdf_to_jpeg'
     convert_pdf_to_jpg(liste)
     l_path = []
     for (cat, path, f, doc) in liste:
@@ -110,7 +99,6 @@ def add_documents(request, category_id):
                 new_filename = str(d.id) + '_' + f
                 new_path = os.path.join(cat.get_absolute_path(), new_filename)
                 shutil.copy2(path, new_path)
-                print 'copy %s %s' % (path, new_path)
                 d.add_page(d.get_npages() + 1, new_filename, w, h)
                 for fu in FileUpload.objects.all():
                     if fu.file.path == path:

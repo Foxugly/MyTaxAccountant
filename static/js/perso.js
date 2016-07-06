@@ -134,7 +134,7 @@ $(document).ready(function() {
     $('#sel_trimester').change(function() {update_categories();});
     $('#sel_year').change(function() {update_trimesters();});
     $('#sel_company').change(function() {update_years();});
-    $('ul.nav-pills li a').click(function() {nav_click($(this));});
+    $('#nav_category li a').click(function() {nav_click($(this));});
     $('#modal_company').on('change', function () { modal_companies();});
     $('#modal_year').on('change', function () { modal_years();});
     $('#modal_trimester').on('change', function () { modal_trimesters();});
@@ -550,7 +550,8 @@ $(document).ready(function() {
     }
 
     function get_form_data(i){
-        console.log('get_form_data ');
+        //console.log('get_form_data ');
+        //console.log("caller is " + arguments.callee.caller.toString());
         var url = '/category/' + $('ul.nav-pills li.active a').attr("data-id") + '/form/' + i + '/';
         $.ajax({
             url: url,
@@ -595,6 +596,8 @@ $(document).ready(function() {
     });
 
     function nav_click(e){
+        //console.log("caller is " + arguments.callee.caller);
+        //console.log('nav_click');
         $('ul.nav-pills li.active').removeClass('active');
         e.parent('li').addClass('active');
         var cat_id = $('ul.nav-pills li.active a').attr("data-id");
@@ -611,13 +614,10 @@ $(document).ready(function() {
                 }
                 var n = parseInt(result['n']);
                 $('#pagination').bootpag({total: n, page: 1, maxVisible: 10}).on("page", function(event, num){
-                    console.log('nav_click');
                     var table = $('#datatable').dataTable();
-                    console.log(table);
                     var a = table.children().children()[1 + num].children[1];
                     var id = $(a).find("a")[0].id;
                     get_form_data(id);
-
                 });
             }
         });
@@ -636,7 +636,11 @@ $(document).ready(function() {
             $("#div_img_form").show();
             $('#alert_save_saved').hide();
             $('#alert_save_error').hide();
-            get_form_data($('#pagination').bootpag().find('.active').data()['lp']);
+            var num = $('#pagination').bootpag().find('.active').data()['lp'];
+            var table = $('#datatable').dataTable();
+            var a = table.children().children()[1 + num].children[1];
+            var id = $(a).find("a")[0].id;
+            get_form_data(id);
         }
     });
 
