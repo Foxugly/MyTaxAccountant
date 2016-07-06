@@ -139,6 +139,13 @@ class DocumentForm(DocumentAdminForm):
                 self.fields[field].widget.attrs['readonly'] = True
                 self.fields[field].widget.attrs['disabled'] = 'disabled'
 
+    class Meta:
+        model = Document
+        fields = ['owner', 'name', 'date', 'description', 'fiscal_id', 'lock']
+        widgets = {
+            'description': forms.Textarea(attrs={'cols': 40, 'rows': 4}),
+        }
+
 
 class DocumentReadOnlyForm(DocumentAdminForm):
     def __init__(self, *args, **kwargs):
