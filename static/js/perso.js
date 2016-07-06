@@ -598,7 +598,7 @@ $(document).ready(function() {
 
     function nav_click(e){
         //console.log("caller is " + arguments.callee.caller);
-        //console.log('nav_click');
+        console.log('nav_click');
         $('ul.nav-pills li.active').removeClass('active');
         e.parent('li').addClass('active');
         var cat_id = $('ul.nav-pills li.active a').attr("data-id");
@@ -626,8 +626,6 @@ $(document).ready(function() {
                     var table = $('#datatable').DataTable().data();
                     if (table.rows().count() > 0){
                         var a = table.rows().data()[num][1];
-                        console.log(a);
-                        console.log($(a).data().id);
                         get_form_data($(a).data().id);
                     }else{
                         view_form(false, null, "", 0);
@@ -655,8 +653,6 @@ $(document).ready(function() {
             var table = $('#datatable').DataTable().data();
             if (table.rows().count() > 0){
                 var a = table.rows().data()[num][1];
-                console.log(a);
-                console.log($(a).data().id);
                 get_form_data($(a).data().id);
             }else{
                 view_form(false, null, "", 0);
@@ -680,9 +676,7 @@ $(document).ready(function() {
             prevClass: 'prev',
             lastClass: 'last',
             firstClass: 'first'
-        });/*.on("page", function(event, num){
-            get_form_data(num);
-    });*/
+        });
 
     $('#document_split').click(function() {
         var form = $('#form_split');
