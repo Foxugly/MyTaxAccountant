@@ -609,26 +609,25 @@ $(document).ready(function() {
             traditional: true,
             dataType: 'json',
             success: function(result){
-                console.log(result);
                 $('#datatable').dataTable().fnClearTable();
                 for (var i = 0; i < result['doc_list'].length; i++) {
                     update_datatable(result['doc_list'][i]);
                 }
-                console.log("start1");
                 view_form(false, null, "", 0);
-                console.log("start2");
                 var n = parseInt(result['n']);
-                console.log("start3");
-                $('#pagination').bootpag({total: n, page: 1, maxVisible: 10}).on("page", function(event, num){
-                    console.log("ici");
                     var table = $('#datatable').DataTable().data();
-                    console.log(table);
                     if (table.rows().count() > 0){
-                        console.log("go go go");
                         var a = table.rows().data()[0][1];
                         get_form_data($(a).data().id);
                     }else{
-                        console.log('clean');
+                        view_form(false, null, "", 0);
+                    }
+                $('#pagination').bootpag({total: n, page: 1, maxVisible: 10}).on("page", function(event, num){
+                    var table = $('#datatable').DataTable().data();
+                    if (table.rows().count() > 0){
+                        var a = table.rows().data()[0][1];
+                        get_form_data($(a).data().id);
+                    }else{
                         view_form(false, null, "", 0);
                     }
                 });
