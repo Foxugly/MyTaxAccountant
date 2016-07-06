@@ -535,6 +535,7 @@ $(document).ready(function() {
                         numpage = i + 1 ;
                     }
                 }
+                console.log("option" + option);
                 if (option){
                         $('#pagination').bootpag({total: result['n'], page: numpage, maxVisible: 10,});
                     if (result['doc'] == null){
