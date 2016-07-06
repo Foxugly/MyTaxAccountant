@@ -135,13 +135,13 @@ class DocumentForm(DocumentAdminForm):
         super(DocumentForm, self).__init__(*args, **kwargs)
         for field in iter(self.fields):
             self.fields[field].widget.attrs.update({'class': 'form-control'})
-            if str(field) == 'lock' or str(field) == 'owner':
-                self.fields[field].widget.attrs['readonly'] = True
-                #self.fields[field].widget.attrs['disabled'] = 'disabled'
+            #if str(field) == 'lock' or str(field) == 'owner':
+            #    self.fields[field].widget.attrs['readonly'] = True
+            #    self.fields[field].widget.attrs['disabled'] = 'disabled'
 
     class Meta:
         model = Document
-        fields = ['owner', 'name', 'date', 'description', 'fiscal_id', 'lock']
+        fields = ['name', 'date', 'description', 'fiscal_id']
         widgets = {
             'description': forms.Textarea(attrs={'cols': 40, 'rows': 4}),
         }
@@ -154,11 +154,11 @@ class DocumentReadOnlyForm(DocumentAdminForm):
             self.fields[field].widget.attrs.update({'class': 'form-control'})
             if str(field) is not 'description':
                 self.fields[field].widget.attrs['readonly'] = True
-                #self.fields[field].widget.attrs['disabled'] = 'disabled'
+                self.fields[field].widget.attrs['disabled'] = 'disabled'
 
     class Meta:
         model = Document
-        fields = ['owner', 'name', 'date', 'description', 'fiscal_id', 'lock']
+        fields = ['name', 'date', 'description', 'fiscal_id']
         widgets = {
             'description': forms.Textarea(attrs={'cols': 40, 'rows': 4}),
         }
