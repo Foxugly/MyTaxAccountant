@@ -1,5 +1,4 @@
-from users.models import UserProfile
-from utils.models import Country, FiscalYear, TemplateTrimester
+from utils.models import FiscalYear, TemplateTrimester
 from companies.models import Company
 from years.models import Year
 from categories.models import TypeCategory
@@ -29,8 +28,8 @@ else :
 	tt = TemplateTrimester(number=trim, year=fy, favorite=True, start_date=date)
 	tt.save()
 
-for c in companies.objects.all():
-	y = Year.objects.get(fiscal_year=fy, refer_company=c)
+for c in Company.objects.all():
+	y = Year.objects.filter(fiscal_year=fy, refer_company=c)
 	if not y:
 		y = Year(fiscal_year=fy, refer_company=c, active=True)
 		y.save()

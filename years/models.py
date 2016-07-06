@@ -33,7 +33,7 @@ class Year(models.Model):
         return len(self.trimesters.all())
 
     def get_trimesters(self):
-        return self.trimesters.all()
+        return self.trimesters.all().order_by('template.number')
 
     def add_trimester(self, trimester):
         self.trimesters.add(trimester)
