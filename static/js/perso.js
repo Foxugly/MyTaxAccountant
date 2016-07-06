@@ -616,8 +616,14 @@ $(document).ready(function() {
                 $('#pagination').bootpag({total: n, page: 1, maxVisible: 10}).on("page", function(event, num){
                     var table = $('#datatable').dataTable();
                     var a = table.children().children()[1 + num].children[1];
-                    var id = $(a).find("a")[0].id;
-                    get_form_data(id);
+                    var find = $(a).find("a");
+                    console.log(find);
+                    if (find.length > 0){
+                        var id = find[0].id;
+                        get_form_data(id);
+                    }else{
+                        view_form(result['valid'], null, "", 0);
+                    }
                 });
             }
         });
