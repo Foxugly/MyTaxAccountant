@@ -609,6 +609,7 @@ $(document).ready(function() {
             traditional: true,
             dataType: 'json',
             success: function(result){
+                console.log(result);
                 $('#datatable').dataTable().fnClearTable();
                 for (var i = 0; i < result['doc_list'].length; i++) {
                     update_datatable(result['doc_list'][i]);
@@ -616,8 +617,8 @@ $(document).ready(function() {
                 var n = parseInt(result['n']);
                 $('#pagination').bootpag({total: n, page: 1, maxVisible: 10}).on("page", function(event, num){
                     var table = $('#datatable').DataTable().data();
-                    var a = table.rows().data()[0][1];
                     if (table.rows().count() > 0){
+                        var a = table.rows().data()[0][1];
                         get_form_data($(a).data().id);
                     }else{
                         view_form(false, null, "", 0);
@@ -643,8 +644,8 @@ $(document).ready(function() {
             $('#alert_save_error').hide();
             var num = $('#pagination').bootpag().find('.active').data()['lp'];
             var table = $('#datatable').DataTable().data();
-            var a = table.rows().data()[0][1];
             if (table.rows().count() > 0){
+                var a = table.rows().data()[0][1];
                 get_form_data($(a).data().id);
             }else{
                 view_form(false, null, "", 0);
