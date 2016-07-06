@@ -625,7 +625,7 @@ $(document).ready(function() {
                 $('#pagination').bootpag({total: n, page: 1, maxVisible: 10}).on("page", function(event, num){
                     var table = $('#datatable').DataTable().data();
                     if (table.rows().count() > 0){
-                        var a = table.rows().data()[0][1];
+                        var a = table.rows().data()[num][1];
                         console.log(a);
                         console.log($(a).data().id);
                         get_form_data($(a).data().id);
