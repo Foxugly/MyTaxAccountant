@@ -626,6 +626,8 @@ $(document).ready(function() {
                     var table = $('#datatable').DataTable().data();
                     if (table.rows().count() > 0){
                         var a = table.rows().data()[0][1];
+                        console.log(a);
+                        console.log($(a).data().id);
                         get_form_data($(a).data().id);
                     }else{
                         view_form(false, null, "", 0);
@@ -653,6 +655,8 @@ $(document).ready(function() {
             var table = $('#datatable').DataTable().data();
             if (table.rows().count() > 0){
                 var a = table.rows().data()[0][1];
+                console.log(a);
+                console.log($(a).data().id);
                 get_form_data($(a).data().id);
             }else{
                 view_form(false, null, "", 0);
