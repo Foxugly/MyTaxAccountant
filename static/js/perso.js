@@ -623,7 +623,7 @@ $(document).ready(function() {
                         var id = find[0].id;
                         get_form_data(id);
                     }else{
-                        view_form(result['valid'], null, "", 0);
+                        view_form(false, null, "", 0);
                     }
                 });
             }
@@ -653,7 +653,7 @@ $(document).ready(function() {
                 var id = find[0].id;
                 get_form_data(id);
             }else{
-                view_form(result['valid'], null, "", 0);
+                view_form(false, null, "", 0);
             }
 
         }
