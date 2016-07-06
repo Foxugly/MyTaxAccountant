@@ -615,11 +615,10 @@ $(document).ready(function() {
                 }
                 var n = parseInt(result['n']);
                 $('#pagination').bootpag({total: n, page: 1, maxVisible: 10}).on("page", function(event, num){
-                    var table = $('#datatable').DataTable();
-                    var a = table.children().children()[1 + num].children[1];
+                    var table = $('#datatable').DataTable().data();
+                    var a = table.rows().data()[0][1];
                     var find = $(a).find("a");
-                    console.log(table.data().count());
-                    if (table.data().count() > 0){
+                    if (table.rows().count() > 0){
                         var id = find[0].id;
                         get_form_data(id);
                     }else{
@@ -645,11 +644,10 @@ $(document).ready(function() {
             $('#alert_save_saved').hide();
             $('#alert_save_error').hide();
             var num = $('#pagination').bootpag().find('.active').data()['lp'];
-            var table = $('#datatable').DataTable();
-            var a = table.children().children()[1 + num].children[1];
+            var table = $('#datatable').DataTable().data();
+            var a = table.rows().data()[0][1];
             var find = $(a).find("a");
-            console.log(table.data().count());
-            if (table.data().count() > 0){
+            if (table.rows().count() > 0){
                 var id = find[0].id;
                 get_form_data(id);
             }else{
