@@ -644,7 +644,7 @@ $(document).ready(function() {
             $("#div_img_form").hide();
             $('#alert_save_saved').hide();
             $('#alert_save_error').hide();
-            view_form(false, null, null, null);
+            view_form(false, null, "", 0);
         }
         else if (view == 'form'){
             $("#div_list").hide();
@@ -654,7 +654,7 @@ $(document).ready(function() {
             var num = $('#pagination').bootpag().find('.active').data()['lp'];
             var table = $('#datatable').DataTable().data();
             if (table.rows().count() > 0){
-                var a = table.rows().data()[0][1];
+                var a = table.rows().data()[num][1];
                 console.log(a);
                 console.log($(a).data().id);
                 get_form_data($(a).data().id);
