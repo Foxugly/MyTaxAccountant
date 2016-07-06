@@ -680,9 +680,9 @@ $(document).ready(function() {
             prevClass: 'prev',
             lastClass: 'last',
             firstClass: 'first'
-        }).on("page", function(event, num){
+        });/*.on("page", function(event, num){
             get_form_data(num);
-    });
+    });*/
 
     $('#document_split').click(function() {
         var form = $('#form_split');
