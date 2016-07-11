@@ -35,7 +35,7 @@ class Category(models.Model):
         return u'%s' % self.cat.name
 
     def __str__(self):
-        return u'%s - %s' % (self.refer_trimester, self.get_name())
+        return u'[%d] %s - %s' % (self.id, self.refer_trimester, self.get_name())
 
     def add_doc(self, document):
         self.documents.add(document)
@@ -60,7 +60,7 @@ class Category(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.random:
-            self.random = str(uuid.uuid4().get_hex().upper()[0:24])
+            self.random = str(uuid.uuid4().get_hex().upper()[0:16])
         super(Category, self).save(*args, **kwargs)
         if not os.path.isdir(self.get_absolute_path()):
             os.mkdir(self.get_absolute_path(), 0711)
