@@ -1,5 +1,5 @@
-django
-django-bootstrap3
-pypdf
-imagemagick
-pillow
+Django==1.8.5
+django-bootstrap3==6.2.2
+pyPdf==1.13
+Pillow==3.1.0
+
