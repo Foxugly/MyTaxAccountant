@@ -8,7 +8,7 @@
 # your option) any later version.
 
 from django.utils.translation import ugettext_lazy as _
-
+import socket
 """
 Django settings for MyTaxAccountant project.
 
@@ -67,14 +67,35 @@ ROOT_URLCONF = 'urls'
 
 WSGI_APPLICATION = 'wsgi.application'
 
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if 'RDS_DB_NAME' in os.environ: #PROD
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ['RDS_DB_NAME'],
+            'USER': os.environ['RDS_USERNAME'],
+            'PASSWORD': os.environ['RDS_PASSWORD'],
+            'HOST': os.environ['RDS_HOSTNAME'],
+            'PORT': os.environ['RDS_PORT'],
+        }
     }
-}
-
+elif socket.gethostname() == 'ip-172-31-18-218': # DEV
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'mytaxaccountant',
+            'USER': 'mytaxaccountant',
+            'PASSWORD': 'mytaxaccountant123789456',
+            'HOST': 'localhost',
+            'PORT': '3306',
+	}
+    }
+else: # LOCAL
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 UPLOAD_LOG = '/tmp/upload_log'
 
 LANGUAGE_CODE = 'en'

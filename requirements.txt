@@ -1,5 +1,7 @@
 Django==1.8.5
+Pillow==3.1.0
+argparse==1.2.1
 django-bootstrap3==6.2.2
 pyPdf==1.13
-Pillow==3.1.0
-
+wsgiref==0.1.2
+psycopg2==2.6.2
