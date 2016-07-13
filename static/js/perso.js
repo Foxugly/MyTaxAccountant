@@ -454,7 +454,9 @@ $(document).ready(function() {
             type: 'GET',
             traditional: true,
             dataType: 'json',
-            success: function(){}
+            success: function(){
+                update_categories();
+            }
         });
     }
 
@@ -488,7 +490,7 @@ $(document).ready(function() {
             bootbox.confirm("Are you sure?", function(result) {
                 if(result) {
                     del_modal(e);
-                    update_data(false);
+                    update_data(true);
                     bootbox.alert("Document deleted !", function() {btn.click();});
                 }
             });
