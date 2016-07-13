@@ -8,7 +8,7 @@
 # your option) any later version.
 
 from django.utils.translation import ugettext_lazy as _
-
+import socket
 """
 Django settings for MyTaxAccountant project.
 
@@ -67,7 +67,7 @@ ROOT_URLCONF = 'urls'
 
 WSGI_APPLICATION = 'wsgi.application'
 
-if 'RDS_DB_NAME' in os.environ:
+if 'RDS_DB_NAME' in os.environ: #PROD
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -78,7 +78,18 @@ if 'RDS_DB_NAME' in os.environ:
             'PORT': os.environ['RDS_PORT'],
         }
     }
-else:
+elif socket.gethostname() == 'ip-172-31-18-218': # DEV
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'mytaxaccountant',
+            'USER': 'mytaxaccountant',
+            'PASSWORD': 'mytaxaccountant123789456',
+            'HOST': 'localhost',
+            'PORT': '3306',
+	}
+    }
+else: # LOCAL
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
