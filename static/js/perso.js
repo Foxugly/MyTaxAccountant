@@ -82,14 +82,14 @@ $(document).ready(function() {
             url: url,
             crossDomain: false,
             beforeSend: function(xhr, settings) {
-                console.log('beforeSend');
+                //console.log('beforeSend');
                 if (!csrfSafeMethod(settings.type)) {
                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
                 }
             },
             dataType: 'json',
             done: function (e, data) {
-                console.log('done');
+                //console.log('done');
                 $("#fileupload_list" ).removeClass( "hide" );
                 $.each(data.result.files, function (index, file) {
                     $("#files-group").append('\n<li class="list-group-item list-group-item-success"><span>' + file.name + '</span><button id="' + file.id + '" type="button" class="close close_fileupload">&times;</button></li>\n');
@@ -468,6 +468,7 @@ $(document).ready(function() {
             lock += '<span class="glyphicon glyphicon-lock"></span>';
         }
         lock += '</td>';
+        var repeat = false;
         if (data['complete']){
             out += '<a id="btn_sp_'+ data['id']+'" class="btn btn-xs btn-default split_modal" data-id="'+ data['id'] +'" title="Split" data-toggle="modal" data-target="#modal_split"><span class="glyphicon glyphicon-resize-full"></span></a>';
             out += '<a id="btn_me_'+ data['id']+'" class="btn btn-xs btn-default merge_modal" data-id="'+ data['id'] +'" title="Merge" data-toggle="modal" data-target="#modal_merge"><span class="glyphicon glyphicon-resize-small"></span></a>';
@@ -477,6 +478,7 @@ $(document).ready(function() {
         }
         else{
             out += '<a class="btn btn-xs btn-default"><span class="glyphicon glyphicon-refresh"></span> </a>';
+            repeat = true;
         }
         out += '</td>';
         $('#datatable').dataTable().fnAddData([data['fiscal_id'], "<a id='" + data['id'] + "' class='img_modal' data-id='"+ data['id'] +"' data-toggle='modal' data-target='#myModal'>" + data['name'] + "</a>", data['date'], data['description'], lock, out]);
@@ -495,6 +497,7 @@ $(document).ready(function() {
                 }
             });
         });
+        return repeat;
     }
 
     function save_form(){
@@ -546,9 +549,10 @@ $(document).ready(function() {
     }
 
     function update_data(option){
-        //console.log('update_data');
+        /*console.log('update_data');*/
         var pagnum = $('#pagination').bootpag().find('.active').data()['lp'];
         var url = '/category/'+ $('ul.nav-pills li.active a').attr("data-id") + '/list/' +  pagnum + '/';
+        var repeat = false;
         $.ajax({
             url: url,
             type: 'GET',
@@ -558,7 +562,8 @@ $(document).ready(function() {
                 $('#datatable').dataTable().fnClearTable();
                 var numpage = 1;
                 for (var i = 0; i < result['doc_list'].length; i++) {
-                    update_datatable(result['doc_list'][i]);
+                    var res_return = update_datatable(result['doc_list'][i]) ;
+                    repeat = res_return || repeat;
                     if ($('#doc_id').val() == result['doc_list'][i]['id']){
                         numpage = i + 1 ;
                     }
@@ -572,6 +577,11 @@ $(document).ready(function() {
                         view_form(result['valid'], result['doc']['img'],result['form'], $('#doc_id').val());
                     }
                     $('ul.nav-pills li.active a').click();
+                }
+                if (repeat){
+                    setTimeout(function(){
+                        update_data(option);
+                    }, 3000);
                 }
             }
         });
@@ -603,6 +613,7 @@ $(document).ready(function() {
         var data_id = $('ul.nav-pills li.active a').attr("data-id");
         var id = $('ul.nav-pills li.active a').attr("id");
         var url = '/category/' + data_id + '/add_documents/';
+        var repeat = false;
         $.ajax({
             url: url,
             type: 'GET',
@@ -613,12 +624,18 @@ $(document).ready(function() {
                 result = JSON.parse(result);
                 $('#datatable').dataTable().fnClearTable();
                 for (var i = 0; i < result['doc_list'].length; i++) {
-                    update_datatable(result['doc_list'][i]);
+                    var res_return = update_datatable(result['doc_list'][i]);
+                    repeat = repeat || res_return;
                     $(".img_modal").click(function(){
                         img_modal($(this));
                     });
                 }
                 $('ul.nav-pills li.active span').html(result['n']);
+                if (repeat){
+                    setTimeout(function(){
+                        update_data(true);
+                    }, 3000);
+                }
             }
         });
     });
@@ -638,7 +655,7 @@ $(document).ready(function() {
             success: function(result){
                 $('#datatable').dataTable().fnClearTable();
                 for (var i = 0; i < result['doc_list'].length; i++) {
-                    update_datatable(result['doc_list'][i]);
+                    var res_return = update_datatable(result['doc_list'][i]);
                 }
                 view_form(false, null, "", 0);
                 var n = parseInt(result['n']);
