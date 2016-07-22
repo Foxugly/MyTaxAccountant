@@ -37,20 +37,34 @@ def remove_fileupload(liste):
 
 def convert_pdf_to_jpg(l):
     for (cat, path, f, doc) in l:
+        try:
+            n = PdfFileReader(open(path, 'rb')).getNumPages()
+        except:
+            os.rename(path, path + '_old')
+            cmd = u'gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=%s %s' % (path, path + '_old')
+            os.system(cmd.encode('utf-8'))
+            cmd = u'rm -f %s' % (path + '_old')
+            os.system(cmd.encode('utf-8'))
+            pass
+        try:
+            pdf = PdfFileReader(open(path, 'rb'))
+            n = pdf.getNumPages()
+        except:
+            print "ERREUR FORMAT PDF"
+            return None
         cat = cat[0]
         doc = doc[0]
         p = re.compile(r'.[Pp][Dd][Ff]$')
         filename = p.sub('.jpg', f)
-        new_path = cat.get_absolute_path() + '/' + str(doc.id) + '_' + '%03d' + '_' + filename
-        #cmd = 'convert -density 600 ' + path + ' ' + new_path
-        cmd = 'gs -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600x600 -sOutputFile=%s %s' % (new_path, path)
-        os.system(cmd)
+        new_path = cat.get_absolute_path() + '/' + str(doc.id) + '_' + '%03d' + '_' + filename.encode('ascii', 'ignore')
+        cmd = u'gs -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600x600 -sOutputFile=%s %s' % (new_path, path)
+        os.system(cmd.encode('utf-8'))
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         p.wait()
-        pdf = PdfFileReader(open(path, 'rb'))
-        n = pdf.getNumPages()
+
+
         for i in range(1, n+1):
-            name_page = str(doc.id) + '_' + "%03d" % i + '_' + filename
+            name_page = str(doc.id) + '_' + "%03d" % i + '_' + filename.encode('ascii', 'ignore')
             path_page = cat.get_absolute_path() + '/' + name_page
             im = Image.open(path_page)
             w, h = im.size
@@ -88,7 +102,7 @@ def add_documents(request, category_id):
             mime = MimeTypes()
             path = os.path.join(settings.MEDIA_ROOT, settings.UPLOAD_DIR, f)
             m = mime.guess_type(path)[0]
-            d = Document(name=f, owner=request.user, refer_category=cat)
+            d = Document(name=f.encode('ascii', 'ignore'), owner=request.user, refer_category=cat)
             d.save()
             cat.add_doc(d)
             if m == 'application/pdf':

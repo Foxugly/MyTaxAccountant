@@ -58,13 +58,13 @@ class Company(models.Model):
         return dict(id=self.id, name=self.name)
 
     def get_name(self):
-        return self.name
+        return self.name.encode('utf-8')
 
     def add_year(self, year):
         self.years.add(year)
 
     def __str__(self):
-        return '%s' % self.get_name()
+        return '%s' % (self.get_name())
 
     def get_absolute_path(self):
         return os.path.join(settings.MEDIA_ROOT, settings.STOCK_DIR, self.slug + '_' + self.random)
