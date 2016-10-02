@@ -1,0 +1,17 @@
+sudo apt-get install build-essential git libfuse-dev libcurl4-openssl-dev libxml2-dev mime-support automake libtool
+sudo apt-get install pkg-config libssl-dev
+git clone https://github.com/s3fs-fuse/s3fs-fuse
+cd s3fs-fuse/
+./autogen.sh
+./configure --prefix=/usr --with-openssl
+make
+sudo make install
+
+nano ~/.passwd-s3fs
+<AWS Access Key ID>:<AWS Secret Access Key>
+chmod 600 ~/.passwd-s3fs
+mkdir /tmp/cache
+chmod 777 /tmp/cache
+sudo mkdir /mnt/s3
+
+sudo s3fs -o use_cache=/tmp/cache MYBUCKET /mnt/s3 -o allow_other
