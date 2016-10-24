@@ -27,10 +27,10 @@ def list_trimister(request, year_id):
     if request.is_ajax():
         y = Year.objects.get(id=year_id)
         if request.user.is_superuser:
-            results = {'list': [t.as_json() for t in y.trimesters.filter(active=True)], 'return': True,
+            results = {'list': [t.as_json() for t in y.trimesters.filter(active=True).order_by('template__number')], 'return': True,
                        'favorite': favorite_trimester(y).as_json()}
         else:
-            results = {'list': [t.as_json() for t in y.trimesters.filter(active=True)], 'return': True,
+            results = {'list': [t.as_json() for t in y.trimesters.filter(active=True).order_by('template__number')], 'return': True,
                        'favorite': favorite_trimester(y).as_json()}
         return HttpResponse(json.dumps(results))
 

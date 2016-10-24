@@ -28,6 +28,8 @@ def category_view(request, category_id):
 
 
 def remove_fileupload(liste):
+    print "remove_fileupload"
+    print liste
     for path in liste:
         for fu in FileUpload.objects.all():
             if fu.file.path == path:
@@ -36,14 +38,18 @@ def remove_fileupload(liste):
 
 
 def convert_pdf_to_jpg(l):
+    print "convert_pdf_to_jpg"
     for (cat, path, f, doc) in l:
+        print "%s %s %s %s" % (cat, path, f, doc)
         try:
             n = PdfFileReader(open(path, 'rb')).getNumPages()
         except:
             os.rename(path, path + '_old')
             cmd = u'gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=%s %s' % (path, path + '_old')
+            print cmd.encode('utf-8')
             os.system(cmd.encode('utf-8'))
             cmd = u'rm -f %s' % (path + '_old')
+            print cmd.encode('utf-8')
             os.system(cmd.encode('utf-8'))
             pass
         try:
@@ -58,11 +64,10 @@ def convert_pdf_to_jpg(l):
         filename = p.sub('.jpg', f)
         new_path = cat.get_absolute_path() + '/' + str(doc.id) + '_' + '%03d' + '_' + filename.encode('ascii', 'ignore')
         cmd = u'gs -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600x600 -sOutputFile=%s %s' % (new_path, path)
+        print cmd.encode('utf-8')
         os.system(cmd.encode('utf-8'))
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         p.wait()
-
-
         for i in range(1, n+1):
             name_page = str(doc.id) + '_' + "%03d" % i + '_' + filename.encode('ascii', 'ignore')
             path_page = cat.get_absolute_path() + '/' + name_page
@@ -73,16 +78,24 @@ def convert_pdf_to_jpg(l):
         doc.save()
 
 
+
 def manage_convert_doc_to_pdf(cmds, paths, liste):
+    print "manage_convert_doc_to_pdf"
+    print cmds
+    print paths
+    print liste
     for c in cmds:
         os.system(c)
+        print c
     convert_pdf_to_jpg(liste)
     remove_fileupload(paths)
     for (c, path, f, d) in liste:
         os.remove(path)
+        print 'remove %s' % (path) 
 
 
 def manage_convert_pdf_to_jpg(liste):
+    print "manage_convert_pdf_to_jpg"
     convert_pdf_to_jpg(liste)
     l_path = []
     for (cat, path, f, doc) in liste:
@@ -119,6 +132,7 @@ def add_documents(request, category_id):
                         fu.delete()
                 d.complete = True
                 d.save()
+                remove_fileupload([path])
             elif m in ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']:
                 p = re.compile(r'.[Dd][Oo][Cc][xX]?$')
                 new_f = p.sub('.pdf', f)
