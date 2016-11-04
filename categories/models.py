@@ -18,6 +18,7 @@ class TypeCategory(models.Model):
     name = models.CharField(_("Type of documents"), max_length=128)
     priority = models.IntegerField(_('Priority'), unique=True)
     active = models.BooleanField(_('active'), default=True)
+    default = models.BooleanField(_('default'), default=True)
 
     def __str__(self):
         return self.name
