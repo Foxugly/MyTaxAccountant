@@ -34,7 +34,7 @@ class Page(models.Model):
         return os.path.join(self.refer_document.refer_category.get_relative_path(), self.filename)
 
     def as_img(self, size=95):
-        return '<img style="max-width: ' + str(size) + '%;" src="' + str(self.get_relative_path()) + '" />'
+        return '<img style="max-width: ' + str(size) + '%;" data-original="' + str(self.get_relative_path()) + '" src="' + str(self.get_relative_path()) + '" />'
 
     def get_size(self):
         s = os.path.getsize(self.get_absolute_path())

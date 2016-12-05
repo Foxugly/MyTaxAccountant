@@ -88,7 +88,7 @@
     </div>
 </div>
 <div id="div_img_form" class="row">
-    <div id="div_img" class="col-md-6" style="width:50%;height: 600px;overflow-y: auto; text-align:center;">
+    <div id="div_img" class="col-md-6 docs-gallery" style="width:50%;height: 600px;overflow-y: auto; text-align:center;">
     </div>
     <div class="col-md-6">
         <div id="div_info" width="100%" style="min-height:55px;">
@@ -246,6 +246,10 @@
 {%  endif %}
 {% endblock %}
 
+{%  block css %}
+    <link rel="stylesheet" href=" {% static "viewer/viewer.min.css" %} ">
+{%  endblock %}
+
 {% block js %}
 <script>
 $(document).ready(function() {
@@ -261,4 +265,6 @@ $(document).ready(function() {
 
 });
 </script>
+<script src=" {% static "viewer/viewer.min.js" %}"></script>
+<script src=" {% static "viewer/main.js" %}"></script>
 {% endblock %}
