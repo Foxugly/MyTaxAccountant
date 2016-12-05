@@ -82,7 +82,7 @@ class Document(models.Model):
     def as_img(self):
         txt = ''
         for p in self.all_pages():
-            txt += p.as_img()
+            txt += '<li>' + p.as_img() + '</li>'
         return txt
 
     def get_size(self):

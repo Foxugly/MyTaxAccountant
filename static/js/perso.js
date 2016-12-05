@@ -531,9 +531,10 @@ $(document).ready(function() {
     }
 
     function view_form(valid, img, form,doc_id){
-        /*console.log('view_form');*/
+        console.log('view_form');
         if (valid == true){
-            $('#div_img').html('<ul class="docs-pictures clearfix"><li>' + img + '</li></ul>');
+            console.log('<ul class="docs-pictures clearfix">' + img + '</ul>');
+            $('#div_img').html('<ul class="docs-pictures clearfix">' + img + '</ul>');
             $('#div_form').html('<input id="doc_id" type="hidden" name="doc_id" value="' + doc_id + '">' +form);
             $('#id_owner').select2({ width: 'resolve', minimumResultsForSearch: -1});
             $('#btn_save').click(function(){

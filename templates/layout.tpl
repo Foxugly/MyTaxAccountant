@@ -29,7 +29,8 @@
     <link rel="stylesheet" href=" {% static "upload/css/style.css" %} ">
     <link rel="stylesheet" href=" {% static "upload/css/jquery.fileupload-ui.css" %}" >
     <link href='{% static "select2-4.0.1/dist/css/select2.min.css" %}' rel='stylesheet' />
-   <link href='{% static "bootstrap-datetimepicker-master/build/css/bootstrap-datetimepicker.min.css" %}' rel="stylesheet"/>
+    <link href='{% static "bootstrap-datetimepicker-master/build/css/bootstrap-datetimepicker.min.css" %}' rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static "viewer/viewer.min.css"%}">
     {% block css %}
     {% endblock %}
     <link href='{% static "css/perso.css" %}' rel='stylesheet' />
@@ -54,6 +55,9 @@
     <script src='{% static "duallistbox/dual-list-box.min.js" %}'></script>
 
     <script type="text/javascript" src='{% static "bootstrap-datetimepicker-master/build/js/bootstrap-datetimepicker.min.js" %}'></script>
+
+    <script src='{% static "viewer/viewer.min.js" %}'></script>
+    <script src='{% static "viewer/main.js" %}'></script>
     <script src='{% static "js/perso.js" %}'></script>
     {% block js %}
     {% endblock %}
