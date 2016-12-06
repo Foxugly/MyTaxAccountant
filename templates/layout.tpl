@@ -57,7 +57,7 @@
     <script type="text/javascript" src='{% static "bootstrap-datetimepicker-master/build/js/bootstrap-datetimepicker.min.js" %}'></script>
 
     <script src='{% static "viewer/viewer.min.js" %}'></script>
-    <script src='{% static "viewer/main.js" %}'></script>
+    <!--<script src='{% static "viewer/main.js" %}'></script>-->
     <script src='{% static "js/perso.js" %}'></script>
     {% block js %}
     {% endblock %}

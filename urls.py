@@ -41,6 +41,8 @@ def custom_404(request):
 def custom_500(request):
     return render(request, "500.tpl")
 
+def test(request):
+    return render(request, "test.tpl")
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
@@ -54,6 +56,7 @@ urlpatterns = [
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^upload/', include('fileupload.urls')),
     url(r'^$', home, name='index'),
+    url(r'^test/', test, name='test'),
 ] \
     + patterns('', (r'^media/(.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}), )\
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

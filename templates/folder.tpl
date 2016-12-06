@@ -89,7 +89,20 @@
 </div>
 <div id="div_img_form" class="row">
     <div id="div_img" class="col-md-6 docs-galley" style="width:50%;height: 600px;overflow-y: auto; text-align:center;">
+<ul class="docs-pictures clearfix">
+			<li><img data-original="https://raw.githubusercontent.com/fengyuanchen/viewerjs/master/assets/img/tibet-1.jpg" src="https://raw.githubusercontent.com/fengyuanchen/viewerjs/master/assets/img/thumbnails/tibet-1.jpg" alt="Picture1"></li>
+                        <li><img data-original="https://raw.githubusercontent.com/fengyuanchen/viewerjs/master/assets/img/tibet-2.jpg" src="https://raw.githubusercontent.com/fengyuanchen/viewerjs/master/assets/img/thumbnails/tibet-2.jpg" alt="Picture2"></li>
+		</ul>
     </div>
+<script>
+/*       window.onload = function () {
+  'use strict';
+        var Viewer = window.Viewer;
+        var pictures = document.querySelector('.docs-pictures');
+        var viewer;
+        viewer = new Viewer(pictures);
+};*/
+    </script>
     <div class="col-md-6">
         <div id="div_info" width="100%" style="min-height:55px;">
             <div id="alert_save_saved" class="alert alert-success" role="alert">{% blocktrans %} Saved !{% endblocktrans %}</div>

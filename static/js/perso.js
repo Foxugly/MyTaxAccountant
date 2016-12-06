@@ -534,7 +534,7 @@ $(document).ready(function() {
         console.log('view_form');
         if (valid == true){
             console.log('<ul class="docs-pictures clearfix">' + img + '</ul>');
-            $('#div_img').html('<ul class="docs-pictures clearfix">' + img + '</ul>');
+            $('#div_img').html('<ul class="docs-pictures clearfix">' + img + '</ul><script>var Viewer = window.Viewer;        var pictures = document.querySelector(".docs-pictures");        var viewer;        viewer = new Viewer(pictures); </script> ');
             $('#div_form').html('<input id="doc_id" type="hidden" name="doc_id" value="' + doc_id + '">' +form);
             $('#id_owner').select2({ width: 'resolve', minimumResultsForSearch: -1});
             $('#btn_save').click(function(){
