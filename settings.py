@@ -67,7 +67,7 @@ ROOT_URLCONF = 'urls'
 
 WSGI_APPLICATION = 'wsgi.application'
 
-if 'RDS_DB_NAME' in os.environ: #PROD
+if 'RDS_DB_NAME' in os.environ:  # PROD
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -78,7 +78,7 @@ if 'RDS_DB_NAME' in os.environ: #PROD
             'PORT': os.environ['RDS_PORT'],
         }
     }
-elif socket.gethostname() == 'ip-172-31-18-218': # DEV
+elif socket.gethostname() == 'ip-172-31-18-218':  # DEV
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -87,9 +87,9 @@ elif socket.gethostname() == 'ip-172-31-18-218': # DEV
             'PASSWORD': 'mytaxaccountant123789456',
             'HOST': 'localhost',
             'PORT': '3306',
-	}
+        }
     }
-else: # LOCAL
+else:  # LOCAL
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -121,7 +121,8 @@ UPLOAD_DIR = 'upload'
 STOCK_DIR = 'folders'
 #STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
-
+TMP_ROOT = MEDIA_ROOT + '/tmp/'
+TMP_URL = MEDIA_URL + 'tmp/'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
 

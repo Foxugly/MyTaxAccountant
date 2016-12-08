@@ -183,8 +183,8 @@ def ajax_download(request, n):
         name = doc.name.replace(' ', '_')
         if ".pdf" != doc.name[-4:]:
             name += ".pdf"
-        output_abs = settings.MEDIA_ROOT + '/tmp/' + name
-        output_rel = settings.MEDIA_URL + 'tmp/' + name
+        output_abs = settings.TMP_ROOT + name
+        output_rel = settings.TMP_URL + name
         cmd = "convert "
         for p in doc.all_pages():
             cmd += p.get_absolute_path() + " "
