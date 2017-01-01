@@ -49,7 +49,7 @@ class Trimester(models.Model):
 
     def __str__(self):
         return ' [%d] %s - %s' % (
-            self.id, self.refer_year.refer_company.slug, unicode(self.refer_year.get_name()))
+            self.id, self.refer_year.refer_company.slug, str(self.template))
 
     def as_json(self):
         return dict(id=self.id, name=self.get_name())

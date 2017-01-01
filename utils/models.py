@@ -51,7 +51,7 @@ class TemplateTrimester(models.Model):
     start_date = models.DateField(_('start date'), null=True)
 
     def __str__(self):
-        return '%s - %s - %d' % (self.year, self.number, self.favorite)
+        return '%sT%s (%d)' % (self.year, self.number, self.favorite)
 
 
 class TemplateTrimesterForm(ModelForm):

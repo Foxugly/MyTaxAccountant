@@ -41,13 +41,12 @@ for c in Company.objects.all():
         if old_year.fiscal_year != fy:
             old_year.favorite = False
             old_year.save()
-            y = Year(fiscal_year=fy, refer_company=c, active=True, favorite=True)
-            y.save()
-            c.add_year(y)
-            actual_year = y
+            actual_year = Year(fiscal_year=fy, refer_company=c, active=True, favorite=True)
+            actual_year.save()
+            c.add_year(actual_year)
         else:
             actual_year = old_year
-        new_t1 = Trimester(template=tt, start_date=date, active=True, favorite=True, refer_year=actual_year)
-        new_t1.save()
-        new_t1.add_categories()
-        actual_year.add_trimester(new_t1)
+    new_t1 = Trimester(template=tt, start_date=date, active=True, favorite=True, refer_year=actual_year)
+    new_t1.save()
+    new_t1.add_categories()
+    actual_year.add_trimester(new_t1)
