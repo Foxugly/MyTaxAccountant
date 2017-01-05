@@ -75,7 +75,7 @@ class Company(models.Model):
 
     def create_directory(self):
         if not os.path.isdir(self.get_absolute_path()):
-            os.mkdir(self.get_absolute_path(), 0711)
+            os.mkdir(self.get_absolute_path(), 0o711)
 
     def save(self, *args, **kwargs):
         if not self.random:
