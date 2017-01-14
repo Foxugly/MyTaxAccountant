@@ -22,7 +22,7 @@ class FileUploadCreateView(CreateView):
     template_name_suffix = '_basic_form'
 
     def form_valid(self, form):
-        print 'form_valid'
+        print("form_valid")
         self.object = form.save()
         files = [serialize(self.object)]
         data = {'files': files}
