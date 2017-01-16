@@ -8,10 +8,10 @@ for c in Category.objects.all():
             if p.filename in list_path:
                 list_path.remove(p.filename)
             else:
-                 print "[NOT IN DIRECTORY] " + path
-                 print p.filename
+                print("[NOT IN DIRECTORY]  %s" % path)
+                print(p.filename)
     if len(list_path):
-        print "[NOT IN DATABASE]" + path
+        print("[NOT IN DATABASE] %s" % path)
         for e in list_path:
-            print e
+            print(e)
 

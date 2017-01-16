@@ -28,8 +28,8 @@ def category_view(request, category_id):
 
 
 def remove_fileupload(liste):
-    print "remove_fileupload"
-    print liste
+    print("remove_fileupload")
+    print(liste)
     for path in liste:
         for fu in FileUpload.objects.all():
             if fu.file.path == path:
@@ -38,25 +38,25 @@ def remove_fileupload(liste):
 
 
 def convert_pdf_to_jpg(l):
-    print "convert_pdf_to_jpg"
+    print("convert_pdf_to_jpg")
     for (cat, path, f, doc) in l:
-        print "%s %s %s %s" % (cat, path, f, doc)
+        print("%s %s %s %s" % (cat, path, f, doc))
         try:
             n = PdfFileReader(open(path, 'rb')).getNumPages()
         except:
             os.rename(path, path + '_old')
             cmd = u'gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=%s %s' % (path, path + '_old')
-            print cmd.encode('utf-8')
+            print(cmd.encode('utf-8'))
             os.system(cmd.encode('utf-8'))
             cmd = u'rm -f %s' % (path + '_old')
-            print cmd.encode('utf-8')
+            print(cmd.encode('utf-8'))
             os.system(cmd.encode('utf-8'))
             pass
         try:
             pdf = PdfFileReader(open(path, 'rb'))
             n = pdf.getNumPages()
         except:
-            print "ERREUR FORMAT PDF"
+            print("ERREUR FORMAT PDF")
             return None
         cat = cat[0]
         doc = doc[0]
@@ -64,7 +64,7 @@ def convert_pdf_to_jpg(l):
         filename = p.sub('.jpg', f)
         new_path = cat.get_absolute_path() + '/' + str(doc.id) + '_' + '%03d' + '_' + filename.encode('ascii', 'ignore')
         cmd = u'gs -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600x600 -sOutputFile=%s %s' % (new_path, path)
-        print cmd.encode('utf-8')
+        print(cmd.encode('utf-8'))
         os.system(cmd.encode('utf-8'))
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         p.wait()
@@ -80,22 +80,22 @@ def convert_pdf_to_jpg(l):
 
 
 def manage_convert_doc_to_pdf(cmds, paths, liste):
-    print "manage_convert_doc_to_pdf"
-    print cmds
-    print paths
-    print liste
+    print("manage_convert_doc_to_pdf")
+    print(cmds)
+    print(paths)
+    print(liste)
     for c in cmds:
         os.system(c)
-        print c
+        print(c)
     convert_pdf_to_jpg(liste)
     remove_fileupload(paths)
     for (c, path, f, d) in liste:
         os.remove(path)
-        print 'remove %s' % (path) 
+        print("remove %s" % (path))
 
 
 def manage_convert_pdf_to_jpg(liste):
-    print "manage_convert_pdf_to_jpg"
+    print("manage_convert_pdf_to_jpg")
     convert_pdf_to_jpg(liste)
     l_path = []
     for (cat, path, f, doc) in liste:
@@ -150,7 +150,7 @@ def add_documents(request, category_id):
                 paths.append(path)
                 l_doc.append(([cat], new_path, new_f, [d]))
             else:
-                print 'ERREUR FORMAT FICHIER'
+                print("ERREUR FORMAT FICHIER")
         if len(l_doc):
             thread1 = Timer(0, manage_convert_doc_to_pdf, (cmds, paths, l_doc,))
             thread1.start()
