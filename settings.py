@@ -28,7 +28,7 @@ BASE_DIR = os.path.dirname(__file__)
 SECRET_KEY = '-b+&3%*nxun2l+id*85aou#vpkw%uhd3ko&b06jmkr#ke)6k3k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -64,41 +64,11 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'urls'
-
 WSGI_APPLICATION = 'wsgi.application'
 
-if 'RDS_DB_NAME' in os.environ:  # PROD
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.environ['RDS_DB_NAME'],
-            'USER': os.environ['RDS_USERNAME'],
-            'PASSWORD': os.environ['RDS_PASSWORD'],
-            'HOST': os.environ['RDS_HOSTNAME'],
-            'PORT': os.environ['RDS_PORT'],
-        }
-    }
-elif socket.gethostname() == 'ip-172-31-18-218':  # DEV
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'mytaxaccountant',
-            'USER': 'mytaxaccountant',
-            'PASSWORD': 'mytaxaccountant123789456',
-            'HOST': 'localhost',
-            'PORT': '3306',
-        }
-    }
-else:  # LOCAL
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-    }
 UPLOAD_LOG = '/tmp/upload_log'
 
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'fr'
 TIME_ZONE = 'Europe/Brussels'
 USE_I18N = True
 USE_L10N = True

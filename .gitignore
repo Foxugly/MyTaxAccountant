@@ -1,5 +1,4 @@
 *~
-settings.py
 *.pyc
 db.sqlite3
 mytaxaccountant.pem
