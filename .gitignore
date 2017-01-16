@@ -1,6 +1,7 @@
 *~
 *.pyc
 db.sqlite3
+settings.py
 mytaxaccountant.pem
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
