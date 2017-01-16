@@ -78,7 +78,6 @@ def convert_pdf_to_jpg(l):
         doc.save()
 
 
-
 def manage_convert_doc_to_pdf(cmds, paths, liste):
     print("manage_convert_doc_to_pdf")
     print(cmds)
