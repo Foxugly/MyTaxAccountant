@@ -21,7 +21,7 @@ import re
 
 class Page(models.Model):
     num = models.IntegerField(_('page number'))
-    filename = models.CharField(_('filename'), max_length=100, default='blank')
+    filename = models.CharField(_('filename'), max_length=255, default='blank')
     width = models.IntegerField(_('width'))
     height = models.IntegerField(_('height'))
     refer_document = models.ForeignKey('documents.Document', verbose_name=_('document'), related_name="back_document",
