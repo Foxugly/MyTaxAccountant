@@ -18,7 +18,7 @@ import shutil
 from PIL import Image
 import os
 from threading import Timer
-from pyPdf import PdfFileReader
+from PyPDF2 import PdfFileReader
 import re
 import subprocess
 
