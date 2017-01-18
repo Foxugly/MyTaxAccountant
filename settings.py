@@ -8,7 +8,7 @@
 # your option) any later version.
 
 from django.utils.translation import ugettext_lazy as _
-import socket
+import database
 """
 Django settings for MyTaxAccountant project.
 
@@ -29,8 +29,8 @@ SECRET_KEY = '-b+&3%*nxun2l+id*85aou#vpkw%uhd3ko&b06jmkr#ke)6k3k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
 ALLOWED_HOSTS = ['*']
+DATABASES = database.db
 
 # Application definition
 
