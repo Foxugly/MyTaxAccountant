@@ -9,7 +9,7 @@
 {% endif %}
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
-    <form class="form-horizontal" method="post" action="{% url 'django.contrib.auth.views.login' %}">
+    <form class="form-horizontal" method="post" action="{% url 'login' %}">
       {% csrf_token %}
       <fieldset>
         <!-- Form Name -->
