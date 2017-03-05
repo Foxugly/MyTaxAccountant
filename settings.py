@@ -131,16 +131,19 @@ TEMPLATES = [
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
     'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler'
+        },
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/var/log/django/mlg.log',
+            'filename': '/var/log/django/mlg.log'
         },
     },
     'loggers': {
-        'django.request': {
+        'django': {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': True,
