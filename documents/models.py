@@ -121,7 +121,7 @@ class DocumentAdminForm(ModelForm):
         for f in self:
             txt += '<div class="form-group">\n'
             txt += f.label_tag().replace('<label ', '<label class="col-md-4 control-label" ') + '\n'
-            txt += '<div class="col-md-8">' + unicode(f) + '</div>\n<span class="help-block"></span>\n'
+            txt += '<div class="col-md-8"> %s </div>\n<span class="help-block"></span>\n' % f
             txt += '</div>\n'
         txt += '<div class="form-group">\n'
         txt += '<div class="col-md-offset-2 col-md-8">\n'
