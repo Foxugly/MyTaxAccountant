@@ -61,7 +61,7 @@ class Category(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.random:
-            self.random = str(uuid.uuid4().get_hex().upper()[0:16])
+            self.random = str(uuid.uuid4().hex.upper()[0:16])
         super(Category, self).save(*args, **kwargs)
         if not os.path.isdir(self.get_absolute_path()):
             os.mkdir(self.get_absolute_path(), 0o711)

@@ -79,7 +79,7 @@ class Company(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.random:
-            self.random = str(uuid.uuid4().get_hex().upper()[0:16])
+            self.random = str(uuid.uuid4().hex.upper()[0:16])
         create = True
         if not self.slug:
             self.slug = slugify(self.name)
