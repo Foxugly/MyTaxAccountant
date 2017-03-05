@@ -7,12 +7,12 @@
 # the Free Software Foundation, either version 3 of the License, or (at
 # your option) any later version.
 
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 from years.views import *
 
 
-urlpatterns = patterns('categories.views',
+urlpatterns = (
 	url(r'^(?P<year_id>[0-9]+)/list/$', login_required(list_trimister), name='list_trimister'),
     url(r'^(?P<year_id>[0-9]+)/$', login_required(year_view), name='year_view'),
     url(r'^$', login_required(admin_years), name='years'),

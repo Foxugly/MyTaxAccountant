@@ -23,26 +23,26 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url, handler404, handler500
 from django.contrib import admin
 from django.conf import settings
 from django.shortcuts import render
 from django.conf.urls.static import static
 from utils.views import lang
 from users.views import home
-
 admin.autodiscover()
 
 
-def custom_404(request):
-    return render(request, "404.tpl")
+#def custom_404(request):
+#    return render(request, "404.tpl")
 
 
-def custom_500(request):
-    return render(request, "500.tpl")
+#def custom_500(request):
+#    return render(request, "500.tpl")
 
-def test(request):
-    return render(request, "test.tpl")
+
+#def test(request):
+#    return render(request, "test.tpl")
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
@@ -56,10 +56,11 @@ urlpatterns = [
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^upload/', include('fileupload.urls')),
     url(r'^$', home, name='index'),
-    url(r'^test/', test, name='test'),
+#    url(r'^test/', test, name='test'),
+    url(r'^hijack/', include('hijack.urls')),
 ] \
-    + patterns('', (r'^media/(.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}), )\
+    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)\
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
-handler404 = 'urls.custom_404'
-handler500 = 'urls.custom_500'
+#handler404 = 'urls.custom_404'
+#handler500 = 'urls.custom_500'

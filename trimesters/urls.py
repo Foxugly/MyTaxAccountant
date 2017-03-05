@@ -7,12 +7,12 @@
 # the Free Software Foundation, either version 3 of the License, or (at
 # your option) any later version.
 
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 from trimesters.views import list_categories, admin_trimesters
 
 
-urlpatterns = patterns('trimesters.views',
+urlpatterns = (
     url(r'^(?P<trimester_id>[0-9]+)/list/$', login_required(list_categories), name='list_categories'),
     url(r'^$', login_required(admin_trimesters), name='trimesters'),
 )

@@ -12,6 +12,7 @@
 {% load i18n %}
 {% load favorite %}
 {% load staticfiles %}
+{% load hijack_tags %}
 <!DOCTYPE HTML>
 <html lang="en">
   <head>
@@ -24,7 +25,9 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <!--  CSS -->
+
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack-styles.css' %}" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.9/css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" href=" {% static "upload/css/style.css" %} ">
     <link rel="stylesheet" href=" {% static "upload/css/jquery.fileupload-ui.css" %}" >
@@ -65,6 +68,7 @@
     {% endblock %}
   </head>
   <body>
+  {% hijack_notification %}
     <nav class="navbar navbar-fixed-top navbar-inverse">
       <div class="container-fluid">
         <div class="navbar-header">
