@@ -21,10 +21,10 @@ from threading import Timer
 from PyPDF2 import PdfFileReader
 import re
 import subprocess
-import logging
+#import logging
 
 
-logger = logging.getLogger(__name__)
+#logger = logging.getLogger(__name__)
 
 
 def category_view(request, category_id):
@@ -44,7 +44,7 @@ def remove_fileupload(liste):
 def convert_pdf_to_jpg(l):
     print("convert_pdf_to_jpg")
     for (cat, path, f, doc) in l:
-        print("%s %s %s %s" % (cat, path, f, doc))
+        #print("%s %s %s %s" % (cat, path, f, doc))
         try:
             n = PdfFileReader(open(path, 'rb')).getNumPages()
         except:
@@ -65,15 +65,15 @@ def convert_pdf_to_jpg(l):
         cat = cat[0]
         doc = doc[0]
         p = re.compile(r'.[Pp][Dd][Ff]$')
-        filename = p.sub('.jpg', f)
-        new_path = cat.get_absolute_path() + '/' + str(doc.id) + '_' + '%03d' + '_' + filename.encode('ascii', 'ignore')
+        filename = p.sub('.jpg', str(f))
+        new_path = u'%s/%s' % (cat.get_absolute_path(), str(doc.id)) + '_%03d_' + filename.encode('ascii', 'ignore')
         cmd = u'gs -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600x600 -sOutputFile=%s %s' % (new_path, path)
         print(cmd.encode('utf-8'))
         os.system(cmd.encode('utf-8'))
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         p.wait()
         for i in range(1, n+1):
-            name_page = str(doc.id) + '_' + "%03d" % i + '_' + filename.encode('ascii', 'ignore')
+            name_page = str(doc.id) + "_%03d_" % i + filename.encode('ascii', 'ignore')
             path_page = cat.get_absolute_path() + '/' + name_page
             im = Image.open(path_page)
             w, h = im.size
@@ -116,9 +116,9 @@ def add_documents(request, category_id):
         paths = []
         for f in list(files):
             mime = MimeTypes()
-            logger.error('[ERROR]Something went wrong!')
-            logger.debug('[DEBUG] add %s to %s' % (f, cat))
-            logger.info('[INFO] add %s to %s' % (f, cat))
+            #logger.error('[ERROR]Something went wrong!')
+            #logger.debug('[DEBUG] add %s to %s' % (f, cat))
+            #logger.info('[INFO] add %s to %s' % (f, cat))
             path = os.path.join(settings.MEDIA_ROOT, settings.UPLOAD_DIR, f)
             m = mime.guess_type(path)[0]
             d = Document(name=f.encode('ascii', 'ignore'), owner=request.user, refer_category=cat)
