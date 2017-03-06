@@ -74,7 +74,7 @@ def convert_pdf_to_jpg(l):
         p.wait()
         for i in range(1, n+1):
             name_page = str(doc.id) + "_%03d_" % i + filename.encode('ascii', 'ignore')
-            path_page = cat.get_absolute_path() + '/' + name_page
+            path_page = '%s/%s' % (cat.get_absolute_path(), name_page)
             im = Image.open(path_page)
             w, h = im.size
             doc.add_page(doc.get_npages() + 1, name_page, w, h)
