@@ -37,7 +37,6 @@ def remove_fileupload(liste):
     for path in liste:
         for fu in FileUpload.objects.all():
             if fu.file.path == path:
-                os.remove(path)
                 fu.delete()
 
 
@@ -118,7 +117,7 @@ def add_documents(request, category_id):
             mime = MimeTypes()
             #logger.error('[ERROR]Something went wrong!')
             #logger.debug('[DEBUG] add %s to %s' % (f, cat))
-            #logger.info('[INFO] add %s to %s' % (f, cat))
+            print('[INFO] add %s to %s' % (f, cat))
             path = os.path.join(settings.MEDIA_ROOT, settings.UPLOAD_DIR, f)
             m = mime.guess_type(path)[0]
             d = Document(name=f.encode('ascii', 'ignore'), owner=request.user, refer_category=cat)
