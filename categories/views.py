@@ -66,15 +66,14 @@ def convert_pdf_to_jpg(l):
         doc = doc[0]
         p = re.compile(r'.[Pp][Dd][Ff]$')
         filename = p.sub('.jpg', str(f))
-        new_path = u'%s/%d' % (cat.get_absolute_path(), doc.id)
-        new_path += u'_%03d_' + filename.encode('utf-8', 'ignore')
+        new_path = u'%s/%d' % (cat.get_absolute_path(), doc.id) + u'_%03d_' + filename
         cmd = u'gs -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600x600 -sOutputFile=%s %s' % (new_path, path)
         print(cmd.encode('utf-8'))
         os.system(cmd.encode('utf-8'))
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         p.wait()
         for i in range(1, n+1):
-            name_page = str(doc.id) + "_%03d_" % i + filename.encode('ascii', 'ignore')
+            name_page = str(doc.id) + "_%03d_" % i + filename
             path_page = '%s/%s' % (cat.get_absolute_path(), name_page)
             im = Image.open(path_page)
             w, h = im.size
