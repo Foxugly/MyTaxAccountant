@@ -27,8 +27,13 @@ import subprocess
 #logger = logging.getLogger(__name__)
 
 
-def category_view(request, category_id):
-    return HttpResponse("category_view")
+def view_category(request, category_id):
+    cat = Category.objects.get(id=category_id)
+    docs = [d for d in cat.get_docs()]
+    # il faut continuer et envoyerau template
+    if request.user.is_authenticated():
+        return render(request, 'folder.tpl')
+    return render(request, "layout.tpl")
 
 
 def remove_fileupload(liste):
