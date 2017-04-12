@@ -14,5 +14,6 @@ from trimesters.views import list_categories, admin_trimesters
 
 urlpatterns = (
     url(r'^(?P<trimester_id>[0-9]+)/list/$', login_required(list_categories), name='list_categories'),
+    # url(r'^(?P<trimester_id>[0-9]+)/$', login_required(view_trimesters), name='view_trimesters'),
     url(r'^$', login_required(admin_trimesters), name='trimesters'),
 )
