@@ -9,7 +9,7 @@
 
 
 from django.http import HttpResponse
-from django.shortcuts import render_to_response, render, redirect
+from django.shortcuts import render
 from trimesters.models import Trimester
 from utils.models import TemplateTrimesterForm, TemplateTrimester
 from companies.models import Company
@@ -18,9 +18,10 @@ import json
 
 
 def view_trimester(request, trimester_id):
+    print("view_trimester | id = "+str(trimester_id))
     t = Trimester.objects.get(id=trimester_id)
-    return view_category(request, t.categories.filter(active=True).order_by('cat__priority')[0])
-
+    return view_category(request, t.categories.filter(active=True).order_by('cat__priority')[0].id)
+"'''"
 
 def favorite_trimester(year):
     t = year.trimesters.filter(active=True, favorite=True)

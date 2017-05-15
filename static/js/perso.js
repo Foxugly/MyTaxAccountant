@@ -2,6 +2,8 @@
  * Created by renaud on 03/02/16.
  */
 
+var DEBUG = true;
+
 $(document).ajaxSend(function(event, xhr, settings) {
     function getCookie(name) {
         var cookieValue = null;
@@ -159,16 +161,33 @@ $(document).ready(function() {
         });
     });
 
-    $('#sel_trimester').change(function() {update_categories();});
+    $('#sel_trimester').change(function() {window.location ='/trimester/' + $('#sel_trimester').val() + '/'});
     $('#sel_year').change(function() {update_trimesters();});
     $('#sel_company').change(function() {update_years();});
-    $('#nav_category li a').click(function() {nav_click($(this));});
+    //$('#nav_category li a').click(function() {nav_click($(this));});
     $('#modal_company').on('change', function () { modal_companies();});
     $('#modal_year').on('change', function () { modal_years();});
     $('#modal_trimester').on('change', function () { modal_trimesters();});
+    $(".img_modal").click(function(){img_modal($(this));});
+    $(".move_modal").click(function(){move_modal($(this));});
+    $(".merge_modal").click(function(){merge_modal($(this));});
+    $(".split_modal").click(function(){split_modal($(this));});
+    $(".download").click(function(){download($(this));});
+    $(".del_modal").click(function(e){
+        var btn = $('ul.nav-pills li.active a')[0];
+        bootbox.confirm("Are you sure?", function(result) {
+            if(result) {
+                del_modal(e);
+                update_data(true);
+                bootbox.alert("Document deleted !", function() {btn.click();});
+            }
+        });
+    });
 
     function update_categories(){
-        /*console.log('update_categories');*/
+        if (DEBUG) {
+            console.log('update_categories');
+        }
         var url = '/trimester/' + $('#sel_trimester').val() + '/list/';
         $.ajax({
             url: url,
@@ -252,6 +271,9 @@ $(document).ready(function() {
     }
 
     function img_modal(e){
+        if (DEBUG) {
+            console.log("img_modal :" + e);
+        }
         var url = '/document/' + e[0].id + '/';
         $.ajax({
             url: url,
@@ -266,9 +288,13 @@ $(document).ready(function() {
     }
 
     function move_modal(e){
-        /*console.log('move_modal');*/
-        var url = '/document/ajax/move/' + e[0]['dataset'].id + '/';
-        /*console.log(url);*/
+        if (DEBUG) {
+            console.log('move_modal');
+        }
+        var url = "/document/ajax/move/" + e[0]['dataset'].id + "/";
+        if (DEBUG) {
+            console.log(url);
+        }
         $.ajax({
             url: url,
             type: 'GET',
@@ -297,7 +323,7 @@ $(document).ready(function() {
     }
 
     $('#document_move').click(function document_move(){
-        var url = '/document/ajax/move/' + $("#move_doc_id").val() + '/' + $("#modal_category").val() + '/';
+        var url = "/document/ajax/move/" + $("#move_doc_id").val() + "/" + $("#modal_category").val() + "/";
         $.ajax({
             url: url,
             type: 'GET',
@@ -311,9 +337,13 @@ $(document).ready(function() {
     });
 
     function modal_trimesters(){
-        /*console.log('modal_trimesters');*/
+        if (DEBUG) {
+            console.log('modal_trimesters');
+        }
         var url = '/trimester/' + $('#modal_trimester').val() + '/list/';
-        /*console.log(url);*/
+        if (DEBUG) {
+            console.log(url);
+        }
         $.ajax({
             url: url,
             type: 'GET',
@@ -331,9 +361,13 @@ $(document).ready(function() {
     }
 
     function modal_years(){
-        /*console.log('modal_years');*/
+        if (DEBUG) {
+            console.log('modal_years');
+        }
         var url = '/year/' + $('#modal_year').val() + '/list/';
-        /*console.log(url);*/
+        if (DEBUG) {
+            console.log(url);
+        }
         $.ajax({
             url: url,
             type: 'GET',
@@ -351,7 +385,9 @@ $(document).ready(function() {
     }
 
     function modal_companies(){
-        /*console.log('modal_companies');*/
+        if (DEBUG) {
+            console.log('modal_companies');
+        }
         var url = '/company/' + $('#modal_company').val() + '/list/';
         $.ajax({
             url: url,
@@ -413,7 +449,9 @@ $(document).ready(function() {
     }
 
     function merge_modal(e){
-        /*console.log("merge_modal");*/
+        if (DEBUG) {
+            console.log("merge_modal");
+        }
         var url = '/document/ajax/merge/' + e[0]['dataset'].id + '/';
         $('#modal_merge_doc_id').val(e[0]['dataset'].id);
         $.ajax({
@@ -461,7 +499,9 @@ $(document).ready(function() {
     }
 
     function update_datatable(data){
-        /*console.log('update_datatable');*/
+        if (DEBUG) {
+            console.log('update_datatable');
+        }
         var out = '<td>';
         var lock = '<td>';
         if (data['lock']){
@@ -500,8 +540,10 @@ $(document).ready(function() {
         return repeat;
     }
 
-    function save_form(){
-        /*console.log('save_form');*/
+    function save_form() {
+        if (DEBUG){
+            console.log('save_form');
+        }
         $('#alert_save_error').hide();
         var form = $('#div_form form');
         var id = $('#doc_id').val();
@@ -530,8 +572,10 @@ $(document).ready(function() {
         });
     }
 
-    function view_form(valid, img, form,doc_id){
-        console.log('view_form');
+    function view_form(valid, img, form,doc_id) {
+        if (DEBUG){
+            console.log('view_form');
+        }
         if (valid == true){
             console.log('<ul class="docs-pictures clearfix">' + img + '</ul>');
             $('#div_img').html('<ul class="docs-pictures clearfix">' + img + '</ul><script>var Viewer = window.Viewer;        var pictures = document.querySelector(".docs-pictures");        var viewer;        viewer = new Viewer(pictures); </script> ');
@@ -550,7 +594,9 @@ $(document).ready(function() {
     }
 
     function update_data(option){
-        /*console.log('update_data');*/
+        if (DEBUG) {
+            console.log('update_data');
+        }
         var pagnum = $('#pagination').bootpag().find('.active').data()['lp'];
         var url = '/category/'+ $('ul.nav-pills li.active a').attr("data-id") + '/list/' +  pagnum + '/';
         var repeat = false;
@@ -589,8 +635,10 @@ $(document).ready(function() {
     }
 
     function get_form_data(i){
-        //console.log('get_form_data ');
-        //console.log("caller is " + arguments.callee.caller.toString());
+        if (DEBUG) {
+            console.log('get_form_data ');
+            console.log("caller is " + arguments.callee.caller.toString());
+        }
         var url = '/category/' + $('ul.nav-pills li.active a').attr("data-id") + '/form/' + i + '/';
         $.ajax({
             url: url,
@@ -612,7 +660,6 @@ $(document).ready(function() {
         $('#files-group').empty();
         $("#fileupload_list" ).addClass( "hide" );
         var data_id = $('ul.nav-pills li.active a').attr("data-id");
-        var id = $('ul.nav-pills li.active a').attr("id");
         var url = '/category/' + data_id + '/add_documents/';
         var repeat = false;
         $.ajax({
@@ -642,8 +689,9 @@ $(document).ready(function() {
     });
 
     function nav_click(e){
-        //console.log("caller is " + arguments.callee.caller);
-        //console.log('nav_click');
+        if (DEBUG){
+            console.log('nav_click');
+        }
         $('ul.nav-pills li.active').removeClass('active');
         e.parent('li').addClass('active');
         var cat_id = $('ul.nav-pills li.active a').attr("data-id");
@@ -759,3 +807,4 @@ $(document).ready(function() {
         });
     });
 });
+

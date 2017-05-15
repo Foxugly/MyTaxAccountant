@@ -8,6 +8,7 @@
 # your option) any later version.
 
 from django.http import HttpResponse
+from django.shortcuts import render_to_response, render, redirect
 from categories.models import Category
 from mimetypes import MimeTypes
 import json
@@ -28,12 +29,24 @@ import subprocess
 
 
 def view_category(request, category_id):
-    cat = Category.objects.get(id=category_id)
-    docs = [d for d in cat.get_docs()]
-    # il faut continuer et envoyerau template
+    print("view_category | id = "+str(category_id))
+    category_current = Category.objects.get(id=category_id)
+    trimester_current = category_current.refer_trimester
+    year_current = trimester_current.refer_year
+    company_current = year_current.refer_company
+    companies = request.user.userprofile.companies.all()
+    years = company_current.years.all()
+    trimesters = year_current.trimesters.all()
+    categories = trimester_current.categories.all()
+    docs = category_current.documents.all()
+    c = {'companies': companies, 'company_current': company_current, 'years': years, 'year_current': year_current,
+         'trimesters': trimesters, 'trimester_current': trimester_current, 'categories': categories,
+         'category_current': category_current, 'docs': docs}
+
+    # il faut continuer et envoyer au template
     if request.user.is_authenticated():
-        return render(request, 'folder.tpl')
-    return render(request, "layout.tpl")
+            return render(request, 'folder.tpl', c)
+    return render(request, "layout.tpl", c)
 
 
 def remove_fileupload(liste):

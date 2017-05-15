@@ -7,19 +7,20 @@
 {% load i18n %}
 {% block content %}
 {% if user.is_authenticated %}
+<!--
 <div class="row">
     <div class="col-md-12">
-        <h1 class="text-center" id="title_trimester"><!-- user|favorite_company|favorite_year|favorite_trimester --></h1>
+        <h1 class="text-center" id="title_trimester">{{trimester_current}}</h1>
     </div>
-</div>
+</div>-->
 <div class="row">
     <div class="col-md-12">
-        <ul id="nav_category" class="nav nav-tabs nav-pills" role="tablist">
-            {% for c in user|favorite_company|favorite_year|favorite_trimester|categories %}
-                {%if forloop.first %}
-                    <li role="presentation" class="active"><a data-target="#" data-id="{{c.id}}" data-toggle="pill" id="nav_{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
+        <ul class="nav nav-tabs nav-pills" role="tablist">
+            {% for c in categories %}
+                {%if c == category_current %}
+                    <li class="active"><a id="{{c.id}}" data-id="{{c.id}}" href="/category/{{c.id}}/">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
                 {% else %}
-                    <li role="presentation"><a data-target="#" data-toggle="pill" data-id="{{c.id}}" id="nav_{{c.id}}" href="#">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
+                    <li><a id="{{c.id}}" data-id="{{c.id}}" href="/category/{{c.id}}/">{{c.cat.name}} <span class="badge">{{c|len_docs}}</span></a></li>
                 {% endif %}
             {% endfor %}
         </ul>
@@ -70,7 +71,38 @@
                     <th>{% trans "Operations" %}</th>
                 </tr>
             </thead>
-     
+            <tbody>
+                {% for doc in docs %}
+                    <tr>
+                    {%  if doc.fiscal_id %}
+                        <td>{{ doc.fiscal_id }}</td>
+                    {% else %}
+                        <td></td>
+                    {%  endif %}
+                    <td><a id="{{ doc.id }}" class="img_modal" data-id="{{ doc.id }}" data-toggle="modal" data-target="#myModal">{{ doc.name }}</a></td>
+                    <td>{% if doc.date.day < 10%}0{% endif %}{{ doc.date.day }}/{% if doc.date.month < 10%}0{% endif %}{{ doc.date.month }}/{{ doc.date.year }}</td>
+                    {%  if  doc.description %}
+                        <td>{{ doc.description }}</td>
+                    {%  else  %}
+                        <td></td>
+                    {%  endif %}
+                    {%  if doc.lock %}
+                        <td><span class="glyphicon glyphicon-lock"></span></td>
+                    {%  else %}
+                    <td></td>
+                    {%  endif %}
+                    {%  if doc.complete %}
+                    <td><a id="btn_sp_{{ doc.id }}" class="btn btn-xs btn-default split_modal" data-id="{{ doc.id }}" title="Split" data-toggle="modal" data-target="#modal_split"><span class="glyphicon glyphicon-resize-full"></span></a>
+                        <a id="btn_me_{{ doc.id }}" class="btn btn-xs btn-default merge_modal" data-id="{{ doc.id }}" title="Merge" data-toggle="modal" data-target="#modal_merge"><span class="glyphicon glyphicon-resize-small"></span></a>
+                        <a id="btn_mv_{{ doc.id }}" class="btn btn-xs btn-default move_modal" data-id="{{ doc.id }}" title="Move" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer"></span></a>
+                        <a id="btn_dl_{{ doc.id }}" class="btn btn-xs btn-default download" data-id="{{ doc.id }}" title="Download"><span class="glyphicon glyphicon-download-alt"></span></a>
+                        <a id="btn_de_{{ doc.id }}" class="btn btn-xs btn-default del_modal" data-id="{{ doc.id }}" title="Delete"><span class="glyphicon glyphicon-remove"></span></a></td>
+                    {%  else %}
+                    <td><a class="btn btn-xs btn-default"><span class="glyphicon glyphicon-refresh"></span> </a></td>
+                    {%  endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
             <tfoot>
                 <tr>
                     <th>{% trans "FiscalID" %}</th>
@@ -89,9 +121,9 @@
 </div>
 <div id="div_img_form" class="row">
     <div id="div_img" class="col-md-6 docs-galley" style="width:50%;height: 600px;overflow-y: auto; text-align:center;">
-<ul class="docs-pictures clearfix">
-			<li><img data-original="https://raw.githubusercontent.com/fengyuanchen/viewerjs/master/assets/img/tibet-1.jpg" src="https://raw.githubusercontent.com/fengyuanchen/viewerjs/master/assets/img/thumbnails/tibet-1.jpg" alt="Picture1"></li>
-                        <li><img data-original="https://raw.githubusercontent.com/fengyuanchen/viewerjs/master/assets/img/tibet-2.jpg" src="https://raw.githubusercontent.com/fengyuanchen/viewerjs/master/assets/img/thumbnails/tibet-2.jpg" alt="Picture2"></li>
+        <ul class="docs-pictures clearfix">
+			<li><img data-original="" src="" alt="Picture1"></li>
+            <li><img data-original="" src="" alt="Picture2"></li>
 		</ul>
     </div>
 <script>
@@ -244,7 +276,7 @@
                     <input type="hidden" id="modal_merge_doc_id" name="modal_merge_doc_id">
                     <div class="row">
                         <div id="dlb_merge" class="col-md-12 col-sm-12 text-center">
-                        <select id="dlb_documents" name="dlb_documents" multiple="multiple" data-title="documents" data-source="static/data.json"  data-value="index" data-text="name"></select>
+                        <select id="dlb_documents" name="dlb_documents" multiple="multiple" data-title="documents" data-source=""  data-value="index" data-text="name"></select>
                         </div>
                     </div>
                 </form>

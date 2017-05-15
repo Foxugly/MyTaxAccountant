@@ -20,8 +20,21 @@ from companies.models import CompanyForm
 
 def home(request):
     if request.user.is_authenticated():
-        return render(request, 'folder.tpl')
-    return render(request, "layout.tpl")
+        companies = request.user.userprofile.companies.all()
+        company_current = companies[0]
+        years = company_current.years.all()
+        year_current = next(y for y in years if y.favorite is True)
+        trimesters = year_current.trimesters.all()
+        trimester_current = next(t for t in trimesters if t.favorite is True)
+        categories = trimester_current.categories.all()
+        category_current = categories.order_by('cat__priority')[0]
+        docs = category_current.documents.all()
+        c = {'companies': companies, 'company_current': company_current, 'years': years, 'year_current': year_current,
+             'trimesters': trimesters, 'trimester_current': trimester_current, 'categories': categories,
+             'category_current': category_current, 'docs': docs}
+        print(c)
+        return render(request, 'folder.tpl', c)
+    return render(request, "layout.tpl", c)
 
 
 @login_required
