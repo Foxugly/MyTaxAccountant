@@ -19,7 +19,7 @@ import json
 
 def view_trimester(request, trimester_id):
     t = Trimester.objects.get(id=trimester_id)
-    return view_category(request, t.categories.filter(active=True).order_by('cat__priority')[0]):
+    return view_category(request, t.categories.filter(active=True).order_by('cat__priority')[0])
 
 
 def favorite_trimester(year):
