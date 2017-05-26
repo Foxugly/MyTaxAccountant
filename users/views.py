@@ -19,6 +19,7 @@ from companies.models import CompanyForm
 
 
 def home(request):
+    c = {}
     if request.user.is_authenticated():
         companies = request.user.userprofile.companies.all()
         company_current = companies[0]
