@@ -47,7 +47,8 @@ def update_ajax(request, document_id):
 
 
 def ajax_move(request, n):
-    print('ajax_move')
+    if settings.DEBUG:
+        print('ajax_move')
     if request.is_ajax():
         results = {}
         doc = Document.objects.get(pk=int(n))

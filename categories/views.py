@@ -24,14 +24,11 @@ import re
 import subprocess
 from users.models import Log
 import time
-#import logging
-
-
-#logger = logging.getLogger(__name__)
 
 
 def view_category(request, category_id):
-    print("view_category | id = "+str(category_id))
+    if settings.DEBUG:
+        print("view_category | id = "+str(category_id))
     category_current = Category.objects.get(id=category_id)
     trimester_current = category_current.refer_trimester
     year_current = trimester_current.refer_year
@@ -52,8 +49,9 @@ def view_category(request, category_id):
 
 
 def remove_fileupload(liste):
-    print("remove_fileupload")
-    print(liste)
+    if settings.DEBUG:
+        print("remove_fileupload")
+        print(liste)
     for path in liste:
         for fu in FileUpload.objects.all():
             if fu.file.path == path:
@@ -61,7 +59,8 @@ def remove_fileupload(liste):
 
 
 def convert_pdf_to_jpg(request, l):
-    print("convert_pdf_to_jpg")
+    if settings.DEBUG:
+        print("convert_pdf_to_jpg")
     for (cat, path, f, doc) in l:
         #print("%s %s %s %s" % (cat, path, f, doc))
         try:
@@ -70,11 +69,13 @@ def convert_pdf_to_jpg(request, l):
             os.rename(path, path + '_old')
             txt = 'mv %s %s \n' % (path, path + '_old')
             cmd = u'gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=%s %s' % (path, path + '_old')
-            print(cmd.encode('utf-8'))
+            if settings.DEBUG:
+                print(cmd.encode('utf-8'))
             txt += cmd.encode('utf-8') + '\n'
             os.system(cmd.encode('utf-8'))
             cmd = u'rm -f %s' % (path + '_old')
-            print(cmd.encode('utf-8'))
+            if settings.DEBUG:
+                print(cmd.encode('utf-8'))
             txt += cmd.encode('utf-8') + '\n'
             os.system(cmd.encode('utf-8'))
             l = Log(userprofile=request.user.userprofile, category=cat, cmd=txt)
@@ -92,7 +93,8 @@ def convert_pdf_to_jpg(request, l):
         filename = p.sub('.jpg', str(f))
         new_path = u'%s/%d' % (cat.get_absolute_path(), doc.id) + u'_%03d_' + filename
         cmd = u'gs -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600x600 -sOutputFile=%s %s' % (new_path, path)
-        print(cmd.encode('utf-8'))
+        if settings.DEBUG:
+            print(cmd.encode('utf-8'))
         l = Log(userprofile=request.user.userprofile, category=cat, cmd=cmd.encode('utf-8'))
         l.save()
         os.system(cmd.encode('utf-8'))
@@ -110,22 +112,26 @@ def convert_pdf_to_jpg(request, l):
 
 
 def manage_convert_doc_to_pdf(request, cmds, paths, liste):
-    print("manage_convert_doc_to_pdf")
-    print(cmds)
-    print(paths)
-    print(liste)
+    if settings.DEBUG:
+        print("manage_convert_doc_to_pdf")
+        print(cmds)
+        #print(paths)
+        #print(liste)
     for c in cmds:
         os.system(c)
-        print(c)
+        if settings.DEBUG:
+            print(c)
     convert_pdf_to_jpg(request, liste)
     remove_fileupload(paths)
     for (c, path, f, d) in liste:
         os.remove(path)
-        print("remove %s" % (path))
+        if settings.DEBUG:
+            print("remove %s" % (path))
 
 
 def manage_convert_pdf_to_jpg(request, liste):
-    print("manage_convert_pdf_to_jpg")
+    if settings.DEBUG:
+        print("manage_convert_pdf_to_jpg")
     convert_pdf_to_jpg(request, liste)
     l_path = []
     for (cat, path, f, doc) in liste:
@@ -143,9 +149,8 @@ def add_documents(request, category_id):
         paths = []
         for f in list(files):
             mime = MimeTypes()
-            #logger.error('[ERROR]Something went wrong!')
-            #logger.debug('[DEBUG] add %s to %s' % (f, cat))
-            print('[INFO] add %s to %s' % (f, cat))
+            if settings.DEBUG:
+                print('[INFO] add %s to %s' % (f, cat))
             path = os.path.join(settings.MEDIA_ROOT, settings.UPLOAD_DIR, f)
             m = mime.guess_type(path)[0]
             d = Document(name=f.encode('ascii', 'ignore'), owner=request.user, refer_category=cat)
@@ -195,6 +200,8 @@ def add_documents(request, category_id):
 
 
 def list_documents(request, category_id, n):
+    if settings.DEBUG:
+        print("list_documents %s %s" % (category_id, n))
     if request.is_ajax():
         cat = Category.objects.get(id=category_id)
         if cat.count_docs() == 0:
@@ -216,6 +223,8 @@ def list_documents(request, category_id, n):
 
 
 def form_document(request, category_id, n):
+    if settings.DEBUG:
+        print("form_document %s %s" % (category_id, n))
     if request.is_ajax():
         cat = Category.objects.get(pk=category_id)
         if cat.count_docs() > 0:
