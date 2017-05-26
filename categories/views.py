@@ -22,6 +22,8 @@ from threading import Timer
 from PyPDF2 import PdfFileReader
 import re
 import subprocess
+from users.models import Log
+import time
 #import logging
 
 
@@ -58,7 +60,7 @@ def remove_fileupload(liste):
                 fu.delete()
 
 
-def convert_pdf_to_jpg(l):
+def convert_pdf_to_jpg(request, l):
     print("convert_pdf_to_jpg")
     for (cat, path, f, doc) in l:
         #print("%s %s %s %s" % (cat, path, f, doc))
@@ -66,12 +68,17 @@ def convert_pdf_to_jpg(l):
             n = PdfFileReader(open(path, 'rb')).getNumPages()
         except:
             os.rename(path, path + '_old')
+            txt = 'mv %s %s \n' % (path, path + '_old')
             cmd = u'gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=%s %s' % (path, path + '_old')
             print(cmd.encode('utf-8'))
+            txt += cmd.encode('utf-8') + '\n'
             os.system(cmd.encode('utf-8'))
             cmd = u'rm -f %s' % (path + '_old')
             print(cmd.encode('utf-8'))
+            txt += cmd.encode('utf-8') + '\n'
             os.system(cmd.encode('utf-8'))
+            l = Log(userprofile=request.user.userprofile, category=cat, cmd=txt)
+            l.save()
             pass
         try:
             pdf = PdfFileReader(open(path, 'rb'))
@@ -86,9 +93,12 @@ def convert_pdf_to_jpg(l):
         new_path = u'%s/%d' % (cat.get_absolute_path(), doc.id) + u'_%03d_' + filename
         cmd = u'gs -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600x600 -sOutputFile=%s %s' % (new_path, path)
         print(cmd.encode('utf-8'))
+        l = Log(userprofile=request.user.userprofile, category=cat, cmd=cmd.encode('utf-8'))
+        l.save()
         os.system(cmd.encode('utf-8'))
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         p.wait()
+        time.sleep(5)
         for i in range(1, n+1):
             name_page = str(doc.id) + "_%03d_" % i + filename
             path_page = '%s/%s' % (cat.get_absolute_path(), name_page)
@@ -99,7 +109,7 @@ def convert_pdf_to_jpg(l):
         doc.save()
 
 
-def manage_convert_doc_to_pdf(cmds, paths, liste):
+def manage_convert_doc_to_pdf(request, cmds, paths, liste):
     print("manage_convert_doc_to_pdf")
     print(cmds)
     print(paths)
@@ -107,16 +117,16 @@ def manage_convert_doc_to_pdf(cmds, paths, liste):
     for c in cmds:
         os.system(c)
         print(c)
-    convert_pdf_to_jpg(liste)
+    convert_pdf_to_jpg(request, liste)
     remove_fileupload(paths)
     for (c, path, f, d) in liste:
         os.remove(path)
         print("remove %s" % (path))
 
 
-def manage_convert_pdf_to_jpg(liste):
+def manage_convert_pdf_to_jpg(request, liste):
     print("manage_convert_pdf_to_jpg")
-    convert_pdf_to_jpg(liste)
+    convert_pdf_to_jpg(request, liste)
     l_path = []
     for (cat, path, f, doc) in liste:
         l_path.append(path)
@@ -175,10 +185,10 @@ def add_documents(request, category_id):
             else:
                 print("ERREUR FORMAT FICHIER")
         if len(l_doc):
-            thread1 = Timer(0, manage_convert_doc_to_pdf, (cmds, paths, l_doc,))
+            thread1 = Timer(0, manage_convert_doc_to_pdf, (request, cmds, paths, l_doc,))
             thread1.start()
         if len(l_pdf):
-            thread = Timer(0, manage_convert_pdf_to_jpg, (l_pdf,))
+            thread = Timer(0, manage_convert_pdf_to_jpg, (request, l_pdf,))
             thread.start()
         results = {'doc_list': [d.as_json() for d in cat.get_docs()], 'n': cat.count_docs()}
         return HttpResponse(json.dumps(results))

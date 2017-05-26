@@ -15,6 +15,8 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.forms import ModelForm
 from django.core.validators import RegexValidator
+from fileupload.models import FileUpload
+from categories.models import Category
 
 
 class UserCreateForm(UserCreationForm):
@@ -73,3 +75,13 @@ class UserProfileForm(ModelForm):
         super(UserProfileForm, self).__init__(*args, **kw)
         self.fields['language'].widget.attrs['class'] = 'select2100-nosearch'
         self.fields['birth_date'].widget.attrs['class'] = 'datepicker'
+
+
+class Log(models.Model):
+    userprofile = models.ForeignKey(UserProfile, null=True)
+    fileupload = models.ForeignKey(FileUpload, null=True)
+    category = models.ForeignKey(Category, null=True)
+    cmd = models.TextField(null=True)
+
+    def __str__(self):
+        return self.pk
