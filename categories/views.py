@@ -130,7 +130,6 @@ def add_documents(request, category_id):
         l_doc = []
         l_pdf = []
         for f in list(files):
-            print f
             fu = None
             fu_list = FileUpload.objects.filter(slug=f)
             if len(fu_list) == 1:
@@ -158,8 +157,6 @@ def add_documents(request, category_id):
                 new_filename = '%s_%s' % (str(d.id), fu.slug)
                 new_path = os.path.join(cat.get_absolute_path(), new_filename)
                 shutil.copy2(path, new_path)
-                print(path)
-                print(new_path)
                 d.add_page(d.get_npages() + 1, new_filename, w, h)
                 d.complete = True
                 d.save()
