@@ -178,7 +178,7 @@ $(document).ready(function() {
         bootbox.confirm("Are you sure?", function(result) {
             if(result) {
                 del_modal(e);
-                update_data(true);
+                update_data(true, 4);
                 bootbox.alert("Document deleted !", function() {btn.click();});
             }
         });
@@ -230,7 +230,7 @@ $(document).ready(function() {
                 }
                 $('#sel_trimester').append('</optgroup>');
                 $('#sel_trimester').val(result['favorite'].id).trigger('change');
-                update_data(true);
+                update_data(true, 4);
             }
         });
     }
@@ -532,7 +532,7 @@ $(document).ready(function() {
             bootbox.confirm("Are you sure?", function(result) {
                 if(result) {
                     del_modal(e);
-                    update_data(true);
+                    update_data(true,4);
                     bootbox.alert("Document deleted !", function() {btn.click();});
                 }
             });
@@ -567,7 +567,7 @@ $(document).ready(function() {
                     $('#alert_save_error').html(out);
                     $('#alert_save_error').show();
                 }
-                update_data(false);
+                update_data(false,4);
             }
         });
     }
@@ -593,13 +593,13 @@ $(document).ready(function() {
         }
     }
 
-    function update_data(option){
-        if (DEBUG) {
-            console.log('update_data');
-        }
+    function update_data(option, nb){
+        //if (DEBUG) {
+        console.log('update_data');
+        //}
         var pagnum = $('#pagination').bootpag().find('.active').data()['lp'];
         var url = '/category/'+ $('ul.nav-pills li.active a').attr("data-id") + '/list/' +  pagnum + '/';
-        var repeat = false;
+
         $.ajax({
             url: url,
             type: 'GET',
@@ -608,6 +608,7 @@ $(document).ready(function() {
             success: function(result){
                 $('#datatable').dataTable().fnClearTable();
                 var numpage = 1;
+                var repeat = false;
                 for (var i = 0; i < result['doc_list'].length; i++) {
                     var res_return = update_datatable(result['doc_list'][i]) ;
                     repeat = res_return || repeat;
@@ -625,10 +626,9 @@ $(document).ready(function() {
                     }
                     $('ul.nav-pills li.active a').click();
                 }
-                if (repeat){
-                    setTimeout(function(){
-                        update_data(option);
-                    }, 3000);
+                if (repeat && nb < 5){
+                    console.log('LOOOP');
+                    setTimeout(function(){ update_data(option, nb+1);}, 20000);
                 }
             }
         });
@@ -680,9 +680,8 @@ $(document).ready(function() {
                 }
                 $('ul.nav-pills li.active span').html(result['n']);
                 if (repeat){
-                    setTimeout(function(){
-                        update_data(true);
-                    }, 3000);
+                    console.log('loop1');
+                    setTimeout(function(){ update_data(true,1);}, 20000);
                 }
             }
         });
