@@ -167,6 +167,7 @@
         </div>
       </div>
     </nav>
+    {% block content %}
     <div class="container"><!--<div class="container-fluid">-->
         <!--[if lt IE 9]>
            	<div id="topwarning">
@@ -178,7 +179,7 @@
     		{% endblocktrans %}
     		</div>
     	<![endif]-->
-      {% block content %}
+
       <div class='row'>
         
           {% if not user.is_authenticated %}
@@ -197,8 +198,8 @@
   	        </div>
           {% endif %}
       </div>
-      {% endblock %}
     </div>
+  {% endblock %}
   </body>
-  <script src='{% static "js/perso.js" %}'></script>
+  <script type="text/javascript" src='{% static "js/perso.js" %}'></script>
 </html>

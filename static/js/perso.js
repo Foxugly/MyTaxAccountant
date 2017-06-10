@@ -726,7 +726,7 @@ $(document).ready(function() {
             }
         });
     }
-
+    /*
     $("#view_group :input:radio").change(function() {
         var view = this.value;
         if (view == 'list'){
@@ -751,7 +751,7 @@ $(document).ready(function() {
             }
 
         }
-    });
+    });*/
 
     $('#pagination').bootpag({
             total: 1,

@@ -38,13 +38,13 @@ def view_category(request, category_id):
     trimesters = year_current.trimesters.all()
     categories = trimester_current.categories.all()
     docs = category_current.documents.all()
-    c = {'companies': companies, 'company_current': company_current, 'years': years, 'year_current': year_current,
-         'trimesters': trimesters, 'trimester_current': trimester_current, 'categories': categories,
-         'category_current': category_current, 'docs': docs}
+    c = dict(companies=companies, company_current=company_current, years=years, year_current=year_current,
+             trimesters=trimesters, trimester_current=trimester_current, categories=categories,
+             category_current=category_current, docs=docs, view='list')
 
     # il faut continuer et envoyer au template
     if request.user.is_authenticated():
-            return render(request, 'folder.tpl', c)
+            return render(request, 'folder_list.tpl', c)
     return render(request, "layout.tpl", c)
 
 
@@ -223,7 +223,46 @@ def form_document(request, category_id, n):
                     form = DocumentReadOnlyForm(instance=doc).as_div()
                 else:
                     form = DocumentForm(instance=doc).as_div()
-            results = {'form': form, 'img': doc.as_img(), 'doc_id': doc.id, 'valid': True}
+            results = {'form': form, 'img': doc.as_img, 'doc_id': doc.id, 'valid': True}
         else:
             results = {'valid': False}
         return HttpResponse(json.dumps(results))
+
+
+def view_form(request, category_id, field, sens, n):
+    if settings.DEBUG:
+        print("view_form")
+    if not request.user.is_authenticated():
+        return render(request, "layout.tpl")
+    category_current = Category.objects.get(id=category_id)
+    trimester_current = category_current.refer_trimester
+    year_current = trimester_current.refer_year
+    company_current = year_current.refer_company
+    companies = request.user.userprofile.companies.all()
+    years = company_current.years.all()
+    trimesters = year_current.trimesters.all()
+    categories = trimester_current.categories.all()
+    docs_all = category_current.documents.all()
+    arg = ''
+    if sens == 'desc':
+        arg += '-'
+    l = ['id', 'name', 'date', 'description', 'lock', 'complete']
+    print(field)
+    arg += l[int(field)]
+    print arg
+    docs = docs_all.order_by(arg)
+    print(docs)
+    doc = docs[int(n)]
+    print(doc)
+    if request.user.is_superuser:
+        form = DocumentAdminForm(instance=doc)
+    else:
+        if doc.lock:
+            form = DocumentReadOnlyForm(instance=doc)
+        else:
+            form = DocumentForm(instance=doc)
+    c = dict(companies=companies, company_current=company_current, years=years, year_current=year_current,
+             trimesters=trimesters, trimester_current=trimester_current, categories=categories,
+             category_current=category_current, doc_form=form, n=len(docs), view='form', img=doc.as_img)
+    print doc.as_img
+    return render(request, 'folder_form.tpl', c)

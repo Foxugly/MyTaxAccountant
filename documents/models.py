@@ -33,7 +33,7 @@ class Page(models.Model):
     def get_relative_path(self):
         return os.path.join(self.refer_document.refer_category.get_relative_path(), self.filename)
 
-    def as_img(self, size=95):
+    def as_img(self, size=1000):
         return '<img style="max-width: ' + str(size) + '%;" data-original="' + str(self.get_relative_path()) + '" src="' + str(self.get_relative_path()) + '" />'
 
     def get_size(self):
@@ -82,7 +82,7 @@ class Document(models.Model):
     def as_img(self):
         txt = ''
         for p in self.all_pages():
-            txt += '<li>' + p.as_img() + '</li>'
+            txt += '<li>%s</li>' % p.as_img()
         return txt
 
     def get_size(self):
@@ -93,7 +93,7 @@ class Document(models.Model):
 
     def as_json(self):
         return dict(id=self.id, name=self.name, date=self.date.strftime('%d/%m/%Y'), description=self.description,
-                    complete=self.complete, fiscal_id=self.fiscal_id, lock=self.lock, img=self.as_img())
+                    complete=self.complete, fiscal_id=self.fiscal_id, lock=self.lock, img=self.as_img)
 
     def delete(self, **kwargs):
         for p in self.pages.all():

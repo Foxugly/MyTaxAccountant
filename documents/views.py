@@ -87,7 +87,7 @@ def ajax_split(request, n):
             results['name'] = doc.name
             results['valid'] = True
             results['nname'] = "new doc"
-            results['img'] = doc.pages.all()[0].as_img(50)
+            results['img'] = doc.pages.all()[0].as_img
             results['size'] = doc.get_npages()
         else:
             results['valid'] = False
@@ -126,7 +126,7 @@ def ajax_img(request, doc_id, num):
     if request.is_ajax():
         results = {}
         doc = Document.objects.get(pk=int(doc_id))
-        results['img'] = doc.pages.all()[int(num) - 1].as_img(50)
+        results['img'] = doc.pages.all()[int(num) - 1].as_img
         results['valid'] = True
         return HttpResponse(json.dumps(results))
 
