@@ -32,7 +32,15 @@
              $('#alert_save_saved').hide();
              $('#alert_save_error').hide()
         </script>
-        <div id="div_form" width="100%">{{ doc_form | escape }}</div>
+        <div id="div_form" width="100%">
+            <form class="form-horizontal">
+                <fieldset>
+                    <legend>{% blocktrans %} Document {% endblocktrans %}</legend>
+                    <input id="doc_id" type="hidden" name="doc_id" value="{{ doc_id }}">
+                    {{ doc_form.as_p }}
+                </fieldset>
+            </form>
+        </div>
         <div id="div_btn_save" width="100%"><a id="btn_save" class="btn btn-block btn-success">{% blocktrans %} Save {% endblocktrans %}</a></div>
         <div id="div_pager" width="100%" style="text-align:center;">
             <p id="pagination"></p>

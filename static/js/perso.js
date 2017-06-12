@@ -122,6 +122,7 @@ $(document).ready(function() {
     $('.select2-nosearch').select2({ width: 'resolve', minimumResultsForSearch: -1});
     $('.select2100-nosearch').select2({ width: '100%', minimumResultsForSearch: -1});
     $("#dlb_documents").DualListBox();
+    $('#btn_save').click(function(){save_form();});
 
     $('#confirm_yes_close').click(function(){
         $('#confirm_yes').hide();
@@ -567,7 +568,6 @@ $(document).ready(function() {
                     $('#alert_save_error').html(out);
                     $('#alert_save_error').show();
                 }
-                update_data(false,4);
             }
         });
     }

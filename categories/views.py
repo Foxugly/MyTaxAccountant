@@ -15,7 +15,6 @@ import json
 from django.conf import settings
 from documents.models import Document, DocumentForm, DocumentAdminForm, DocumentReadOnlyForm
 from fileupload.models import FileUpload
-import shutil
 from PIL import Image
 import os
 from threading import Timer
@@ -27,6 +26,7 @@ import time
 from django.core.exceptions import ObjectDoesNotExist
 from error.models import Error
 from django.http import Http404
+from unidecode import unidecode
 
 
 def view_category(request, category_id):
@@ -151,24 +151,25 @@ def add_documents(request, category_id):
                 if len(fu_list2) == 1:
                     fu = fu_list2[0]
             if not fu:
-                print("ERREUR")
+                e = Error(user=request.user, detail='[add_documents] FileUpload id : %s error' % fu.id)
+                e.save()
                 return 0
-            else:
-                print(fu)
+            fu.pathname = fu.file.name.split('/')[1]
+            fu.save()
             mime = MimeTypes()
             if settings.DEBUG:
                 print('[INFO] add %s to %s' % (fu, cat))
-            path = os.path.join(settings.MEDIA_ROOT, settings.UPLOAD_DIR, fu.slug)
+            path = os.path.join(settings.MEDIA_ROOT, unicode(fu.file.name))
             m = mime.guess_type(path)[0]
-            d = create_document(fu.slug, request.user, cat)
+            d = create_document(unidecode(fu.pathname), request.user, cat)
             if m == 'application/pdf':
                 l_pdf.append((cat, path, fu, d))
             elif m in ['image/png', 'image/jpeg', 'image/bmp']:
                 im = Image.open(path)
                 w, h = im.size
-                new_filename = '%s_%s' % (str(d.id), fu.slug)
+                new_filename = '%s_%s' % (str(d.id), unidecode(fu.pathname))
                 new_path = os.path.join(cat.get_absolute_path(), new_filename)
-                shutil.copy2(path, new_path)
+                subprocess.call(['cp', path, new_path])
                 d.add_page(d.get_npages() + 1, new_filename, w, h)
                 d.complete = True
                 d.save()
@@ -176,18 +177,19 @@ def add_documents(request, category_id):
                     fu.delete()
             elif m in ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']:
                 p = re.compile(r'.[Dd][Oo][Cc][xX]?$')
-                new_f = p.sub('.pdf', fu.slug)
-                new_path = path.replace(fu.slug, new_f)
+                new_f = p.sub('.pdf', fu.file.name)
+                new_path = path.replace(fu.file.nameg, new_f)
                 cmd = 'soffice --headless --convert-to pdf  %s --outdir %s/upload' % (path, settings.MEDIA_ROOT)
                 l_doc.append(dict(filename=new_f, path=new_path, cmd=cmd, fileupload=fu, document=d, cat=cat))
             elif m in ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']:
                 p = re.compile(r'.[Xx][Ll][Ss][xX]?$')
-                new_f = p.sub('.pdf', f.slug)
-                new_path = path.replace(f.slug, new_f)
+                new_f = p.sub('.pdf', fu.file.name)
+                new_path = path.replace(fu.file.name, new_f)
                 cmd = 'soffice --headless --convert-to pdf  %s --outdir %s/upload' % (path, settings.MEDIA_ROOT)
                 l_doc.append(dict(filename=new_f, path=new_path, cmd=cmd, fileupload=fu, document=d, cat=cat))
             else:
-                print("ERREUR FORMAT FICHIER")
+                e = Error(user=request.user, detail='[add_documents] FileUpload id : %s Format error' % fu.id)
+                e.save()
         if len(l_doc):
             thread1 = Timer(0, manage_convert_doc_to_pdf, (request, l_doc,))
             thread1.start()
@@ -297,5 +299,5 @@ def view_form(request, category_id, field, sens, n):
             form = DocumentForm(instance=doc)
     c = dict(companies=companies, company_current=company_current, years=years, year_current=year_current,
              trimesters=trimesters, trimester_current=trimester_current, categories=categories, view='form',
-             category_current=category_current, doc_form=form, n_max=len(docs), n_cur=int(n), img=doc.as_img)
+             category_current=category_current, doc_form=form, doc_id=doc.id,n_max=len(docs), n_cur=int(n), img=doc.as_img)
     return render(request, 'folder_form.tpl', c)

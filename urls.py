@@ -33,16 +33,16 @@ from users.views import home
 admin.autodiscover()
 
 
-#def custom_404(request):
-#    return render(request, "404.tpl")
+def custom_404(request):
+    return render(request, "404.tpl")
 
 
-#def custom_500(request):
-#    return render(request, "500.tpl")
+def custom_500(request):
+    return render(request, "500.tpl")
 
 
-#def test(request):
-#    return render(request, "test.tpl")
+def test(request):
+    return render(request, "test.tpl")
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
@@ -56,11 +56,10 @@ urlpatterns = [
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^upload/', include('fileupload.urls')),
     url(r'^$', home, name='index'),
-#    url(r'^test/', test, name='test'),
     url(r'^hijack/', include('hijack.urls')),
 ] \
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)\
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
-#handler404 = 'urls.custom_404'
-#handler500 = 'urls.custom_500'
+handler404 = 'urls.custom_404'
+handler500 = 'urls.custom_500'

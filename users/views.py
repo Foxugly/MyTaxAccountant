@@ -7,7 +7,7 @@
 # the Free Software Foundation, either version 3 of the License, or (at
 # your option) any later version.
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
@@ -28,13 +28,8 @@ def home(request):
         trimesters = year_current.trimesters.all()
         trimester_current = next(t for t in trimesters if t.favorite is True)
         categories = trimester_current.categories.all()
-        category_current = categories.order_by('cat__priority')[0]
-        docs = category_current.documents.all()
-        c = {'companies': companies, 'company_current': company_current, 'years': years, 'year_current': year_current,
-             'trimesters': trimesters, 'trimester_current': trimester_current, 'categories': categories,
-             'category_current': category_current, 'docs': docs}
-        print(c)
-        return render(request, 'folder.tpl', c)
+        cat = categories.order_by('cat__priority')[0]
+        return redirect('/category/%s/' % cat.id)
     return render(request, "layout.tpl", c)
 
 

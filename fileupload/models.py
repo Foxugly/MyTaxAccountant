@@ -15,9 +15,10 @@ from django.conf import settings
 class FileUpload(models.Model):
     file = models.FileField(upload_to=settings.UPLOAD_DIR)
     slug = models.SlugField(max_length=255, blank=True)
+    pathname = models.CharField(max_length=255, blank=True)
 
     def __unicode__(self):
-           return self.file.name
+        return self.file.name
     
     def __str__(self):
         return self.slug
