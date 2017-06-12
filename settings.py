@@ -52,7 +52,8 @@ INSTALLED_APPS = (
     'documents',
     'utils',
     'users',
-    'fileupload'
+    'fileupload',
+    'error',
 )
 
 MIDDLEWARE_CLASSES = (

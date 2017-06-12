@@ -7,7 +7,7 @@
 # the Free Software Foundation, either version 3 of the License, or (at
 # your option) any later version.
 
-from django.utils.translation import ugettext_lazy  as _
+from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.forms import ModelForm
 from django import forms
@@ -15,8 +15,6 @@ from django.contrib.auth.models import User
 import os
 from django.utils import timezone
 from django.core.validators import RegexValidator
-from django.core.exceptions import ValidationError
-import re
 
 
 class Page(models.Model):

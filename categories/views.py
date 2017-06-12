@@ -24,12 +24,21 @@ import re
 import subprocess
 from users.models import Log
 import time
+from django.core.exceptions import ObjectDoesNotExist
+from error.models import Error
+from django.http import Http404
 
 
 def view_category(request, category_id):
     if settings.DEBUG:
         print("view_category | id = "+str(category_id))
-    category_current = Category.objects.get(id=category_id)
+    try:
+        category_current = Category.objects.get(id=category_id)
+    except ObjectDoesNotExist:
+        e = Error(user=request.user, detail='[view_category] Category id : %s does not exists' % category_id)
+        e.save()
+        raise Http404('Category id : %s does not exists' % category_id)
+
     trimester_current = category_current.refer_trimester
     year_current = trimester_current.refer_year
     company_current = year_current.refer_company
@@ -109,10 +118,8 @@ def manage_convert_doc_to_pdf(request, liste):
     for l in liste:
         if settings.DEBUG:
             print(l['cmd'])
-        out = os.system(l['cmd'])
-        print(out)
-        out2 = convert_pdf_to_jpg(request, l['cat'], l['path'], l['filename'], l['document'])
-        print(out2)
+        os.system(l['cmd'])
+        convert_pdf_to_jpg(request, l['cat'], l['path'], l['filename'], l['document'])
         l['fileupload'].delete()
 
 
@@ -126,7 +133,12 @@ def create_document(name, owner, cat):
 def add_documents(request, category_id):
     if request.is_ajax():
         files = request.GET.getlist('files', False)
-        cat = Category.objects.get(id=category_id)
+        try:
+            cat = Category.objects.get(id=category_id)
+        except ObjectDoesNotExist:
+            e = Error(user=request.user, detail='[add_documents] Category id : %s does not exists' % category_id)
+            e.save()
+            return HttpResponse(json.dumps({}))
         l_doc = []
         l_pdf = []
         for f in list(files):
@@ -190,7 +202,12 @@ def list_documents(request, category_id, n):
     if settings.DEBUG:
         print("list_documents %s %s" % (category_id, n))
     if request.is_ajax():
-        cat = Category.objects.get(id=category_id)
+        try:
+            cat = Category.objects.get(id=category_id)
+        except ObjectDoesNotExist:
+            e = Error(user=request.user, detail='[list_documents] Category id : %s does not exists' % category_id)
+            e.save()
+            return HttpResponse(json.dumps({}))
         if cat.count_docs() == 0:
             docjson = None
             form = None
@@ -213,9 +230,19 @@ def form_document(request, category_id, n):
     if settings.DEBUG:
         print("form_document %s %s" % (category_id, n))
     if request.is_ajax():
-        cat = Category.objects.get(pk=category_id)
+        try:
+            cat = Category.objects.get(id=category_id)
+        except ObjectDoesNotExist:
+            e = Error(user=request.user, detail='[form_document] Category id : %s does not exists' % category_id)
+            e.save()
+            return HttpResponse(json.dumps({}))
         if cat.count_docs() > 0:
-            doc = Document.objects.get(pk=n)
+            try:
+                doc = Document.objects.get(pk=n)
+            except ObjectDoesNotExist:
+                e = Error(user=request.user, detail='[form_document] doc id : %s does not exists' % n)
+                e.save()
+                return HttpResponse(json.dumps({}))
             if request.user.is_superuser:
                 form = DocumentAdminForm(instance=doc).as_div()
             else:
@@ -234,7 +261,12 @@ def view_form(request, category_id, field, sens, n):
         print("view_form")
     if not request.user.is_authenticated():
         return render(request, "layout.tpl")
-    category_current = Category.objects.get(id=category_id)
+    try:
+            category_current = Category.objects.get(id=category_id)
+    except ObjectDoesNotExist:
+        e = Error(user=request.user, detail='[view_form] Category id : %s does not exists' % category_id)
+        e.save()
+        raise Http404('Category id : %s does not exists' % category_id)
     trimester_current = category_current.refer_trimester
     year_current = trimester_current.refer_year
     company_current = year_current.refer_company
@@ -247,13 +279,15 @@ def view_form(request, category_id, field, sens, n):
     if sens == 'desc':
         arg += '-'
     l = ['id', 'name', 'date', 'description', 'lock', 'complete']
-    print(field)
     arg += l[int(field)]
-    print arg
     docs = docs_all.order_by(arg)
-    print(docs)
-    doc = docs[int(n)-1]
-    print(doc)
+    indice = int(n)-1
+    try:
+        doc = docs[indice]
+    except IndexError:
+        e = Error(user=request.user, detail='[view_form] doc[%s] of category %s out of range' % (indice, category_id))
+        e.save()
+        raise Http404('doc[%s] of category %s out of range' % (indice, category_id))
     if request.user.is_superuser:
         form = DocumentAdminForm(instance=doc)
     else:
@@ -264,5 +298,4 @@ def view_form(request, category_id, field, sens, n):
     c = dict(companies=companies, company_current=company_current, years=years, year_current=year_current,
              trimesters=trimesters, trimester_current=trimester_current, categories=categories, view='form',
              category_current=category_current, doc_form=form, n_max=len(docs), n_cur=int(n), img=doc.as_img)
-    print doc.as_img
     return render(request, 'folder_form.tpl', c)
