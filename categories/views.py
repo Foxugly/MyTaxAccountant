@@ -252,7 +252,7 @@ def view_form(request, category_id, field, sens, n):
     print arg
     docs = docs_all.order_by(arg)
     print(docs)
-    doc = docs[int(n)]
+    doc = docs[int(n)-1]
     print(doc)
     if request.user.is_superuser:
         form = DocumentAdminForm(instance=doc)
@@ -262,7 +262,7 @@ def view_form(request, category_id, field, sens, n):
         else:
             form = DocumentForm(instance=doc)
     c = dict(companies=companies, company_current=company_current, years=years, year_current=year_current,
-             trimesters=trimesters, trimester_current=trimester_current, categories=categories,
-             category_current=category_current, doc_form=form, n=len(docs), view='form', img=doc.as_img)
+             trimesters=trimesters, trimester_current=trimester_current, categories=categories, view='form',
+             category_current=category_current, doc_form=form, n_max=len(docs), n_cur=int(n), img=doc.as_img)
     print doc.as_img
     return render(request, 'folder_form.tpl', c)

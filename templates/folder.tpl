@@ -35,7 +35,7 @@
                     var parts = pathname.split('/');
                     var field = $('#datatable').dataTable().fnSettings().aaSorting[0][0];
                     var sens = $('#datatable').dataTable().fnSettings().aaSorting[0][1];
-                    var transfer = parts[0] + '/' + parts[1] + '/' + parts[2] + '/form/' + field + '/' + sens + '/0/';
+                    var transfer = parts[0] + '/' + parts[1] + '/' + parts[2] + '/form/' + field + '/' + sens + '/1/';
                     console.log(transfer);
                     window.location.replace(transfer);
                 });

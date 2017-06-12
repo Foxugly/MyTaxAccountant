@@ -572,7 +572,7 @@ $(document).ready(function() {
         });
     }
 
-    function view_form(valid, img, form,doc_id) {
+  /*  function view_form(valid, img, form,doc_id) {
         if (DEBUG){
             console.log('view_form');
         }
@@ -592,7 +592,7 @@ $(document).ready(function() {
             $('#pagination').hide();
         }
     }
-
+*/
     function update_data(option, nb){
         //if (DEBUG) {
         console.log('update_data');
@@ -752,23 +752,6 @@ $(document).ready(function() {
 
         }
     });*/
-
-    $('#pagination').bootpag({
-            total: 1,
-            page: 1,
-            maxVisible: 10,
-            leaps: true,
-            firstLastUse: true,
-            first: '←',
-            last: '→',
-            wrapClass: 'pagination',
-            activeClass: 'active',
-            disabledClass: 'disabled',
-            nextClass: 'next',
-            prevClass: 'prev',
-            lastClass: 'last',
-            firstClass: 'first'
-        });
 
     $('#document_split').click(function() {
         var form = $('#form_split');

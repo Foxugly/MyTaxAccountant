@@ -9,18 +9,19 @@
 
 
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from trimesters.models import Trimester
 from utils.models import TemplateTrimesterForm, TemplateTrimester
 from companies.models import Company
-from categories.views import view_category
+
 import json
 
 
 def view_trimester(request, trimester_id):
     print("view_trimester | id = "+str(trimester_id))
     t = Trimester.objects.get(id=trimester_id)
-    return view_category(request, t.categories.filter(active=True).order_by('cat__priority')[0].id)
+    cat = t.categories.filter(active=True).order_by('cat__priority')[0].id
+    return redirect('/category/%s/' % cat)
 
 
 def favorite_trimester(year):
