@@ -18,9 +18,15 @@ class FileUpload(models.Model):
     pathname = models.CharField(max_length=255, blank=True)
 
     def __unicode__(self):
+        print('__unicode__')
+        print(str(self.file.name))
+        print(self.file.name)
         return self.file.name
     
     def __str__(self):
+        print('__str__')
+        print(str(self.slug))
+        print(self.slug)
         return self.slug
 
     @models.permalink
@@ -28,7 +34,7 @@ class FileUpload(models.Model):
         return ('upload-new', )
 
     def save(self, *args, **kwargs):
-        self.slug = self.file.name
+        self.slug = str(self.file.name)
         super(FileUpload, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
