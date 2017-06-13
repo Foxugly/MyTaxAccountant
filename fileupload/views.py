@@ -23,6 +23,7 @@ class FileUploadCreateView(CreateView):
 
     def form_valid(self, form):
         print("form_valid")
+        print(str(form))
         self.object = form.save()
         files = [serialize(self.object)]
         data = {'files': files}
