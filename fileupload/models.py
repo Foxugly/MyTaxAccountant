@@ -10,6 +10,7 @@
 
 from django.db import models
 from django.conf import settings
+from unidecode import unidecode
 
 
 class FileUpload(models.Model):
@@ -19,15 +20,13 @@ class FileUpload(models.Model):
 
     def __unicode__(self):
         print('__unicode__')
-        print(str(self.file.name.decode('utf-8')))
-        print(self.file.name.decode('utf-8'))
-        return self.file.name
+        print(unidecode(self.file.name.encode('latin-1').decode('utf-8')))
+        return unidecode(self.file.name.encode('latin-1').decode('utf-8'))
     
     def __str__(self):
         print('__str__')
-        print(str(self.slug.decode('utf-8')))
-        print(self.slug.decode('utf-8'))
-        return self.slug
+        print(unidecode(self.slug.encode('latin-1').decode('utf-8')))
+        return unidecode(self.slug.encode('latin-1').decode('utf-8'))
 
     @models.permalink
     def get_absolute_url(self):
