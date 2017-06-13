@@ -19,14 +19,14 @@ class FileUpload(models.Model):
 
     def __unicode__(self):
         print('__unicode__')
-        print(str(self.file.name))
-        print(self.file.name)
+        print(str(self.file.name.decode('utf-8')))
+        print(self.file.name.decode('utf-8'))
         return self.file.name
     
     def __str__(self):
         print('__str__')
-        print(str(self.slug))
-        print(self.slug)
+        print(str(self.slug.decode('utf-8')))
+        print(self.slug.decode('utf-8'))
         return self.slug
 
     @models.permalink
