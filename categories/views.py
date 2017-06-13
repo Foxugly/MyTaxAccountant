@@ -159,11 +159,11 @@ def add_documents(request, category_id):
             mime = MimeTypes()
             if settings.DEBUG:
                 print('[INFO] add %s to %s' % (fu, cat))
-            path = os.path.join(settings.MEDIA_ROOT, unicode(fu.file.name))
+            path = os.path.join(settings.MEDIA_ROOT, str(fu.file.name))
             m = mime.guess_type(path)[0]
             d = create_document(unidecode(fu.pathname), request.user, cat)
             if m == 'application/pdf':
-                l_pdf.append((cat, path, fu, d))
+                l_pdf.append((cat, path, fu.pathname, d))
             elif m in ['image/png', 'image/jpeg', 'image/bmp']:
                 im = Image.open(path)
                 w, h = im.size
