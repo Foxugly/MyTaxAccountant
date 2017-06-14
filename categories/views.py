@@ -63,12 +63,12 @@ def convert_pdf_to_jpg(request, cat, path, f, doc):
     except:
         os.rename(path, path + '_old')
         txt = 'mv %s %s \n' % (path, path + '_old')
-        cmd = u'gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=%s %s' % (path, path + '_old')
+        cmd = 'gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=%s %s' % (path, path + '_old')
         if settings.DEBUG:
             print(cmd.encode('utf-8'))
         txt += cmd.encode('utf-8') + '\n'
         os.system(cmd.encode('utf-8'))
-        cmd = u'rm -f %s' % (path + '_old')
+        cmd = 'rm -f %s' % (path + '_old')
         if settings.DEBUG:
             print(cmd.encode('utf-8'))
         txt += cmd.encode('utf-8') + '\n'
@@ -83,9 +83,9 @@ def convert_pdf_to_jpg(request, cat, path, f, doc):
         print("ERREUR FORMAT PDF")
         return None
     p = re.compile(r'.[Pp][Dd][Ff]$')
-    filename = p.sub('.jpg', str(f))
-    new_path = u'%s/%d' % (cat.get_absolute_path(), doc.id) + u'_%03d_' + filename
-    cmd = u'gs -dBATCH -dNOPAUSE -sDEVICE=jpeg -r300x300 -sOutputFile=%s %s' % (new_path, path)
+    filename = p.sub('.jpg', unicode(f))
+    new_path = '%s/%d' % (cat.get_absolute_path(), doc.id) + '_%03d_' + filename
+    cmd = 'gs -dBATCH -dNOPAUSE -sDEVICE=jpeg -r300x300 -sOutputFile=%s %s' % (new_path, path)
     if settings.DEBUG:
         print(cmd.encode('utf-8'))
     l = Log(userprofile=request.user.userprofile, category=cat, cmd=cmd.encode('utf-8'))
@@ -118,7 +118,7 @@ def manage_convert_doc_to_pdf(request, liste):
     for l in liste:
         if settings.DEBUG:
             print(l['cmd'])
-        os.system(l['cmd'])
+        os.system(l['cmd'].encode('utf-8'))
         convert_pdf_to_jpg(request, l['cat'], l['path'], l['filename'], l['document'])
         l['fileupload'].delete()
 
@@ -159,7 +159,7 @@ def add_documents(request, category_id):
             mime = MimeTypes()
             if settings.DEBUG:
                 print('[INFO] add %s to %s' % (fu, cat))
-            path = os.path.join(settings.MEDIA_ROOT, str(fu.file.name))
+            path = os.path.join(settings.MEDIA_ROOT, unicode(fu.file.name))
             m = mime.guess_type(path)[0]
             d = create_document(unidecode(fu.pathname), request.user, cat)
             if m == 'application/pdf':
@@ -169,7 +169,9 @@ def add_documents(request, category_id):
                 w, h = im.size
                 new_filename = '%s_%s' % (str(d.id), unidecode(fu.pathname))
                 new_path = os.path.join(cat.get_absolute_path(), new_filename)
-                subprocess.call(['cp', path, new_path])
+                cmd = ['cp', path, new_path]
+                print(cmd)
+                subprocess.call(cmd)
                 d.add_page(d.get_npages() + 1, new_filename, w, h)
                 d.complete = True
                 d.save()
@@ -178,15 +180,16 @@ def add_documents(request, category_id):
             elif m in ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']:
                 p = re.compile(r'.[Dd][Oo][Cc][xX]?$')
                 new_f = p.sub('.pdf', fu.file.name)
-                new_path = path.replace(fu.file.nameg, new_f)
-                cmd = 'soffice --headless --convert-to pdf  %s --outdir %s/upload' % (path, settings.MEDIA_ROOT)
-                l_doc.append(dict(filename=new_f, path=new_path, cmd=cmd, fileupload=fu, document=d, cat=cat))
+                new_path = path.replace(fu.file.name, new_f)
+                cmd = 'soffice --headless --convert-to pdf %s --outdir %s/upload' % (path, settings.MEDIA_ROOT)
+                l_doc.append(dict(filename=unidecode(new_f.split('/')[1]), path=new_path, cmd=cmd, fileupload=fu, document=d, cat=cat))
+                print(l_doc)
             elif m in ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']:
                 p = re.compile(r'.[Xx][Ll][Ss][xX]?$')
                 new_f = p.sub('.pdf', fu.file.name)
                 new_path = path.replace(fu.file.name, new_f)
                 cmd = 'soffice --headless --convert-to pdf  %s --outdir %s/upload' % (path, settings.MEDIA_ROOT)
-                l_doc.append(dict(filename=new_f, path=new_path, cmd=cmd, fileupload=fu, document=d, cat=cat))
+                l_doc.append(dict(filename=unidecode(new_f.split('/')[1]), path=new_path, cmd=cmd, fileupload=fu, document=d, cat=cat))
             else:
                 e = Error(user=request.user, detail='[add_documents] FileUpload id : %s Format error' % fu.id)
                 e.save()

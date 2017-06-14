@@ -22,7 +22,7 @@ def document_view(request, document_id):
         result = {'name': d.name, 'img': ''}
         i = 1
         for p in d.pages.all().order_by('num'):
-            result['img'] += '<img style="max-width:100%;" src="' + str(p.get_relative_path()) + '" />'
+            result['img'] += '<img style="max-width:100%;" src="' + unicode(p.get_relative_path()) + '" />'
             result['img'] += '<div class="text-center">%s %d</div>' % (_('Page'), i)
             i += 1
         return HttpResponse(json.dumps(result))

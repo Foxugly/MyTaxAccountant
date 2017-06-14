@@ -32,17 +32,17 @@ class Page(models.Model):
         return os.path.join(self.refer_document.refer_category.get_relative_path(), self.filename)
 
     def as_img(self, size=100):
-        return '<img style="max-width: ' + str(size) + '%;" data-original="' + str(self.get_relative_path()) + '" src="' + str(self.get_relative_path()) + '" />'
+        return '<img style="max-width: ' + str(size) + '%;" data-original="' + unicode(self.get_relative_path()) + '" src="' + unicode(self.get_relative_path()) + '" />'
 
     def get_size(self):
-        s = os.path.getsize(self.get_absolute_path())
+        s = os.path.getsize(unicode(self.get_absolute_path()))
         return s
 
     def __str__(self):
         return '%s - %s' % (self.filename, self.num)
 
     def delete(self, **kwargs):
-        os.remove(self.get_absolute_path())
+        os.remove(unicode(self.get_absolute_path()))
         super(Page, self).delete(kwargs)
 
 
