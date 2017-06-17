@@ -181,14 +181,14 @@ def add_documents(request, category_id):
                 p = re.compile(r'.[Dd][Oo][Cc][xX]?$')
                 new_f = p.sub('.pdf', fu.file.name)
                 new_path = path.replace(fu.file.name, new_f)
-                cmd = 'soffice --headless --convert-to pdf %s --outdir %s/upload' % (path, settings.MEDIA_ROOT)
+                cmd = 'soffice --headless --convert-to pdf %s --outdir %s/upload' % (unidecode(path), settings.MEDIA_ROOT)
                 l_doc.append(dict(filename=unidecode(new_f.split('/')[1]), path=new_path, cmd=cmd, fileupload=fu, document=d, cat=cat))
                 print(l_doc)
             elif m in ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']:
                 p = re.compile(r'.[Xx][Ll][Ss][xX]?$')
                 new_f = p.sub('.pdf', fu.file.name)
                 new_path = path.replace(fu.file.name, new_f)
-                cmd = 'soffice --headless --convert-to pdf  %s --outdir %s/upload' % (path, settings.MEDIA_ROOT)
+                cmd = 'soffice --headless --convert-to pdf  %s --outdir %s/upload' % (unidecode(path), settings.MEDIA_ROOT)
                 l_doc.append(dict(filename=unidecode(new_f.split('/')[1]), path=new_path, cmd=cmd, fileupload=fu, document=d, cat=cat))
             else:
                 e = Error(user=request.user, detail='[add_documents] FileUpload id : %s Format error' % fu.id)
@@ -281,7 +281,7 @@ def view_form(request, category_id, field, sens, n):
     categories = trimester_current.categories.all()
     docs_all = category_current.documents.all()
     arg = ''
-    if sens == 'desc':
+    if sens == 'asc':
         arg += '-'
     l = ['id', 'name', 'date', 'description', 'lock', 'complete']
     arg += l[int(field)]
