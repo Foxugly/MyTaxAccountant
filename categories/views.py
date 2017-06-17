@@ -156,11 +156,13 @@ def add_documents(request, category_id):
                 return 0
             #pathname = fu.file.name.split('/')[1]
             pathfile = os.path.join(settings.MEDIA_ROOT, fu.file.name)
+            print(pathfile)
             #os.system('cp %s %s' % (pathfile, unidecode(pathfile.decode('utf-8'))))
             path_upload = os.path.join(settings.MEDIA_ROOT, 'upload')
             pathfile_new = os.path.join(settings.MEDIA_ROOT, 'upload', fu.slug)
-            os.system('cp %s %s' % (pathfile, pathfile_new))
-
+            cmd = 'cp %s %s' % (pathfile, pathfile_new)
+            print(cmd)
+            os.system(unidecode(cmd))
             mime = MimeTypes()
             #if settings.DEBUG:
             #    print('[INFO] add %s to %s' % (unidecode(fu), cat))
