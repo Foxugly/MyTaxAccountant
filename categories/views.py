@@ -59,7 +59,7 @@ def view_category(request, category_id):
 
 def convert_pdf_to_jpg(request, cat, path, f, doc):
     try:
-        PdfFileReader(open(path, 'rb')).getNumPages()
+        PdfFileReader(open(unidecode(path), 'rb')).getNumPages()
     except:
         os.rename(path, path + '_old')
         txt = 'mv %s %s \n' % (path, path + '_old')
@@ -77,7 +77,7 @@ def convert_pdf_to_jpg(request, cat, path, f, doc):
         l.save()
         pass
     try:
-        pdf = PdfFileReader(open(path, 'rb'))
+        pdf = PdfFileReader(open(unidecode(path), 'rb'))
         n = pdf.getNumPages()
     except:
         print("ERREUR FORMAT PDF")
@@ -85,7 +85,7 @@ def convert_pdf_to_jpg(request, cat, path, f, doc):
     p = re.compile(r'.[Pp][Dd][Ff]$')
     filename = p.sub('.jpg', unicode(f))
     new_path = '%s/%d' % (cat.get_absolute_path(), doc.id) + '_%03d_' + filename
-    cmd = 'gs -dBATCH -dNOPAUSE -sDEVICE=jpeg -r300x300 -sOutputFile=%s %s' % (new_path, path)
+    cmd = 'gs -dBATCH -dNOPAUSE -sDEVICE=jpeg -r300x300 -sOutputFile=%s %s' % (new_path, unidecode(path))
     #if settings.DEBUG:
     #    print(cmd.encode('utf-8'))
     l = Log(userprofile=request.user.userprofile, category=cat, cmd=cmd.encode('utf-8'))
