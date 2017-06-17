@@ -158,7 +158,7 @@ def add_documents(request, category_id):
             fu.save()
             mime = MimeTypes()
             if settings.DEBUG:
-                print('[INFO] add %s to %s' % (fu, cat))
+                print('[INFO] add %s to %s' % (unidecode(fu), cat))
             path = os.path.join(settings.MEDIA_ROOT, unicode(fu.file.name))
             m = mime.guess_type(path)[0]
             d = create_document(unidecode(fu.pathname), request.user, cat)
