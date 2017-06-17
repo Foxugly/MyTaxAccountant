@@ -154,22 +154,26 @@ def add_documents(request, category_id):
                 e = Error(user=request.user, detail='[add_documents] FileUpload id : %s error' % fu.id)
                 e.save()
                 return 0
-            fu.pathname = fu.file.name.split('/')[1]
-            fu.save()
+            #pathname = fu.file.name.split('/')[1]
+            pathfile = os.path.join(settings.MEDIA_ROOT, fu.file.name)
+            #os.system('cp %s %s' % (pathfile, unidecode(pathfile.decode('utf-8'))))
+            path_upload = os.path.join(settings.MEDIA_ROOT, 'upload')
+            pathfile_new = os.path.join(settings.MEDIA_ROOT, 'upload', fu.slug)
+            os.system('cp %s %s' % (pathfile, pathfile_new))
+
             mime = MimeTypes()
             #if settings.DEBUG:
             #    print('[INFO] add %s to %s' % (unidecode(fu), cat))
-            path = os.path.join(settings.MEDIA_ROOT, unicode(fu.file.name))
-            m = mime.guess_type(path)[0]
-            d = create_document(unidecode(fu.pathname), request.user, cat)
+            m = mime.guess_type(pathfile_new)[0]
+            d = create_document(fu.slug, request.user, cat)
             if m == 'application/pdf':
-                l_pdf.append((cat, path, fu.pathname, d))
+                l_pdf.append((cat, pathfile_new, fu.slug, d))
             elif m in ['image/png', 'image/jpeg', 'image/bmp']:
-                im = Image.open(path)
+                im = Image.open(pathfile_new)
                 w, h = im.size
-                new_filename = '%s_%s' % (str(d.id), unidecode(fu.pathname))
+                new_filename = '%s_%s' % (str(d.id), fu.slug)
                 new_path = os.path.join(cat.get_absolute_path(), new_filename)
-                cmd = ['cp', path, new_path]
+                cmd = ['cp', pathfile_new, new_path]
                 print(cmd)
                 subprocess.call(cmd)
                 d.add_page(d.get_npages() + 1, new_filename, w, h)
@@ -179,17 +183,17 @@ def add_documents(request, category_id):
                     fu.delete()
             elif m in ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']:
                 p = re.compile(r'.[Dd][Oo][Cc][xX]?$')
-                new_f = p.sub('.pdf', fu.file.name)
-                new_path = path.replace(fu.file.name, new_f)
-                cmd = 'soffice --headless --convert-to pdf %s --outdir %s/upload' % (unidecode(path), settings.MEDIA_ROOT)
-                l_doc.append(dict(filename=unidecode(new_f.split('/')[1]), path=new_path, cmd=cmd, fileupload=fu, document=d, cat=cat))
+                new_f = p.sub('.pdf', fu.slug)
+                new_path = pathfile_new.replace(fu.slug, new_f)
+                cmd = 'soffice --headless --convert-to pdf %s --outdir %s/upload' % (pathfile_new, settings.MEDIA_ROOT)
+                l_doc.append(dict(filename=new_f.split('/')[1], path=new_path, cmd=cmd, fileupload=fu, document=d, cat=cat))
                 print(l_doc)
             elif m in ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']:
                 p = re.compile(r'.[Xx][Ll][Ss][xX]?$')
-                new_f = p.sub('.pdf', fu.file.name)
-                new_path = path.replace(fu.file.name, new_f)
-                cmd = 'soffice --headless --convert-to pdf  %s --outdir %s/upload' % (unidecode(path), settings.MEDIA_ROOT)
-                l_doc.append(dict(filename=unidecode(new_f.split('/')[1]), path=new_path, cmd=cmd, fileupload=fu, document=d, cat=cat))
+                new_f = p.sub('.pdf', fu.slug)
+                new_path = pathfile_new.replace(fu.slug, new_f)
+                cmd = 'soffice --headless --convert-to pdf  %s --outdir %s/upload' % (pathfile_new, settings.MEDIA_ROOT)
+                l_doc.append(dict(filename=new_f.split('/')[1], path=new_path, cmd=cmd, fileupload=fu, document=d, cat=cat))
             else:
                 e = Error(user=request.user, detail='[add_documents] FileUpload id : %s Format error' % fu.id)
                 e.save()
