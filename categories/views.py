@@ -64,13 +64,13 @@ def convert_pdf_to_jpg(request, cat, path, f, doc):
         os.rename(path, path + '_old')
         txt = 'mv %s %s \n' % (path, path + '_old')
         cmd = 'gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=%s %s' % (path, path + '_old')
-        if settings.DEBUG:
-            print(cmd.encode('utf-8'))
+        #if settings.DEBUG:
+        #    print(cmd.encode('utf-8'))
         txt += cmd.encode('utf-8') + '\n'
         os.system(cmd.encode('utf-8'))
         cmd = 'rm -f %s' % (path + '_old')
-        if settings.DEBUG:
-            print(cmd.encode('utf-8'))
+        #if settings.DEBUG:
+        #    print(cmd.encode('utf-8'))
         txt += cmd.encode('utf-8') + '\n'
         os.system(cmd.encode('utf-8'))
         l = Log(userprofile=request.user.userprofile, category=cat, cmd=txt)
@@ -86,8 +86,8 @@ def convert_pdf_to_jpg(request, cat, path, f, doc):
     filename = p.sub('.jpg', unicode(f))
     new_path = '%s/%d' % (cat.get_absolute_path(), doc.id) + '_%03d_' + filename
     cmd = 'gs -dBATCH -dNOPAUSE -sDEVICE=jpeg -r300x300 -sOutputFile=%s %s' % (new_path, path)
-    if settings.DEBUG:
-        print(cmd.encode('utf-8'))
+    #if settings.DEBUG:
+    #    print(cmd.encode('utf-8'))
     l = Log(userprofile=request.user.userprofile, category=cat, cmd=cmd.encode('utf-8'))
     l.save()
     os.system(cmd.encode('utf-8'))
@@ -116,8 +116,8 @@ def manage_convert_doc_to_pdf(request, liste):
     if settings.DEBUG:
         print("manage_convert_doc_to_pdf")
     for l in liste:
-        if settings.DEBUG:
-            print(l['cmd'])
+        #if settings.DEBUG:
+        #    print(l['cmd'])
         os.system(l['cmd'].encode('utf-8'))
         convert_pdf_to_jpg(request, l['cat'], l['path'], l['filename'], l['document'])
         l['fileupload'].delete()
