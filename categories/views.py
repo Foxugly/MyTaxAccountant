@@ -156,7 +156,9 @@ def add_documents(request, category_id):
                 return 0
             pathname = fu.file.name.split('/')[1]
             pathfile = os.path.join(settings.MEDIA_ROOT, unicode(fu.file.name))
-            pathname_new = unidecode(pathname.decode('utf-8'))
+            print('%s' % pathname)
+            print(type(pathname))
+            pathname_new = unidecode(str(pathname).decode('utf-8'))
             pathfile_new = os.path.join(settings.MEDIA_ROOT, pathname_new)
             print('VERSION1')
             try:
