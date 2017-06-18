@@ -509,7 +509,7 @@ $(document).ready(function() {
             traditional: true,
             dataType: 'json',
             success: function(){
-                update_categories();
+                //update_categories();
             }
         });
     }
