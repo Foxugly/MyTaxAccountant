@@ -27,6 +27,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from error.models import Error
 from django.http import Http404
 from unidecode import unidecode
+from django.template.defaultfilters import slugify
 
 
 def view_category(request, category_id):
@@ -155,11 +156,13 @@ def add_documents(request, category_id):
                 e.save()
                 return 0
             pathname = fu.file.name.split('/')[1]
-            pathfile = os.path.join(settings.MEDIA_ROOT, unicode(fu.file.name))
-            print('%s' % pathname)
             print(type(pathname))
-            pathname_new = unidecode(str(pathname).decode('utf-8'))
+            pathfile = os.path.join(settings.MEDIA_ROOT, fu.file.name)
+            print(type(pathfile))
+            pathname_new = slugify(pathname)
+            print(type(pathname_new))
             pathfile_new = os.path.join(settings.MEDIA_ROOT, pathname_new)
+            print(type(pathfile_new))
             print('VERSION1')
             try:
                 cmd = 'mv %s %s' % (pathfile, pathfile_new)
