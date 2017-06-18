@@ -180,7 +180,7 @@ def add_documents(request, category_id):
                 new_filename = '%s_%s' % (str(d.id), pathname_new)
                 new_path = os.path.join(cat.get_absolute_path(), new_filename)
                 cmd = ['cp', pathfile_new, new_path]
-                #print(cmd)
+                print(cmd)
                 subprocess.call(cmd)
                 d.add_page(d.get_npages() + 1, new_filename, w, h)
                 d.complete = True
