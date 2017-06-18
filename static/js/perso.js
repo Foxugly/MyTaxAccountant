@@ -191,10 +191,11 @@ $(document).ready(function() {
             callback: function (result) {
                 if (result) {
                     del_modal(e);
-                    update_data(true, 4);
+                    /*update_data(true, 4);
                     bootbox.alert("Document deleted !", function () {
                         btn.click();
-                    });
+                    });*/
+                    window.location.reload();
                 }
             }
         });
@@ -346,8 +347,9 @@ $(document).ready(function() {
             traditional: true,
             dataType: 'json',
             success: function () {
-                update_categories();
-                $('#modal_move').hide();
+                //update_categories();
+                //$('#modal_move').hide();
+                window.location.reload();
             }
         });
     });
@@ -561,9 +563,10 @@ $(document).ready(function() {
                     if (result) {
                         del_modal(e);
                         //update_data(true, 4);
-                        bootbox.alert("Document deleted !", function () {
+                        /*bootbox.alert("Document deleted !", function () {
                             btn.click();
-                        });
+                        });*/
+                        window.location.reload();
                     }
                 }
             });
@@ -661,6 +664,7 @@ $(document).ready(function() {
                 }
             }
         });
+
     }
 
     function get_form_data(i){
@@ -792,7 +796,8 @@ $(document).ready(function() {
             traditional: true,
             dataType: 'json',
             success: function(){
-                update_categories();
+                //update_categories();
+                window.location.reload()
             }
         });
     });
@@ -813,7 +818,8 @@ $(document).ready(function() {
             traditional: true,
             dataType: 'json',
             success: function(){
-                update_categories();
+                //update_categories();
+                window.location.reload()
             }
         });
     });
