@@ -65,15 +65,15 @@ def convert_pdf_to_jpg(request, cat, path, f, doc):
         os.rename(path, path + '_old')
         txt = 'mv %s %s \n' % (path, path + '_old')
         cmd = 'gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=%s %s' % (path, path + '_old')
-        #if settings.DEBUG:
-        #    print(cmd.encode('utf-8'))
-        txt += cmd.encode('utf-8') + '\n'
-        os.system(cmd.encode('utf-8'))
+        if settings.DEBUG:
+            print(cmd)
+        txt += cmd + '\n'
+        os.system(cmd)
         cmd = 'rm -f %s' % (path + '_old')
-        #if settings.DEBUG:
-        #    print(cmd.encode('utf-8'))
-        txt += cmd.encode('utf-8') + '\n'
-        os.system(cmd.encode('utf-8'))
+        if settings.DEBUG:
+            print(cmd)
+        txt += cmd + '\n'
+        os.system(cmd)
         l = Log(userprofile=request.user.userprofile, category=cat, cmd=txt)
         l.save()
         pass
@@ -84,14 +84,14 @@ def convert_pdf_to_jpg(request, cat, path, f, doc):
         print("ERREUR FORMAT PDF")
         return None
     p = re.compile(r'.[Pp][Dd][Ff]$')
-    filename = p.sub('.jpg', unicode(f))
+    filename = p.sub('.jpg', f)
     new_path = '%s/%d' % (cat.get_absolute_path(), doc.id) + '_%03d_' + filename
-    cmd = 'gs -dBATCH -dNOPAUSE -sDEVICE=jpeg -r300x300 -sOutputFile=%s %s' % (new_path, unidecode(path))
-    #if settings.DEBUG:
-    #    print(cmd.encode('utf-8'))
-    l = Log(userprofile=request.user.userprofile, category=cat, cmd=cmd.encode('utf-8'))
+    cmd = 'gs -dBATCH -dNOPAUSE -sDEVICE=jpeg -r300x300 -sOutputFile=%s %s' % (new_path, path)
+    if settings.DEBUG:
+        print(cmd)
+    l = Log(userprofile=request.user.userprofile, category=cat, cmd=cmd)
     l.save()
-    os.system(cmd.encode('utf-8'))
+    #os.system(cmd)
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     p.wait()
     time.sleep(5)
@@ -117,9 +117,9 @@ def manage_convert_doc_to_pdf(request, liste):
     if settings.DEBUG:
         print("manage_convert_doc_to_pdf")
     for l in liste:
-        #if settings.DEBUG:
-        #    print(l['cmd'])
-        os.system(l['cmd'].encode('utf-8'))
+        if settings.DEBUG:
+            print(l['cmd'])
+        os.system(l['cmd'])
         convert_pdf_to_jpg(request, l['cat'], l['path'], l['filename'], l['document'])
         l['fileupload'].delete()
 
@@ -156,15 +156,10 @@ def add_documents(request, category_id):
                 e.save()
                 return 0
             pathname = fu.file.name.split('/')[1]
-            print(type(pathname))
             pathfile = os.path.join(settings.MEDIA_ROOT, fu.file.name)
-            print(type(pathfile))
             k = pathname.rfind(".")
             pathname_new = '%s.%s' % (slugify(pathname[0:k]), pathname[k+1:])
-            print(type(pathname_new))
             pathfile_new = os.path.join(settings.MEDIA_ROOT, 'upload', pathname_new)
-            print(type(pathfile_new))
-            print('VERSION1')
             cmd = ['mv', pathfile, pathfile_new]
             subprocess.call(cmd)
             mime = MimeTypes()
