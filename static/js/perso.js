@@ -195,7 +195,7 @@ $(document).ready(function() {
                     bootbox.alert("Document deleted !", function () {
                         btn.click();
                     });*/
-                    window.location.reload();
+                    /*window.location.reload();*/
                 }
             }
         });
