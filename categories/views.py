@@ -94,7 +94,7 @@ def convert_pdf_to_jpg(request, cat, path, f, doc):
     #os.system(cmd)
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     p.wait()
-    time.sleep(5)
+    time.sleep(2)
     for i in range(1, n+1):
         name_page = str(doc.id) + "_%03d_" % i + filename
         path_page = '%s/%s' % (cat.get_absolute_path(), name_page)
