@@ -560,7 +560,7 @@ $(document).ready(function() {
                 callback: function (result) {
                     if (result) {
                         del_modal(e);
-                        update_data(true, 4);
+                        //update_data(true, 4);
                         bootbox.alert("Document deleted !", function () {
                             btn.click();
                         });
