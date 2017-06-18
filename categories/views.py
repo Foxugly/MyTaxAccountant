@@ -161,7 +161,7 @@ def add_documents(request, category_id):
             print(type(pathfile))
             pathname_new = slugify(pathname)
             print(type(pathname_new))
-            pathfile_new = os.path.join(settings.MEDIA_ROOT, pathname_new)
+            pathfile_new = os.path.join(settings.MEDIA_ROOT, 'upload', pathname_new)
             print(type(pathfile_new))
             #print('VERSION1')
             #try:
