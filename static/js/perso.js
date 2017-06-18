@@ -545,27 +545,28 @@ $(document).ready(function() {
         $("#btn_dl_"+data['id']).click(function(){download($(this));});
         $("#btn_de_"+data['id']).click(function(e){
             var btn = $('ul.nav-pills li.active a')[0];
-        bootbox.confirm({
-            message: "Are you sure ?",
-            buttons : {
-                confirm: {
-                    label: 'Yes',
-                    className: 'btn-success'
+            bootbox.confirm({
+                message: "Are you sure ?",
+                buttons : {
+                    confirm: {
+                        label: 'Yes',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: 'No',
+                        className: 'btn-danger'
+                    }
                 },
-                cancel: {
-                    label: 'No',
-                    className: 'btn-danger'
+                callback: function (result) {
+                    if (result) {
+                        del_modal(e);
+                        update_data(true, 4);
+                        bootbox.alert("Document deleted !", function () {
+                            btn.click();
+                        });
+                    }
                 }
-            },
-            callback: function (result) {
-                if (result) {
-                    del_modal(e);
-                    update_data(true, 4);
-                    bootbox.alert("Document deleted !", function () {
-                        btn.click();
-                    });
-                }
-            }
+            });
         });
         return repeat;
     }
