@@ -229,7 +229,11 @@ $(document).ready(function() {
                     }
                 }
                 nav_click($('ul.nav-pills li.active a'));
-            }
+            },
+            error: function(){
+                bootbox.alert("[update_categories] ERROR with " + url);
+                return 0;
+            },
         });
     }
 
@@ -248,7 +252,11 @@ $(document).ready(function() {
                 $('#sel_trimester').append('</optgroup>');
                 $('#sel_trimester').val(result['favorite'].id).trigger('change');
                 update_data(true, 4);
-            }
+            },
+            error: function(){
+                bootbox.alert("[update_trimesters] ERROR with " + url);
+                return 0;
+            },
         });
     }
 
@@ -267,7 +275,11 @@ $(document).ready(function() {
                 $('#sel_year').append('</optgroup>');
                 $('#sel_year').val(result['favorite'].id).trigger('change');
                 update_trimesters();
-            }
+            },
+            error: function(){
+                bootbox.alert("[update_years] ERROR with " + url);
+                return 0;
+            },
         });
     }
 
@@ -300,7 +312,11 @@ $(document).ready(function() {
             success: function(result){
                 $("#modal-title").text(result['name']);
                 $("#modal-body").html(result['img']);
-            }
+            },
+            error: function(){
+                bootbox.alert("[img_modal] ERROR with " + url);
+                return 0;
+            },
         });
     }
 
@@ -335,7 +351,11 @@ $(document).ready(function() {
                 setTimeout(function(){
                     $("#modal_category").val(result['category'].id).trigger('change');
                 }, 500);
-            }
+            },
+            error: function(){
+                bootbox.alert("[move_modal] ERROR with " + url);
+                return 0;
+            },
         });
     }
 
@@ -350,7 +370,11 @@ $(document).ready(function() {
                 //update_categories();
                 //$('#modal_move').hide();
                 window.location.reload();
-            }
+            },
+            error: function(){
+                bootbox.alert("[click on document_move] ERROR with " + url);
+                return 0;
+            },
         });
     });
 
@@ -374,7 +398,11 @@ $(document).ready(function() {
                 }
                 $('#modal_category').select2({ width: 'resolve', minimumResultsForSearch: -1});
                 $('#modal_category').val(result['nav_list'][0].id).trigger('change');
-            }
+            },
+            error: function(){
+                bootbox.alert("[modal_trimesters] ERROR with " + url);
+                return 0;
+            },
         });
     }
 
@@ -398,7 +426,11 @@ $(document).ready(function() {
                 }
                 $('#modal_trimester').select2({ width: 'resolve', minimumResultsForSearch: -1});
                 $('#modal_trimester').val(result['favorite'].id).trigger('change');
-            }
+            },
+            error: function(){
+                bootbox.alert("[modal_years] ERROR with " + url);
+                return 0;
+            },
         });
     }
 
@@ -419,7 +451,11 @@ $(document).ready(function() {
                 }
                 $('#modal_year').select2({ width: 'resolve', minimumResultsForSearch: -1});
                 $('#modal_year').val(result['favorite'].id).trigger('change');
-            }
+            },
+            error: function(){
+                bootbox.alert("[modal_companies] ERROR with " + url);
+                return 0;
+            },
         });
     }
 
@@ -449,7 +485,11 @@ $(document).ready(function() {
                 else {
                     bootbox.alert("the document cantains only one page");
                 }
-            }
+            },
+            error: function(){
+                bootbox.alert("[split_modal] ERROR with " + url);
+                return 0;
+            },
         });
     }
 
@@ -462,7 +502,11 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(result){
                $('#modal_view').html(result['img']);
-            }
+            },
+            error: function(){
+                bootbox.alert("[modal_update_img] ERROR with " + url);
+                return 0;
+            },
         });
     }
 
@@ -485,12 +529,20 @@ $(document).ready(function() {
                 }
                 $("#modal_merge").show();
                 $('#dual-list-box-documents').find('div')[1].children[3].click();
-            }
+            },
+            error: function(){
+                bootbox.alert("[merge_modal] ERROR with " + url);
+                return 0;
+            },
         });
     }
 
     function download(e){
         var url = '/document/ajax/download/' + e[0]['dataset'].id + '/';
+        if (DEBUG) {
+            console.log("download");
+            console.log(url);
+        }
         $.ajax({
             url: url,
             dataType: "json",
@@ -498,21 +550,33 @@ $(document).ready(function() {
                  if (result["valid"]) {
                      window.open(result['url'], '_blank');
                  }
-            }
+            },
+            error: function(){
+                bootbox.alert("[download] ERROR with " + url);
+                return 0;
+            },
         });
     }
 
 
     function del_modal(e){
         var url = '/document/ajax/delete/' +e.currentTarget['dataset'].id + '/';
+        if (DEBUG) {
+            console.log("del_modal");
+            console.log(url);
+        }
         $.ajax({
             url: url,
             type: 'GET',
             traditional: true,
             dataType: 'json',
             success: function(){
-                //update_categories();
-            }
+                return 1;
+            },
+            error: function(){
+                bootbox.alert("[del_modal] ERROR with " + url);
+                return 0;
+            },
         });
     }
 
