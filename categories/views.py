@@ -192,7 +192,7 @@ def add_documents(request, category_id):
                 new_f = p.sub('.pdf', pathname_new)
                 new_path = pathfile_new.replace(pathname_new, new_f)
                 cmd = 'soffice --headless --convert-to pdf %s --outdir %s/upload' % (pathfile_new, settings.MEDIA_ROOT)
-                l_doc.append(dict(filename=new_f.split('/')[1], path=new_path, cmd=cmd, fileupload=fu, document=d, cat=cat))
+                l_doc.append(dict(filename=pathname_new, path=new_path, cmd=cmd, fileupload=fu, document=d, cat=cat))
                 print(l_doc)
             elif m in ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']:
                 p = re.compile(r'.[Xx][Ll][Ss][xX]?$')
