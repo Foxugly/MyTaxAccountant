@@ -164,23 +164,14 @@ def add_documents(request, category_id):
             print(type(pathname_new))
             pathfile_new = os.path.join(settings.MEDIA_ROOT, 'upload', pathname_new)
             print(type(pathfile_new))
-            #print('VERSION1')
-            #try:
-            #    cmd = 'mv %s %s' % (pathfile, pathfile_new)
-            #    os.system(cmd)
-            #except:
-            #    print('ERREUR V1')
-            print('VERSION2')
-            try:
-                cmd = ['mv', pathfile, pathfile_new]
-                subprocess.call(cmd)
-            except:
-                print('ERREUR V2')
+            print('VERSION1')
+            cmd = ['mv', pathfile, pathfile_new]
+            subprocess.call(cmd)
             mime = MimeTypes()
             #if settings.DEBUG:
             #    print('[INFO] add %s to %s' % (unidecode(fu), cat))
             m = mime.guess_type(pathfile_new)[0]
-            d = create_document(slugify(pathname), request.user, cat)
+            d = create_document(pathname_new, request.user, cat)
             if m == 'application/pdf':
                 l_pdf.append((cat, pathfile_new, pathname_new, d))
             elif m in ['image/png', 'image/jpeg', 'image/bmp']:
