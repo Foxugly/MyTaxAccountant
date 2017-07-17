@@ -1,5 +1,5 @@
-{% load staticfiles %}
 {% extends "layout.tpl" %}
+{% load staticfiles %}
 {% block content %}
 {% if next %}
     {% if user.is_authenticated %}
@@ -10,7 +10,7 @@
 {% endif %}
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
-    <!--<p><img style="display: block; margin-left: auto; margin-right: auto;" src=" {% static "logo_lieutenant_guillaume.png" %}"/></p>-->
+    <p><img style="display: block; margin-left: auto; margin-right: auto;" src=" {% static "logo_lieutenant_guillaume.png" %}"/></p>
     <form class="form-horizontal" method="post" action="{% url 'login' %}">
       {% csrf_token %}
       <fieldset>
