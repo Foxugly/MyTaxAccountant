@@ -31,24 +31,24 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.9/css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" href=" {% static "upload/css/style.css" %} ">
     <link rel="stylesheet" href=" {% static "upload/css/jquery.fileupload-ui.css" %}" >
-    <link href='{% static "select2-4.0.1/dist/css/select2.min.css" %}' rel='stylesheet' />
-    <link href='{% static "bootstrap-datetimepicker-master/build/css/bootstrap-datetimepicker.min.css" %}' rel="stylesheet"/>
+    <link rel="stylesheet" href='{% static "select2-4.0.1/dist/css/select2.min.css" %}'  />
+    <link rel="stylesheet" href='{% static "bootstrap-datetimepicker-master/build/css/bootstrap-datetimepicker.min.css" %}' />
     <link rel="stylesheet" href="{% static "viewer/viewer.min.css"%}">
     {% block css %}
     {% endblock %}
     <link href='{% static "css/perso.css" %}' rel='stylesheet' />
     <!--  JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script type="text/javascript" src="https://momentjs.com/downloads/moment-with-locales.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.9/js/jquery.dataTables.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.9/js/dataTables.bootstrap.min.js"></script>
-    <script src=" {% static "upload/js/vendor/jquery.ui.widget.js" %}"></script>
-    <script src=" {% static "upload/js/jquery.iframe-transport.js" %}"></script>
-    <script src=" {% static "upload/js/jquery.fileupload.js" %}"></script>
-    <script src=" {% static "upload/js/jquery.cookie.js" %}"></script>
-    <script src=" {% static "bootpag/jquery.bootpag.min.js" %}"></script>
-    <script src=" {% static "bootbox/bootbox.min.js" %}"></script>
+    <script type="text/javascript" src=" {% static "upload/js/vendor/jquery.ui.widget.js" %}"></script>
+    <script type="text/javascript" src=" {% static "upload/js/jquery.iframe-transport.js" %}"></script>
+    <script type="text/javascript" src=" {% static "upload/js/jquery.fileupload.js" %}"></script>
+    <script type="text/javascript" src=" {% static "upload/js/jquery.cookie.js" %}"></script>
+    <script type="text/javascript" src=" {% static "bootpag/jquery.bootpag.min.js" %}"></script>
+    <script type="text/javascript" src=" {% static "bootbox/bootbox.min.js" %}"></script>
     <script type="text/javascript" src='{% static "select2-4.0.1/dist/js/select2.min.js" %}'></script>
     {% if LANGUAGE_CODE != 'en' %}
         {% with 'select2-4.0.1/dist/js/i18n/'|add:LANGUAGE_CODE|add:'.js' as select2_lang %}
@@ -183,7 +183,7 @@
       <div class='row'>
         
           {% if not user.is_authenticated %}
-          	  <div class="col-md-6 col-md-offset-3" style="margin-top:20px"><p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://www.lieutenantguillaume.com/static/img/partner-of-success-stories.png"/></p></div>
+          	  <div class="col-md-6 col-md-offset-3" style="margin-top:20px"><p><img style="display: block; margin-left: auto; margin-right: auto;" src=" {% static "logo_lieutenant_guillaume.png" %}"/></p></div>
               <div class="col-md-6 col-md-offset-3" style="margin-top:20px">
                 {% blocktrans %}
                 <p>Nous avons développé un service cloud pour faire bénéficier nos clients d'un espace de stockage gratuit et centralisé.</p>
