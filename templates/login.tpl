@@ -1,3 +1,4 @@
+{% load staticfiles %}
 {% extends "layout.tpl" %}
 {% block content %}
 {% if next %}

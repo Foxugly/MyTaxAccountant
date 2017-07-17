@@ -94,13 +94,13 @@ MEDIA_URL = '/media/'
 UPLOAD_DIR = 'upload'
 STOCK_DIR = 'folders'
 # ACTIVE TO PROD / COMMENT TO TEST
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 TMP_ROOT = MEDIA_ROOT + '/tmp/'
 TMP_URL = MEDIA_URL + 'tmp/'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 # COMMENT TO PROD / ACTIVE TO TEST
-#STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
 
 
 #STATICFILES_FINDERS = (
