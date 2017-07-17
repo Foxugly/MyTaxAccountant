@@ -39,10 +39,10 @@
     <link href='{% static "css/perso.css" %}' rel='stylesheet' />
     <!--  JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script type="text/javascript" src="http://momentjs.com/downloads/moment-with-locales.js"></script>
+    <script type="text/javascript" src="https://momentjs.com/downloads/moment-with-locales.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="http://cdn.datatables.net/1.10.9/js/jquery.dataTables.js"></script>
-    <script type="text/javascript" src="http://cdn.datatables.net/1.10.9/js/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.9/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.9/js/dataTables.bootstrap.min.js"></script>
     <script src=" {% static "upload/js/vendor/jquery.ui.widget.js" %}"></script>
     <script src=" {% static "upload/js/jquery.iframe-transport.js" %}"></script>
     <script src=" {% static "upload/js/jquery.fileupload.js" %}"></script>
