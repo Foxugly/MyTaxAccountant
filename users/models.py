@@ -84,4 +84,4 @@ class Log(models.Model):
     cmd = models.TextField(null=True)
 
     def __str__(self):
-        return self.pk
+        return "%i" % self.pk
