@@ -652,7 +652,7 @@ $(document).ready(function() {
                 else{;
                     var out = '';
                     for (var key in result['errors']){
-                        out += result['errors'][key][0] + '<br>';
+                        out += result['errors'][key][0];
                     }
                     $('#alert_save_error').html(out);
                     $('#alert_save_error').show();
