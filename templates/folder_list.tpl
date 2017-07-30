@@ -249,7 +249,7 @@ $(document).ready(function() {
             var api = this.api();
             new $.fn.dataTable.Buttons(api, {
              buttons: [
-                {  text: '<span class="glyphicon glyphicon-transfert"></span>',
+                {  text: '<span class="glyphicon glyphicon-transfer"></span>',
                    action: function ( e, dt, node, config ) {
                       alert( 'Button activated' );
                    }
