@@ -262,7 +262,6 @@ $(document).ready(function() {
              ]
           });
           api.buttons().container().appendTo( '#' + api.table().container().id + ' .col-sm-6:eq(0)' );
-          api.buttons().container().appendTo( ' .col-sm-4:eq(1)' );
         },
         "language": {
             "url": "//cdn.datatables.net/plug-ins/1.10.13/i18n/French.json"
