@@ -256,7 +256,7 @@ $(document).ready(function() {
                           alert( 'transfer' ); //TODO
                        }
                     },
-                    {  text: '<span class="glyphicon glyphicon-download" title="{% trans "Download" %}"></span>',
+                    {  text: '<span class="glyphicon glyphicon-download-alt" title="{% trans "Download" %}"></span>',
                        action: function ( e, dt, node, config ) {
                           alert( 'remove' ); //TODO
                        }
