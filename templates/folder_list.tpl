@@ -262,6 +262,7 @@ $(document).ready(function() {
              ]
           });
           api.buttons().container().appendTo( '#' + api.table().container().id + ' .col-sm-6:eq(0)' );
+          console.log($('#' + api.table().container().id));
         },
         "language": {
             "url": "//cdn.datatables.net/plug-ins/1.10.13/i18n/French.json"
