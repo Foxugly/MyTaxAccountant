@@ -21,35 +21,35 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <!--  CSS -->
 
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack-styles.css' %}" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.9/css/dataTables.bootstrap.min.css">
-    <link rel="stylesheet" href=" {% static "upload/css/style.css" %} ">
-    <link rel="stylesheet" href=" {% static "upload/css/jquery.fileupload-ui.css" %}" >
-    <link rel="stylesheet" href='{% static "select2-4.0.1/dist/css/select2.min.css" %}'  />
-    <link rel="stylesheet" href='{% static "bootstrap-datetimepicker-master/build/css/bootstrap-datetimepicker.min.css" %}' />
-    <link rel="stylesheet" href="{% static "viewer/viewer.min.css"%}">
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.9/css/dataTables.bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href=" {% static "upload/css/style.css" %} " />
+    <link rel="stylesheet" type="text/css" href=" {% static "upload/css/jquery.fileupload-ui.css" %}" />
+    <link rel="stylesheet" type="text/css" href='{% static "select2-4.0.1/dist/css/select2.min.css" %}'  />
+    <link rel="stylesheet" type="text/css" href='{% static "bootstrap-datetimepicker-master/build/css/bootstrap-datetimepicker.min.css" %}' />
+    <link rel="stylesheet" type="text/css" href="{% static "viewer/viewer.min.css"%}" />
     {% block css %}
     {% endblock %}
-    <link href='{% static "css/perso.css" %}' rel='stylesheet' />
+    <link rel="stylesheet" type="text/css" href='{% static "css/perso.css" %}'/>
     <!--  JS -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script type="text/javascript" src="https://momentjs.com/downloads/moment-with-locales.js"></script>
-    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.9/js/jquery.dataTables.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.9/js/dataTables.bootstrap.min.js"></script>
-    <script type="text/javascript" src=" {% static "upload/js/vendor/jquery.ui.widget.js" %}"></script>
-    <script type="text/javascript" src=" {% static "upload/js/jquery.iframe-transport.js" %}"></script>
-    <script type="text/javascript" src=" {% static "upload/js/jquery.fileupload.js" %}"></script>
-    <script type="text/javascript" src=" {% static "upload/js/jquery.cookie.js" %}"></script>
-    <script type="text/javascript" src=" {% static "bootpag/jquery.bootpag.min.js" %}"></script>
-    <script type="text/javascript" src=" {% static "bootbox/bootbox.min.js" %}"></script>
-    <script type="text/javascript" src='{% static "select2-4.0.1/dist/js/select2.min.js" %}'></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="//momentjs.com/downloads/moment-with-locales.js"></script>
+    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="//cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript" src="{% static "upload/js/vendor/jquery.ui.widget.js" %}"></script>
+    <script type="text/javascript" src="{% static "upload/js/jquery.iframe-transport.js" %}"></script>
+    <script type="text/javascript" src="{% static "upload/js/jquery.fileupload.js" %}"></script>
+    <script type="text/javascript" src="{% static "upload/js/jquery.cookie.js" %}"></script>
+    <script type="text/javascript" src="{% static "bootpag/jquery.bootpag.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "bootbox/bootbox.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "select2-4.0.1/dist/js/select2.min.js" %}"></script>
     {% if LANGUAGE_CODE != 'en' %}
         {% with 'select2-4.0.1/dist/js/i18n/'|add:LANGUAGE_CODE|add:'.js' as select2_lang %}
         <script type="text/javascript" src='{% static select2_lang %}'></script>
