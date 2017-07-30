@@ -245,14 +245,24 @@
 <script type="text/javascript">
 $(document).ready(function() {
     var datatable = $('#datatable').DataTable( {
-        dom: 'lftip',
-        /*buttons: [
-           {  text: '<span class="glyphicon glyphicon-remove"></span>',
-              action: function ( e, dt, node, config ) {
-                  alert( 'Button activated' );
-              }
-           },
-        ],*/
+        initComplete: function() {
+            var api = this.api();
+            new $.fn.dataTable.Buttons(api, {
+             buttons: [
+                {  text: '<span class="glyphicon glyphicon-transfert"></span>',
+                   action: function ( e, dt, node, config ) {
+                      alert( 'Button activated' );
+                   }
+                },
+                {  text: '<span class="glyphicon glyphicon-remove"></span>',
+                   action: function ( e, dt, node, config ) {
+                      alert( 'Button activated' );
+                   }
+                },
+             ]
+          });
+          api.buttons().container().appendTo( '#' + api.table().container().id + ' .col-sm-6:eq(0)' );
+        },
         "language": {
             "url": "//cdn.datatables.net/plug-ins/1.10.13/i18n/French.json"
                     /* https://cdn.datatables.net/plug-ins/1.10.13/i18n/Dutch.json
