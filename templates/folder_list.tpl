@@ -254,7 +254,10 @@ $(document).ready(function() {
            },
         ],
         "language": {
-            "url": {% with 'datatables/i18n/'|add:LANGUAGE_CODE|add:'.lang' as lang_url %}"{% static lang_url %}"{% endwith %}
+            "url": "//cdn.datatables.net/plug-ins/1.10.13/i18n/French.json"
+                    /* https://cdn.datatables.net/plug-ins/1.10.13/i18n/Dutch.json
+                        https://cdn.datatables.net/plug-ins/1.10.13/i18n/English.json
+                    {% with 'datatables/i18n/'|add:LANGUAGE_CODE|add:'.lang' as lang_url %}"{% static lang_url %}"{% endwith %}*/
         },
         'columnDefs': [
             {   'targets': 0, 'searchable':false, 'orderable':false, 'className': 'dt-body-center',
