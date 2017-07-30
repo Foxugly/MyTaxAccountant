@@ -28,7 +28,8 @@
 
     <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack-styles.css' %}" />
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.9/css/dataTables.bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.3.1/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href=" {% static "upload/css/style.css" %} " />
     <link rel="stylesheet" type="text/css" href=" {% static "upload/css/jquery.fileupload-ui.css" %}" />
     <link rel="stylesheet" type="text/css" href='{% static "select2-4.0.1/dist/css/select2.min.css" %}'  />
@@ -43,6 +44,7 @@
     <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
     <script type="text/javascript" src="//cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+
     <script type="text/javascript" src="{% static "upload/js/vendor/jquery.ui.widget.js" %}"></script>
     <script type="text/javascript" src="{% static "upload/js/jquery.iframe-transport.js" %}"></script>
     <script type="text/javascript" src="{% static "upload/js/jquery.fileupload.js" %}"></script>
