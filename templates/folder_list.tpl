@@ -261,7 +261,7 @@ $(document).ready(function() {
                 },
              ]
           });
-          api.buttons().container().appendTo( '#' + api.table().container().id + ' .col-sm-8:eq(0)' );
+          //api.buttons().container().appendTo( '#' + api.table().container().id + ' .col-sm-8:eq(0)' );
         },
         "language": {
             "url": "//cdn.datatables.net/plug-ins/1.10.13/i18n/French.json"
