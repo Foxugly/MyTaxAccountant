@@ -246,13 +246,13 @@
 $(document).ready(function() {
     var datatable = $('#datatable').DataTable( {
         dom: 'lBftip',
-        buttons: [
+        /*buttons: [
            {  text: '<span class="glyphicon glyphicon-remove"></span>',
               action: function ( e, dt, node, config ) {
                   alert( 'Button activated' );
               }
            },
-        ],
+        ],*/
         "language": {
             "url": "//cdn.datatables.net/plug-ins/1.10.13/i18n/French.json"
                     /* https://cdn.datatables.net/plug-ins/1.10.13/i18n/Dutch.json
