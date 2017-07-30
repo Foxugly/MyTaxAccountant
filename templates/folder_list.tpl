@@ -254,7 +254,7 @@ $(document).ready(function() {
            },
         ],
         "language": {
-            "url": {% with 'datatables/i18n/'|add:LANGUAGE_CODE|add:'.lang' as lang_url %}{% static lang_url %}{% endwith %}
+            "url": {% with 'datatables/i18n/'|add:LANGUAGE_CODE|add:'.lang' as lang_url %}"{% static lang_url %}"{% endwith %}
         },
         'columnDefs': [
             {   'targets': 0, 'searchable':false, 'orderable':false, 'className': 'dt-body-center',
