@@ -64,7 +64,8 @@
                     <td></td>
                     {%  endif %}
                     {%  if doc.complete %}
-                    <td><a id="btn_sp_{{ doc.id }}" class="btn btn-xs btn-default split_modal" data-id="{{ doc.id }}" title="Split" data-toggle="modal" data-target="#modal_split"><span class="glyphicon glyphicon-resize-full"></span></a>
+                    <td><a id="btn_vi_{{ doc.id }}" class="btn btn-xs btn-default view_modal" data-id="{{ doc.id }}" title="View" data-toggle="modal" data-target="#modal_view"><span class="glyphicon glyphicon-file"></span></a> <!-- TODO -->
+                        <a id="btn_sp_{{ doc.id }}" class="btn btn-xs btn-default split_modal" data-id="{{ doc.id }}" title="Split" data-toggle="modal" data-target="#modal_split"><span class="glyphicon glyphicon-resize-full"></span></a>
                         <a id="btn_me_{{ doc.id }}" class="btn btn-xs btn-default merge_modal" data-id="{{ doc.id }}" title="Merge" data-toggle="modal" data-target="#modal_merge"><span class="glyphicon glyphicon-resize-small"></span></a>
                         <a id="btn_mv_{{ doc.id }}" class="btn btn-xs btn-default move_modal" data-id="{{ doc.id }}" title="Move" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer"></span></a>
                         <a id="btn_dl_{{ doc.id }}" class="btn btn-xs btn-default download" data-id="{{ doc.id }}" title="Download"><span class="glyphicon glyphicon-download-alt"></span></a>
@@ -245,38 +246,24 @@
 <script type="text/javascript">
 $(document).ready(function() {
     var datatable = $('#datatable').DataTable( {
-        /*initComplete: function() {
-            var api = this.api();
-            new $.fn.dataTable.Buttons(api, {
-             buttons: [
-                {  text: '<span class="glyphicon glyphicon-transfer"></span>',
-                   action: function ( e, dt, node, config ) {
-                      alert( 'Button activated' );
-                   }
-                },
-                {  text: '<span class="glyphicon glyphicon-remove"></span>',
-                   action: function ( e, dt, node, config ) {
-                      alert( 'Button activated' );
-                   }
-                },
-             ]
-          });
-          api.buttons().container().appendTo( '#' + api.table().container().id + ' .col-sm-6:eq(0)' );
-          console.log($('#' + api.table().container().id));
-        },*/
         'dom':
 			"<'row'<'col-sm-4'l><'col-sm-4'B><'col-sm-4'f>>" +
 			"<'row'<'col-sm-12'tr>>" +
 			"<'row'<'col-sm-5'i><'col-sm-7'p>>",
             'buttons': [
-                {  text: '<span class="glyphicon glyphicon-transfer"></span>',
+                {  text: '<span class="glyphicon glyphicon-transfer" title="{% trans "Transfer" %}"></span>',
                        action: function ( e, dt, node, config ) {
-                          alert( 'Button activated' );
+                          alert( 'transfer' ); //TODO
                        }
                     },
-                    {  text: '<span class="glyphicon glyphicon-remove"></span>',
+                    {  text: '<span class="glyphicon glyphicon-download" title="{% trans "Download" %}"></span>',
                        action: function ( e, dt, node, config ) {
-                          alert( 'Button activated' );
+                          alert( 'remove' ); //TODO
+                       }
+                    },
+                    {  text: '<span class="glyphicon glyphicon-remove" title="{% trans "Remove" %}"></span>',
+                       action: function ( e, dt, node, config ) {
+                          alert( 'remove' ); //TODO
                        }
                     }
             ],
