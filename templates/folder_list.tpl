@@ -245,7 +245,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
     var datatable = $('#datatable').DataTable( {
-        initComplete: function() {
+        /*initComplete: function() {
             var api = this.api();
             new $.fn.dataTable.Buttons(api, {
              buttons: [
@@ -263,8 +263,24 @@ $(document).ready(function() {
           });
           api.buttons().container().appendTo( '#' + api.table().container().id + ' .col-sm-6:eq(0)' );
           console.log($('#' + api.table().container().id));
-        },
-        "language": {
+        },*/
+        'dom':
+			"<'row'<'col-sm-4'l><'col-sm-4'B><'col-sm-4'f>>" +
+			"<'row'<'col-sm-12'tr>>" +
+			"<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            'buttons': [
+                {  text: '<span class="glyphicon glyphicon-transfer"></span>',
+                       action: function ( e, dt, node, config ) {
+                          alert( 'Button activated' );
+                       }
+                    },
+                    {  text: '<span class="glyphicon glyphicon-remove"></span>',
+                       action: function ( e, dt, node, config ) {
+                          alert( 'Button activated' );
+                       }
+                    }
+            ],
+        'language': {
             "url": "//cdn.datatables.net/plug-ins/1.10.13/i18n/French.json"
                     /* https://cdn.datatables.net/plug-ins/1.10.13/i18n/Dutch.json
                         https://cdn.datatables.net/plug-ins/1.10.13/i18n/English.json
