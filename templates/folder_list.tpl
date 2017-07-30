@@ -35,7 +35,9 @@
         <table id="datatable" class="table table-striped table-bordered" width="100%" cellspacing="0">
             <thead>
                 <tr>
-                    <th>{% trans "FiscalID" %}</th>
+                    <th><input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>
+                    <th>{% trans "Fiscal ID" %}</th>
+                    <th>{% trans "Document ID" %}</th>
                     <th>{% trans "Name" %}</th>
                     <th>{% trans "Date" %}</th>
                     <th>{% trans "Comments" %}</th>
@@ -46,13 +48,11 @@
             <tbody>
                 {% for doc in docs %}
                     <tr>
-                    {%  if doc.fiscal_id %}
-                        <td>{{ doc.fiscal_id }}</td>
-                    {% else %}
-                        <td></td>
-                    {%  endif %}
+                    <td></td>
+                    <td>{%  if doc.fiscal_id %}{{ doc.fiscal_id }}{% endif %}</td>
+                    <td>{{ doc.id }}</td>
                     <td><a id="{{ doc.id }}" class="img_modal" data-id="{{ doc.id }}" data-toggle="modal" data-target="#myModal">{{ doc.name }}</a></td>
-                    <td>{% if doc.date.day < 10%}0{% endif %}{{ doc.date.day }}/{% if doc.date.month < 10%}0{% endif %}{{ doc.date.month }}/{{ doc.date.year }}</td>
+                    <td>{% if doc.date.day < 10%}0{% endif %}{{ doc.date.day }}/{% if doc.date.month < 10%}0{% endif %}{{ doc.date.month }}/{{ doc.date.year }} {% if doc.date.hour < 10%}0{% endif %}{{ doc.date.hour }}:{% if doc.date.minute < 10%}0{% endif %}{{ doc.date.minute }}</td>
                     {%  if  doc.description %}
                         <td>{{ doc.description }}</td>
                     {%  else  %}
@@ -77,7 +77,9 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <th>{% trans "FiscalID" %}</th>
+                    <th><input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>
+                    <th>{% trans "Fiscal ID" %}</th>
+                    <th>{% trans "Document ID" %}</th>
                     <th>{% trans "Name" %}</th>
                     <th>{% trans "Date" %}</th>
                     <th>{% trans "Comments" %}</th>
@@ -243,17 +245,37 @@
 <script type="text/javascript">
 $(document).ready(function() {
     var datatable = $('#datatable').DataTable( {
-        "language": {
-            "url": "/static/datatables/i18n/{{ LANGUAGE_CODE }}.lang"
-        },
-        aoColumnDefs: [
-            { "aTargets": [ 1 ], "bSortable": true },
-            { "aTargets": [ 2 ], "bSortable": true },
-            { "aTargets": [ 3 ], "bSortable": true, "sType": "date-euro"},
-            { "aTargets": [ 4 ], "bSortable": true },
-            { "aTargets": [ 5 ], "bSortable": true }
+        dom: 'lBftip',
+        buttons: [
+           {  text: '<span class="glyphicon glyphicon-remove"></span>',
+              action: function ( e, dt, node, config ) {
+                  alert( 'Button activated' );
+              }
+           },
         ],
+        "language": {
+            "url": "{% static "datatables/i18n/{{ LANGUAGE_CODE }}.lang" %}"
+        },
+        'columnDefs': [
+            {   'targets': 0, 'searchable':false, 'orderable':false, 'className': 'dt-body-center',
+                'render': function (data, type, full, meta){
+                return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';
+                }
+            },
+            { targets: 1, orderable : true },
+            { targets: 2, orderable: true, visible: false },
+            { targets: 3, orderable: true},
+            { targets: 4, orderable: true, Type: "date-euro" },
+            { targets: 5, orderable: true },
+            { targets: 6, orderable: true }
+      ],
+      'order': [4, 'asc']
     });
+    $('#example-select-all').on('click', function(){
+      // Check/uncheck all checkboxes in the table
+      var rows = datatable.rows({ 'search': 'applied' }).nodes();
+      $('input[type="checkbox"]', rows).prop('checked', this.checked);
+   });
 });
 jQuery.extend( jQuery.fn.dataTableExt.oSort, {
 "date-euro-pre": function ( a ) {
