@@ -51,7 +51,8 @@ class Category(models.Model):
         return self.documents.get(id=i)
 
     def as_json(self):
-        return dict(id=self.id, name=self.cat.name, n=str(self.count_docs()), )
+        name = "%sT%s %s" % (self.refer_trimester.refer_year.get_name(), self.refer_trimester.get_year(), self.cat.name)
+        return dict(id=self.id, name=name, n=str(self.count_docs()), )
 
     def get_relative_path(self):
         return os.path.join(self.refer_trimester.get_relative_path(), self.cat.name + "_" + self.random)
