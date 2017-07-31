@@ -64,7 +64,7 @@
                     <td></td>
                     {%  endif %}
                     {%  if doc.complete %}
-                    <td><a id="btn_vi_{{ doc.id }}" class="btn btn-xs btn-default view_modal" data-id="{{ doc.id }}" title="View"><span class="glyphicon glyphicon-file"></span></a> <!-- TODO -->
+                    <td><a id="btn_vi_{{ doc.id }}" class="btn btn-xs btn-default view_modal" data-id="{{ doc.id }}" title="View"><span class="glyphicon glyphicon-file"></span></a>
                         <a id="btn_sp_{{ doc.id }}" class="btn btn-xs btn-default split_modal" data-id="{{ doc.id }}" title="Split" data-toggle="modal" data-target="#modal_split"><span class="glyphicon glyphicon-resize-full"></span></a>
                         <a id="btn_me_{{ doc.id }}" class="btn btn-xs btn-default merge_modal" data-id="{{ doc.id }}" title="Merge" data-toggle="modal" data-target="#modal_merge"><span class="glyphicon glyphicon-resize-small"></span></a>
                         <a id="btn_mv_{{ doc.id }}" class="btn btn-xs btn-default move_modal" data-id="{{ doc.id }}" title="Move" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer"></span></a>
@@ -256,7 +256,7 @@ $(document).ready(function() {
 			"<'row'<'col-sm-12'tr>>" +
 			"<'row'<'col-sm-5'i><'col-sm-7'p>>",
             'buttons': [
-                {  text: '<a id="btn_mv_selected" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer" title="{% trans "Transfer" %}"></span></a>',
+                {  text: '<a id="btn_mv_selected" style="text-decoration: none;color:black;" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer" title="{% trans "Transfer" %}"></span></a>',
                     action: function ( e, dt, node, config ) {
                         console.log("before");
                         var url = "/document/ajax/move/" + rows_selected[0] + "/";
@@ -401,8 +401,8 @@ $(document).ready(function() {
         e.stopPropagation();
     });
 
-    // Handle click on table cells with checkboxes
-    $('#datatable').on('click', 'tbody td, thead th:first-child', function(e){
+    // Handle click on table cells with checkboxes --- tbody td,
+    $('#datatable').on('click', 'thead th:first-child', function(e){
       $(this).parent().find('input[type="checkbox"]').trigger('click');
     });
 
@@ -445,8 +445,12 @@ $(document).ready(function() {
         var parts = pathname.split('/');
         var field = $('#datatable').dataTable().fnSettings().aaSorting[0][0];
         var sens = $('#datatable').dataTable().fnSettings().aaSorting[0][1];
-        var n = $(this).closest('tr').index() + 1;
+        var n_in_page = $(this).closest('tr').index() + 1;
+        var n_length_page = $('#datatable').DataTable().page.info().length;
+        var n_current_page = $('#datatable').DataTable().page.info().page;
+        var n = (n_length_page * n_current_page) + n_in_page;
         var url = parts[0] + '/' + parts[1] + '/' + parts[2] + '/form/' + field + '/' + sens + '/' + n + '/';
+        console.log(url);
         window.location.replace(url);
     });
 });
