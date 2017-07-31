@@ -97,31 +97,39 @@ def ajax_split(request, n):
         return HttpResponse(json.dumps(results))
 
 
+def move_document(doc_id, cat_id):
+    doc = Document.objects.get(pk=int(doc_id))
+    old_cat = doc.refer_category
+    new_cat = Category.objects.get(pk=int(cat_id))
+    for p in doc.pages.all():
+        cmd = "mv " + p.get_absolute_path() + " " + new_cat.get_absolute_path() + "/"
+        os.system(cmd)
+    doc.refer_category = new_cat
+    doc.save()
+    old_cat.documents.remove(doc)
+    new_cat.documents.add(doc)
+    return True
+
+
 def ajax_move_doc(request, doc_id, cat_id):
     if request.is_ajax():
         results = {}
-        doc = Document.objects.get(pk=int(doc_id))
-        old_cat = doc.refer_category
-        new_cat = Category.objects.get(pk=int(cat_id))
-        for p in doc.pages.all():
-            cmd = "mv " + p.get_absolute_path() + " " + new_cat.get_absolute_path() + "/"
-            os.system(cmd)
-        doc.refer_category = new_cat
-        doc.save()
-        old_cat.documents.remove(doc)
-        new_cat.documents.add(doc)
-        results['valid'] = True
+
+        results['valid'] = move_document(doc_id, cat_id)
         return HttpResponse(json.dumps(results))
+
+
+def delete_document(doc_id):
+    doc = Document.objects.get(pk=int(doc_id))
+    cat = doc.refer_category
+    cat.documents.remove(doc)
+    doc.delete()
+    return True
 
 
 def ajax_delete(request, doc_id):
     if request.is_ajax():
-        results = {}
-        doc = Document.objects.get(pk=int(doc_id))
-        cat = doc.refer_category
-        cat.documents.remove(doc)
-        doc.delete()
-        results['valid'] = True
+        results = {'valid': delete_document(doc_id)}
         return HttpResponse(json.dumps(results))
 
 
@@ -198,5 +206,33 @@ def ajax_download(request, n):
             os.system("rm " + output_abs)
         os.system(cmd)
         results['url'] = output_rel
+        results['valid'] = True
+        return HttpResponse(json.dumps(results))
+
+
+def ajax_multiple_move(request, cat_id):
+    if request.is_ajax():
+        results = {}
+        for key, val in dict(request.GET).items():
+            move_document(val, cat_id)
+        results['valid'] = True
+        return HttpResponse(json.dumps(results))
+
+
+def ajax_multiple_delete(request):
+    if request.is_ajax():
+        results = {}
+        for key, val in dict(request.GET).items():
+            delete_document(val)
+        results['valid'] = True
+        return HttpResponse(json.dumps(results))
+
+
+def ajax_multiple_download(request):
+    if request.is_ajax():
+        results = {}
+        for key, val in dict(request.GET).items():
+            print '%s : %s' % (key, val)
+
         results['valid'] = True
         return HttpResponse(json.dumps(results))

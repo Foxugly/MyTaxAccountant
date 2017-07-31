@@ -33,9 +33,10 @@
                 $("#btn_view_form").click(function () {
                     var pathname = window.location.pathname; // Returns path only
                     var parts = pathname.split('/');
-                    var field = $('#datatable').dataTable().fnSettings().aaSorting[0][0];
-                    var sens = $('#datatable').dataTable().fnSettings().aaSorting[0][1];
+                    var field = $('#datatable').dataTable().fnSettings().aaSorting[0];
+                    var sens = $('#datatable').dataTable().fnSettings().aaSorting[1];
                     var transfer = parts[0] + '/' + parts[1] + '/' + parts[2] + '/form/' + field + '/' + sens + '/1/';
+                    console.log($('#datatable').dataTable().fnSettings());
                     console.log(transfer);
                     window.location.replace(transfer);
                 });

@@ -35,7 +35,7 @@
         <table id="datatable" class="table table-striped table-bordered" width="100%" cellspacing="0">
             <thead>
                 <tr>
-                    <th><input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>
+                    <th><input name="select_all" value="1" id="select-all" type="checkbox" /></th>
                     <th>{% trans "Fiscal ID" %}</th>
                     <th>{% trans "Document ID" %}</th>
                     <th>{% trans "Name" %}</th>
@@ -78,7 +78,7 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <th><input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>
+                    <th><input name="select_all" value="1" id="select-all" type="checkbox" /></th>
                     <th>{% trans "Fiscal ID" %}</th>
                     <th>{% trans "Document ID" %}</th>
                     <th>{% trans "Name" %}</th>
@@ -159,6 +159,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
                 <button id="document_move" type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Move" %}</button>
+                <button id="document_multiple_move" type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Move" %}</button>
             </div>
         </div>
     </div>
@@ -174,7 +175,7 @@
             </div>
             <div id='modal-body' class="modal-body" style="text-align:center;">
                 <div id="modal_view"></div>
-                <div id="modal_pager" width="100%" style="text-align:center;">
+                <div id="modal_pager" style="text-align:center;width:100%;">
                     <p id="modal_pagination"></p>
                 </div>
 
@@ -244,28 +245,117 @@
 {% block js %}
 {% if user.is_authenticated %}
 <script type="text/javascript">
+
+
 $(document).ready(function() {
+    var rows_selected = [];
+    var dict = {};
     var datatable = $('#datatable').DataTable( {
         'dom':
 			"<'row'<'col-sm-4'l><'col-sm-4'B><'col-sm-4'f>>" +
 			"<'row'<'col-sm-12'tr>>" +
 			"<'row'<'col-sm-5'i><'col-sm-7'p>>",
             'buttons': [
-                {  text: '<span class="glyphicon glyphicon-transfer" title="{% trans "Transfer" %}"></span>',
-                       action: function ( e, dt, node, config ) {
-                          alert( 'transfer' ); //TODO
-                       }
-                    },
-                    {  text: '<span class="glyphicon glyphicon-download-alt " title="{% trans "Download" %}"></span>',
-                       action: function ( e, dt, node, config ) {
-                          alert( 'remove' ); //TODO
-                       }
-                    },
-                    {  text: '<span class="glyphicon glyphicon-remove" title="{% trans "Remove" %}"></span>',
-                       action: function ( e, dt, node, config ) {
-                          alert( 'remove' ); //TODO
-                       }
+                {  text: '<a id="btn_mv_selected" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer" title="{% trans "Transfer" %}"></span></a>',
+                    action: function ( e, dt, node, config ) {
+                        console.log("before");
+                        var url = "/document/ajax/move/" + rows_selected[0] + "/";
+                            console.log(url);
+                        $("#document_move").hide();
+                        $("#document_multiple_move").show();
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            traditional: true,
+                            dataType: 'json',
+                            success: function(result){
+                                $("#modal_company").empty();
+                                for (var i=0; i < result['companies'].length;i++){
+                                    var option = '<option value="' + result['companies'][i].id + '"';
+                                    option += '>' + result['companies'][i].name + '</option>';
+                                    $("#modal_company").append(option);
+                                }
+                                $("#move_doc_id").val(result['doc_id']);
+                                    $("#modal_company").val(result['company'].id).trigger('change');
+                                setTimeout(function(){
+                                    $("#modal_year").val(result['year'].id).trigger('change');
+                                }, 100);
+                                setTimeout(function(){
+                                    $("#modal_trimester").val(result['trimester'].id).trigger('change');
+                                }, 400);
+                                setTimeout(function(){
+                                    $("#modal_category").val(result['category'].id).trigger('change');
+                                }, 700);
+                            },
+                            error: function(){
+                                bootbox.alert("[move_modal] ERROR with " + url);
+                                return 0;
+                            },
+                        });
+
+                        console.log(rows_selected);
+                        console.log("after");
                     }
+                },
+                {   text: '<span class="glyphicon glyphicon-download-alt " title="{% trans "Download" %}"></span>',
+                    action: function () {
+                        var url = '/document/ajax/multiple_download/';
+                            console.log("download");
+                            console.log(url);
+                        for (var a=0; a < rows_selected.length;a++){dict[a] = rows_selected[a];}
+                        $.ajax({
+                            url: url,
+                            dataType: "json",
+                            data: dict,
+                            success: function(result){
+                                if (result["valid"]) {
+                                    //window.open(result['url'], '_blank');
+                                    //TODO
+                                }
+                            },
+                            error: function(){
+                                bootbox.alert("[download] ERROR with " + url);
+                                return 0;
+                            },
+                        });
+                    }
+                },
+                {  text: '<span class="glyphicon glyphicon-remove" title="{% trans "Delete" %}"></span>',
+                    action: function () {
+                        bootbox.confirm({
+                            message: "Do you really want to delete selected document(s) ?",
+                                buttons : {
+                                    confirm: {
+                                        label: 'Yes',
+                                        className: 'btn-success'
+                                    },
+                                    cancel: {
+                                        label: 'No',
+                                        className: 'btn-danger'
+                                    }
+                                },
+                                callback: function (result) {
+                                if (result) {
+                                    for (var a=0; a < rows_selected.length;a++){dict[a] = rows_selected[a];}
+                                    $.ajax({
+                                        type: "GET",
+                                        contentType: "application/json",
+                                        url : "/document/ajax/multiple_delete/",
+                                        data: dict,
+                                        dataType: "json",
+                                        success: function(){
+                                            window.location.reload();
+                                        },
+                                        error: function(){
+                                            bootbox.alert("[del_modal] ERROR with " + url);
+                                            return 0;
+                                        },
+                                    });
+                                }
+                            }
+                        });
+                   }
+                }
             ],
         'language': {
             "url": "//cdn.datatables.net/plug-ins/1.10.13/i18n/French.json"
@@ -274,9 +364,9 @@ $(document).ready(function() {
                     {% with 'datatables/i18n/'|add:LANGUAGE_CODE|add:'.lang' as lang_url %}"{% static lang_url %}"{% endwith %}*/
         },
         'columnDefs': [
-            {   'targets': 0, 'searchable':false, 'orderable':false, 'className': 'dt-body-center',
+            {   targets: 0, searchable:false, orderable:false, className: 'dt-body-center',
                 'render': function (data, type, full, meta){
-                return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';
+                return '<input class="select-checkbox" type="checkbox" name="select-id[]" value="' + $('<div/>').text(data).html() + '">';
                 }
             },
             { targets: 1, orderable : true },
@@ -285,37 +375,73 @@ $(document).ready(function() {
             { targets: 4, orderable: true, type: "date-euro" },
             { targets: 5, orderable: true },
             { targets: 6, orderable: true }
-      ],
-      'order': [4, 'asc']
+        ],
+        select: {
+            style:    'os',
+            selector: 'td:first-child'
+        },
+        'order': [[4, 'asc']]
     });
-    $('#example-select-all').on('click', function(){
+
+    $('#datatable').on('click', 'input[type="checkbox"]', function(e){
+        var $row = $(this).closest('tr');
+        var data = datatable.row($row).data();
+        var rowId = data[2];
+        var index = $.inArray(rowId, rows_selected);
+        if(this.checked && index === -1){
+            rows_selected.push(rowId);
+        } else if (!this.checked && index !== -1){
+            rows_selected.splice(index, 1);
+        }
+        if(this.checked){
+            $row.addClass('selected');
+        } else {
+            $row.removeClass('selected');
+        }
+        e.stopPropagation();
+    });
+
+    // Handle click on table cells with checkboxes
+    $('#datatable').on('click', 'tbody td, thead th:first-child', function(e){
+      $(this).parent().find('input[type="checkbox"]').trigger('click');
+    });
+
+    // Handle click on "Select all" control
+    $('#datatable thead input[name="select_all"]', datatable.table().container()).on('click', function(e){
+        if(this.checked){
+            $('#datatable tbody input[type="checkbox"]:not(:checked)').trigger('click');
+        } else {
+            $('#datatable tbody input[type="checkbox"]:checked').trigger('click');
+        }
+        e.stopPropagation();
+    });
+
+    $('#select-all').on('click', function(){
       // Check/uncheck all checkboxes in the table
       var rows = datatable.rows({ 'search': 'applied' }).nodes();
       $('input[type="checkbox"]', rows).prop('checked', this.checked);
-   });
+    });
+
+    $('#document_multiple_move').click(function document_move(){
+        var url = "/document/ajax/multiple_move/" + $("#modal_category").val() + "/";
+        for (var a=0; a < rows_selected.length;a++){dict[a] = rows_selected[a];}
+        $.ajax({
+            url: url,
+            type: 'GET',
+            traditional: true,
+            data: dict,
+            dataType: 'json',
+            success: function() {
+                window.location.reload();
+            },
+            error: function(){
+                bootbox.alert("[click on document_move] ERROR with " + url);
+                return 0;
+            },
+        });
+    });
 });
-/*jQuery.extend( jQuery.fn.dataTableExt.oSort, {
-"date-euro-pre": function ( a ) {
-if ($.trim(a) != '') {
-var frDatea = $.trim(a).split(' ');
-var frTimea = frDatea[1].split(':');
-var frDatea2 = frDatea[0].split('/');
-var x = (frDatea2[2] + frDatea2[1] + frDatea2[0] + frTimea[0] + frTimea[1] + frTimea[2]) * 1;
-} else {
-var x = 10000000000000; // = l'an 1000 ...
-}
 
-return x;
-},
-
-"date-euro-asc": function ( a, b ) {
-return a - b;
-},
-
-"date-euro-desc": function ( a, b ) {
-return b - a;
-}
-} );*/
 </script>
 {%  endif %}
 {% endblock %}

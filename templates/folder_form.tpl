@@ -41,7 +41,12 @@
                 </fieldset>
             </form>
         </div>
-        <div id="div_btn_save" width="100%"><a id="btn_save" class="btn btn-block btn-success">{% blocktrans %} Save {% endblocktrans %}</a><a id="btn_save" class="btn btn-block btn-success">{% blocktrans %} Save + Next (TODO){% endblocktrans %}</a></div>
+        <div id="div_btn_save">
+            <div class="btn-group btn-group-justified">
+                <a id="btn_save" class="btn btn-success">{% blocktrans %} Save {% endblocktrans %}</a>
+                <a id="btn_save2" class="btn btn-success">{% blocktrans %} Save + Next (TODO){% endblocktrans %}</a>
+            </div>
+        </div>
         <div id="div_pager" width="100%" style="text-align:center;">
             <p id="pagination"></p>
         </div>

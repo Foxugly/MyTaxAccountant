@@ -4,6 +4,9 @@
 
 var DEBUG = true;
 
+/**
+ *  fileupload
+ */
 $(document).ajaxSend(function(event, xhr, settings) {
     function getCookie(name) {
         var cookieValue = null;
@@ -73,9 +76,6 @@ $(document).ready(function() {
         .parent().addClass($.support.fileInput ? undefined : 'disabled');
 });
 
-
-
-
     $(function () {
         'use strict';
         var url = '/upload/basic/';
@@ -116,29 +116,15 @@ $(document).ready(function() {
     });
 
     $('.select2').select2({width: 'resolve'});
-
-
     $('.select2100').select2({ width: '100%' });
     $('.select2-nosearch').select2({ width: 'resolve', minimumResultsForSearch: -1});
     $('.select2100-nosearch').select2({ width: '100%', minimumResultsForSearch: -1});
     $("#dlb_documents").DualListBox();
     $('#btn_save').click(function(){save_form();});
-
-    $('#confirm_yes_close').click(function(){
-        $('#confirm_yes').hide();
-    });
-
-    $('#confirm_yes_ok').click(function(){
-        $('#confirm_yes').hide();
-    });
-
-    $('#confirm_no_close').click(function(){
-        $('#confirm_no').hide();
-    });
-
-    $('#confirm_no_ok').click(function(){
-        $('#confirm_no').hide();
-    });
+    $('#confirm_yes_close').click(function(){$('#confirm_yes').hide();});
+    $('#confirm_yes_ok').click(function(){$('#confirm_yes').hide();});
+    $('#confirm_no_close').click(function(){$('#confirm_no').hide();});
+    $('#confirm_no_ok').click(function(){$('#confirm_no').hide();});
 
     $('#language').change(function() {
         var select = $(this);
@@ -324,6 +310,8 @@ $(document).ready(function() {
         if (DEBUG) {
             console.log(url);
         }
+        $("#document_move").show();
+        $("#document_multiple_move").hide();
         $.ajax({
             url: url,
             type: 'GET',
@@ -343,10 +331,10 @@ $(document).ready(function() {
                 }, 100);
                 setTimeout(function(){
                     $("#modal_trimester").val(result['trimester'].id).trigger('change');
-                }, 300);
+                }, 400);
                 setTimeout(function(){
                     $("#modal_category").val(result['category'].id).trigger('change');
-                }, 500);
+                }, 700);
             },
             error: function(){
                 bootbox.alert("[move_modal] ERROR with " + url);
@@ -364,13 +352,50 @@ $(document).ready(function() {
             dataType: 'json',
             success: function () {
                 //update_categories();
-                //$('#modal_move').hide();
+                //document_move
                 window.location.reload();
             },
             error: function(){
                 bootbox.alert("[click on document_move] ERROR with " + url);
                 return 0;
             },
+        });
+    });
+
+    $('#document_split').click(function() {
+        var form = $('#form_split');
+        var url = '/document/split/';
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: form.serialize(),
+            traditional: true,
+            dataType: 'json',
+            success: function(){
+                window.location.reload()
+            }
+        });
+    });
+
+    $('#document_merge').click(function() {
+        var data = $('#form_merge').serializeArray();
+        var l = [];
+        var select = $('#dual-list-box-documents').find('select')[1];
+        for (var i = 0 ; i < select.length ; i++){
+            l.push(select[i].value);
+        }
+        data.push({name: 'doc_ids', value: l});
+        var url = '/document/merge/';
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: data,
+            traditional: true,
+            dataType: 'json',
+            success: function(){
+                //update_categories();
+                window.location.reload()
+            }
         });
     });
 
@@ -536,15 +561,15 @@ $(document).ready(function() {
     function download(e){
         var url = '/document/ajax/download/' + e[0]['dataset'].id + '/';
         if (DEBUG) {
-            console.log("download");
-            console.log(url);
+             console.log("download");
+             console.log(url);
         }
         $.ajax({
-            url: url,
-            dataType: "json",
+             url: url,
+             dataType: "json",
              success: function(result){
                  if (result["valid"]) {
-                     window.open(result['url'], '_blank');
+                      window.open(result['url'], '_blank');
                  }
             },
             error: function(){
@@ -553,7 +578,6 @@ $(document).ready(function() {
             },
         });
     }
-
 
     function del_modal(e){
         var url = '/document/ajax/delete/' +e.currentTarget['dataset'].id + '/';
@@ -661,27 +685,6 @@ $(document).ready(function() {
         });
     }
 
-  /*  function view_form(valid, img, form,doc_id) {
-        if (DEBUG){
-            console.log('view_form');
-        }
-        if (valid == true){
-            console.log('<ul class="docs-pictures clearfix">' + img + '</ul>');
-            $('#div_img').html('<ul class="docs-pictures clearfix">' + img + '</ul><script>var Viewer = window.Viewer;        var pictures = document.querySelector(".docs-pictures");        var viewer;        viewer = new Viewer(pictures); </script> ');
-            $('#div_form').html('<input id="doc_id" type="hidden" name="doc_id" value="' + doc_id + '">' +form);
-            $('#id_owner').select2({ width: 'resolve', minimumResultsForSearch: -1});
-            $('#btn_save').click(function(){
-                save_form();
-            });
-            $('#pagination').show();
-        }
-        else{
-            $('#div_img').html(" ");
-            $('#div_form').html('<div class="alert alert-info" role="alert">No documents for this category</div>');
-            $('#pagination').hide();
-        }
-    }
-*/
     function update_data(option, nb){
         //if (DEBUG) {
         console.log('update_data');
@@ -815,69 +818,4 @@ $(document).ready(function() {
             }
         });
     }
-    /*
-    $("#view_group :input:radio").change(function() {
-        var view = this.value;
-        if (view == 'list'){
-            $("#div_list").show();
-            $("#div_img_form").hide();
-            $('#alert_save_saved').hide();
-            $('#alert_save_error').hide();
-            view_form(false, null, "", 0);
-        }
-        else if (view == 'form'){
-            $("#div_list").hide();
-            $("#div_img_form").show();
-            $('#alert_save_saved').hide();
-            $('#alert_save_error').hide();
-            var num = $('#pagination').bootpag().find('.active').data()['lp'];
-            var table = $('#datatable').DataTable().data();
-            if (table.rows().count() > 0){
-                var a = table.rows().data()[num-1][1];
-                get_form_data($(a).data().id);
-            }else{
-                view_form(false, null, "", 0);
-            }
-
-        }
-    });*/
-
-    $('#document_split').click(function() {
-        var form = $('#form_split');
-        var url = '/document/split/';
-        $.ajax({
-            url: url,
-            type: 'GET',
-            data: form.serialize(),
-            traditional: true,
-            dataType: 'json',
-            success: function(){
-                //update_categories();
-                window.location.reload()
-            }
-        });
-    });
-
-    $('#document_merge').click(function() {
-        var data = $('#form_merge').serializeArray();
-        var l = [];
-        var select = $('#dual-list-box-documents').find('select')[1];
-        for (var i = 0 ; i < select.length ; i++){
-            l.push(select[i].value);
-        }
-        data.push({name: 'doc_ids', value: l});
-        var url = '/document/merge/';
-        $.ajax({
-            url: url,
-            type: 'GET',
-            data: data,
-            traditional: true,
-            dataType: 'json',
-            success: function(){
-                //update_categories();
-                window.location.reload()
-            }
-        });
-    });
 });
-
