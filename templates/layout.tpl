@@ -45,6 +45,7 @@
     <script type="text/javascript" src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
     <script type="text/javascript" src="//cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
     <script type="text/javascript" src="//cdn.datatables.net/buttons/1.3.1/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="//cdn.datatables.net/plug-ins/1.10.15/sorting/date-euro.js"></script>
     <script type="text/javascript" src="{% static "upload/js/vendor/jquery.ui.widget.js" %}"></script>
     <script type="text/javascript" src="{% static "upload/js/jquery.iframe-transport.js" %}"></script>
     <script type="text/javascript" src="{% static "upload/js/jquery.fileupload.js" %}"></script>

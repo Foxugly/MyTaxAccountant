@@ -256,7 +256,7 @@ $(document).ready(function() {
                           alert( 'transfer' ); //TODO
                        }
                     },
-                    {  text: '<span class="glyphicon glyphicon-download-alt" title="{% trans "Download" %}"></span>',
+                    {  text: '<span class="glyphicon glyphicon-download-alt " title="{% trans "Download" %}"></span>',
                        action: function ( e, dt, node, config ) {
                           alert( 'remove' ); //TODO
                        }
@@ -282,7 +282,7 @@ $(document).ready(function() {
             { targets: 1, orderable : true },
             { targets: 2, orderable: true, visible: false },
             { targets: 3, orderable: true},
-            { targets: 4, orderable: true, Type: "date-euro" },
+            { targets: 4, orderable: true, type: "date-euro" },
             { targets: 5, orderable: true },
             { targets: 6, orderable: true }
       ],
@@ -294,7 +294,7 @@ $(document).ready(function() {
       $('input[type="checkbox"]', rows).prop('checked', this.checked);
    });
 });
-jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+/*jQuery.extend( jQuery.fn.dataTableExt.oSort, {
 "date-euro-pre": function ( a ) {
 if ($.trim(a) != '') {
 var frDatea = $.trim(a).split(' ');
@@ -315,7 +315,7 @@ return a - b;
 "date-euro-desc": function ( a, b ) {
 return b - a;
 }
-} );
+} );*/
 </script>
 {%  endif %}
 {% endblock %}
