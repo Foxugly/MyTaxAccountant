@@ -211,19 +211,23 @@ def ajax_download(request, n):
 
 
 def ajax_multiple_move(request, cat_id):
+    print("ajax_multiple_move")
     if request.is_ajax():
         results = {}
         for key, val in dict(request.GET).items():
-            move_document(val, cat_id)
+            print(val)
+            move_document(val[0], cat_id)
         results['valid'] = True
         return HttpResponse(json.dumps(results))
 
 
 def ajax_multiple_delete(request):
+    print("ajax_multiple_delete")
     if request.is_ajax():
         results = {}
         for key, val in dict(request.GET).items():
-            delete_document(val)
+            print(val)
+            delete_document(val[0])
         results['valid'] = True
         return HttpResponse(json.dumps(results))
 
