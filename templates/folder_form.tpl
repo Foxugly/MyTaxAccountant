@@ -44,7 +44,7 @@
         <div id="div_btn_save">
             <div class="btn-group btn-group-justified">
                 <a id="btn_save" class="btn btn-success">{% blocktrans %} Save {% endblocktrans %}</a>
-                <a id="btn_save2" class="btn btn-success">{% blocktrans %} Save + Next (TODO){% endblocktrans %}</a>
+                <a id="btn_save_next" class="btn btn-success">{% blocktrans %} Save and Next {% endblocktrans %}</a>
             </div>
         </div>
         <div id="div_pager" width="100%" style="text-align:center;">

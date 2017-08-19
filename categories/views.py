@@ -286,9 +286,9 @@ def view_form(request, category_id, field, sens, n):
     categories = trimester_current.categories.all()
     docs_all = category_current.documents.all()
     arg = ''
-    if sens == 'asc':
+    if sens == 'desc':
         arg += '-'
-    l = ['id', 'name', 'date', 'description', 'lock', 'complete']
+    l = [None, 'id', None, 'name', 'date', 'description', 'lock', 'complete']
     arg += l[int(field)]
     docs = docs_all.order_by(arg)
     indice = int(n)-1

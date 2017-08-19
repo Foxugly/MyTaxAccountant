@@ -29,15 +29,16 @@ def document_view(request, document_id):
 
 
 def update_ajax(request, document_id):
+    if settings.DEBUG:
+        print('update_ajax')
     results = {}
     if request.is_ajax():
         doc = Document.objects.get(id=document_id)
-        print(request.GET)
         if request.user.is_superuser:
             form = DocumentAdminForm(request.GET, instance=doc)
         else:
             form = DocumentForm(request.GET, instance=doc)
-        print(form)
+        results['n'] = doc.refer_category.count_docs();
         if form.is_valid():
             form.save()
             results['return'] = True

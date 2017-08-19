@@ -84,14 +84,12 @@ $(document).ready(function() {
             url: url,
             crossDomain: false,
             beforeSend: function(xhr, settings) {
-                //console.log('beforeSend');
                 if (!csrfSafeMethod(settings.type)) {
                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
                 }
             },
             dataType: 'json',
             done: function (e, data) {
-                //console.log('done');
                 $("#fileupload_list" ).removeClass( "hide" );
                 $.each(data.result.files, function (index, file) {
                     $("#files-group").append('\n<li class="list-group-item list-group-item-success"><span>' + file.name + '</span><button id="' + file.id + '" type="button" class="close close_fileupload">&times;</button></li>\n');
@@ -121,6 +119,7 @@ $(document).ready(function() {
     $('.select2100-nosearch').select2({ width: '100%', minimumResultsForSearch: -1});
     $("#dlb_documents").DualListBox();
     $('#btn_save').click(function(){save_form();});
+    $('#btn_save_next').click(function(){save_next_form();});
     $('#confirm_yes_close').click(function(){$('#confirm_yes').hide();});
     $('#confirm_yes_ok').click(function(){$('#confirm_yes').hide();});
     $('#confirm_no_close').click(function(){$('#confirm_no').hide();});
@@ -604,14 +603,16 @@ $(document).ready(function() {
         if (DEBUG) {
             console.log('update_datatable');
         }
-        var out = '<td>';
+
         var lock = '<td>';
         if (data['lock']){
             lock += '<span class="glyphicon glyphicon-lock"></span>';
         }
         lock += '</td>';
         var repeat = false;
+        var out = '<td>';
         if (data['complete']){
+            out += '<a id="btn_vi_'+ data['id']+'" class="btn btn-xs btn-default view_modal" data-id="'+ data['id']+'" title="View"><span class="glyphicon glyphicon-file"></span></a>';
             out += '<a id="btn_sp_'+ data['id']+'" class="btn btn-xs btn-default split_modal" data-id="'+ data['id'] +'" title="Split" data-toggle="modal" data-target="#modal_split"><span class="glyphicon glyphicon-resize-full"></span></a>';
             out += '<a id="btn_me_'+ data['id']+'" class="btn btn-xs btn-default merge_modal" data-id="'+ data['id'] +'" title="Merge" data-toggle="modal" data-target="#modal_merge"><span class="glyphicon glyphicon-resize-small"></span></a>';
             out += '<a id="btn_mv_'+ data['id']+'" class="btn btn-xs btn-default move_modal" data-id="'+ data['id'] +'" title="Move" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer"></span></a>';
@@ -623,8 +624,18 @@ $(document).ready(function() {
             repeat = true;
         }
         out += '</td>';
-        $('#datatable').dataTable().fnAddData([data['fiscal_id'], "<a id='" + data['id'] + "' class='img_modal' data-id='"+ data['id'] +"' data-toggle='modal' data-target='#myModal'>" + data['name'] + "</a>", data['date'], data['description'], lock, out]);
+        $('#datatable').dataTable().fnAddData([
+            "<input class='select-checkbox type='checkbox' name='select-id[]' value=''>",
+            data['fiscal_id'],
+            data['id'],
+            "<a id='" + data['id'] + "' class='img_modal' data-id='"+ data['id'] +"' data-toggle='modal' data-target='#myModal'>" + data['name'] + "</a>",
+            data['date'],
+            data['description'],
+            lock,
+            out
+        ]);
         $("#"+data['id']).click(function(){img_modal($(this));});
+
         $("#btn_mv_"+data['id']).click(function(){move_modal($(this));});
         $("#btn_me_"+data['id']).click(function(){merge_modal($(this));});
         $("#btn_sp_"+data['id']).click(function(){split_modal($(this));});
@@ -685,10 +696,53 @@ $(document).ready(function() {
         });
     }
 
+    function save_next_form() {
+        if (DEBUG){
+            console.log('save_form');
+        }
+        $('#alert_save_error').hide();
+        var form = $('#div_form form');
+        var id = $('#doc_id').val();
+        var url = '/document/' + id + '/update/';
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: form.serialize(),
+            traditional: true,
+            dataType: 'json',
+            success: function(result){
+                if (result['return']){
+                    var url = window.location.href;
+                    var split = url.split("/");
+                    var next = "";
+                    for (var i = 0 ; i < (split.length)-2; i = i +1){
+                        next += split[i] + "/";
+                    }
+                    var next_n = parseInt(split[split.length-2])+1;
+                    if (next_n <= result['n']){
+                        next += next_n + "/";
+                        window.location.href = next;
+                    }
+                    else{
+                        bootbox.alert("Saved!", function(){});
+                        $('#alert_save_saved').show().delay( 1000 ).fadeOut(1000);
+                    }
+                }
+                else{;
+                    var out = '';
+                    for (var key in result['errors']){
+                        out += result['errors'][key][0];
+                    }
+                    $('#alert_save_error').html(out);
+                    $('#alert_save_error').show();
+                }
+            }
+        });
+    }
     function update_data(option, nb){
-        //if (DEBUG) {
-        console.log('update_data');
-        //}
+        if (DEBUG) {
+            console.log('update_data');
+        }
         var pagnum = $('#pagination').bootpag().find('.active').data()['lp'];
         var url = '/category/'+ $('ul.nav-pills li.active a').attr("data-id") + '/list/' +  pagnum + '/';
 
@@ -772,7 +826,6 @@ $(document).ready(function() {
                 }
                 $('ul.nav-pills li.active span').html(result['n']);
                 if (repeat){
-                    console.log('loop1');
                     setTimeout(function(){ update_data(true,1);}, 4000);
                 }
             }

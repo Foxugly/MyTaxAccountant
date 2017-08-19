@@ -159,7 +159,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
                 <button id="document_move" type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Move" %}</button>
-                <button id="document_multiple_move" type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Move" %}</button>
+                <button id="document_multiple_move" type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Move all" %}</button>
             </div>
         </div>
     </div>
@@ -257,111 +257,126 @@ $(document).ready(function() {
 			"<'row'<'col-sm-5'i><'col-sm-7'p>>",
             'buttons': [
                 {  text: '<a id="btn_mv_selected" style="text-decoration: none;color:black;" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer" title="{% trans "Transfer" %}"></span></a>',
-                    action: function ( e, dt, node, config ) {
-                        console.log("before");
-                        var url = "/document/ajax/move/" + rows_selected[0] + "/";
-                            console.log(url);
-                        $("#document_move").hide();
-                        $("#document_multiple_move").show();
-                        $.ajax({
-                            url: url,
-                            type: 'GET',
-                            traditional: true,
-                            dataType: 'json',
-                            success: function(result){
-                                $("#modal_company").empty();
-                                for (var i=0; i < result['companies'].length;i++){
-                                    var option = '<option value="' + result['companies'][i].id + '"';
-                                    option += '>' + result['companies'][i].name + '</option>';
-                                    $("#modal_company").append(option);
-                                }
-                                $("#move_doc_id").val(result['doc_id']);
+                    action: function () {
+                        if (rows_selected.length == 0) {
+                            bootbox.alert("{% trans "No document is selected !" %}");
+                        } else {
+                            var url = "/document/ajax/move/" + rows_selected[0] + "/";
+                            $("#document_move").hide();
+                            $("#document_multiple_move").show();
+                            $.ajax({
+                                url: url,
+                                type: 'GET',
+                                traditional: true,
+                                dataType: 'json',
+                                success: function (result) {
+                                    $("#modal_company").empty();
+                                    for (var i = 0; i < result['companies'].length; i++) {
+                                        var option = '<option value="' + result['companies'][i].id + '"';
+                                        option += '>' + result['companies'][i].name + '</option>';
+                                        $("#modal_company").append(option);
+                                    }
+                                    $("#move_doc_id").val(result['doc_id']);
                                     $("#modal_company").val(result['company'].id).trigger('change');
-                                setTimeout(function(){
-                                    $("#modal_year").val(result['year'].id).trigger('change');
-                                }, 100);
-                                setTimeout(function(){
-                                    $("#modal_trimester").val(result['trimester'].id).trigger('change');
-                                }, 400);
-                                setTimeout(function(){
-                                    $("#modal_category").val(result['category'].id).trigger('change');
-                                }, 700);
-                            },
-                            error: function(){
-                                bootbox.alert("[move_modal] ERROR with " + url);
-                                return 0;
-                            },
-                        });
-
-                        console.log(rows_selected);
-                        console.log("after");
+                                    setTimeout(function () {
+                                        $("#modal_year").val(result['year'].id).trigger('change');
+                                    }, 100);
+                                    setTimeout(function () {
+                                        $("#modal_trimester").val(result['trimester'].id).trigger('change');
+                                    }, 400);
+                                    setTimeout(function () {
+                                        $("#modal_category").val(result['category'].id).trigger('change');
+                                    }, 700);
+                                },
+                                error: function () {
+                                    bootbox.alert("[move_modal] ERROR with " + url);
+                                    return 0;
+                                },
+                            });
+                        }
                     }
                 },
                 {   text: '<span class="glyphicon glyphicon-download-alt " title="{% trans "Download" %}"></span>',
                     action: function () {
-                        var url = '/document/ajax/multiple_download/';
+                        if (rows_selected.length == 0) {
+                            bootbox.alert("{% trans "No document is selected !" %}");
+                        } else {
+                            bootbox.alert("{% trans "In construction !" %}");
+                            /*var url = '/document/ajax/multiple_download/';
                             console.log("download");
                             console.log(url);
-                        for (var a=0; a < rows_selected.length;a++){dict[a] = rows_selected[a];}
-                        $.ajax({
-                            url: url,
-                            dataType: "json",
-                            data: dict,
-                            success: function(result){
-                                if (result["valid"]) {
-                                    //window.open(result['url'], '_blank');
-                                    //TODO
-                                }
-                            },
-                            error: function(){
-                                bootbox.alert("[download] ERROR with " + url);
-                                return 0;
-                            },
-                        });
+                            for (var a = 0; a < rows_selected.length; a++) {
+                                dict[a] = rows_selected[a];
+                            }
+                            $.ajax({
+                                url: url,
+                                dataType: "json",
+                                data: dict,
+                                success: function (result) {
+                                    if (result["valid"]) {
+                                        //window.open(result['url'], '_blank');
+                                        //TODO
+                                    }
+                                },
+                                error: function () {
+                                    bootbox.alert("[download] ERROR with " + url);
+                                    return 0;
+                                },
+                            });*/
+                        }
                     }
                 },
                 {  text: '<span class="glyphicon glyphicon-remove" title="{% trans "Delete" %}"></span>',
                     action: function () {
-                        bootbox.confirm({
-                            message: "Do you really want to delete selected document(s) ?",
-                                buttons : {
+                        if (rows_selected.length == 0) {
+                            bootbox.alert("{% trans "No document is selected !" %}");
+                        } else {
+                            bootbox.confirm({
+                                message: "{% trans "Do you really want to delete selected document(s) ?" %}",
+                                buttons: {
                                     confirm: {
-                                        label: 'Yes',
+                                        label: "{% trans "Yes" %}",
                                         className: 'btn-success'
                                     },
                                     cancel: {
-                                        label: 'No',
+                                        label: "{% trans "No" %}",
                                         className: 'btn-danger'
                                     }
                                 },
                                 callback: function (result) {
-                                if (result) {
-                                    for (var a=0; a < rows_selected.length;a++){dict[a] = rows_selected[a];}
-                                    $.ajax({
-                                        type: "GET",
-                                        contentType: "application/json",
-                                        url : "/document/ajax/multiple_delete/",
-                                        data: dict,
-                                        dataType: "json",
-                                        success: function(){
-                                            window.location.reload();
-                                        },
-                                        error: function(){
-                                            bootbox.alert("[del_modal] ERROR with " + url);
-                                            return 0;
-                                        },
-                                    });
+                                    if (result) {
+                                        for (var a = 0; a < rows_selected.length; a++) {
+                                            dict[a] = rows_selected[a];
+                                        }
+                                        $.ajax({
+                                            type: "GET",
+                                            contentType: "application/json",
+                                            url: "/document/ajax/multiple_delete/",
+                                            data: dict,
+                                            dataType: "json",
+                                            success: function () {
+                                                window.location.reload();
+                                            },
+                                            error: function () {
+                                                bootbox.alert("[del_modal] ERROR with " + url);
+                                                return 0;
+                                            },
+                                        });
+                                    }
                                 }
-                            }
-                        });
-                   }
+                            });
+                        }
+                    }
                 }
             ],
         'language': {
-            "url": "//cdn.datatables.net/plug-ins/1.10.13/i18n/French.json"
-                    /* https://cdn.datatables.net/plug-ins/1.10.13/i18n/Dutch.json
-                        https://cdn.datatables.net/plug-ins/1.10.13/i18n/English.json
-                    {% with 'datatables/i18n/'|add:LANGUAGE_CODE|add:'.lang' as lang_url %}"{% static lang_url %}"{% endwith %}*/
+            {% if LANGUAGE_CODE == "fr" %}
+                "url": "//cdn.datatables.net/plug-ins/1.10.13/i18n/French.json",
+            {% elif  LANGUAGE_CODE == "nl" %}
+                "url": "cdn.datatables.net/plug-ins/1.10.13/i18n/Dutch.json",
+            {% elif  LANGUAGE_CODE == "en" %}
+                "url": "cdn.datatables.net/plug-ins/1.10.13/i18n/English.json",
+            {% endif %}
         },
         'columnDefs': [
             {   targets: 0, searchable:false, orderable:false, className: 'dt-body-center',
@@ -382,6 +397,7 @@ $(document).ready(function() {
         },
         'order': [[4, 'asc']]
     });
+
 
     $('#datatable').on('click', 'input[type="checkbox"]', function(e){
         var $row = $(this).closest('tr');
