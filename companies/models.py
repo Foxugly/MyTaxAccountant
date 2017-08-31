@@ -62,7 +62,13 @@ class Company(models.Model):
 
     def add_year(self, year):
         self.years.add(year)
+    
+    def get_years(self):
+        return self.years.order_by('fiscal_year__id')
 
+    def get_active_years(self):
+        retun self.years.filter(active=True).order_by('fiscal_year__id')
+        
     def __str__(self):
         return '%s' % (self.get_name())
 
