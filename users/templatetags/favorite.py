@@ -28,7 +28,7 @@ def favorite_company(user):
 
 @register.filter()
 def years(company):
-    return company.years.filter(active=True)
+    return company.years.filter(active=True).order_by('fiscal_year__id')
 
 
 @register.filter()
@@ -41,7 +41,7 @@ def favorite_year(company):
 
 @register.filter()
 def trimesters(year):
-    return year.trimesters.filter(active=True)
+    return year.trimesters.filter(active=True).order_by('template__number')
 
 
 @register.filter()
