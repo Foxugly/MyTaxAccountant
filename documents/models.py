@@ -115,6 +115,17 @@ class DocumentAdminForm(ModelForm):
             'description': forms.Textarea(attrs={'cols': 40, 'rows': 4}),
         }
 
+    def clean(self):
+        cleaned_data = super(DocumentAdminForm, self).clean()
+        current_doc = self.instance
+        fiscal_id = cleaned_data.get("fiscal_id")
+        if len(fiscal_id):
+            for tri in current_doc.refer_category.refer_trimester.refer_year.get_trimesters():
+                for doc in tri.get_docs():
+                    if doc.pk is not current_doc.pk:
+                        if fiscal_id == doc.fiscal_id:
+                            self.add_error('fiscal_id', _("Fiscal ID already used"))
+    
     def as_div(self):
         txt = '<form class="form-horizontal">\n<fieldset>\n<legend>' + str(_('Document')) + '</legend>'
         for f in self:
