@@ -21,7 +21,7 @@ class TypeCategory(models.Model):
     default = models.BooleanField(_('default'), default=True)
 
     def __str__(self):
-        return self.name
+        return '[%d] %s' % (self.priority, self.name)
 
 
 class Category(models.Model):
