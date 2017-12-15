@@ -14,10 +14,25 @@ from django import forms
 from django.forms import ModelForm
 from utils.models import Country, TemplateTrimester
 from years.models import Year
+from categories.models import Category
 from django.conf import settings
 from django.utils.text import slugify
 import os
 import uuid
+
+
+class ModelTrimester(models.Model):
+    name = models.TextField(_("Name of the model trimester"))
+    categories = models.ManyToManyField(Category, verbose_name=_('categories'), blank=True)
+
+    def __str__(self):
+        return '[%d] %s' % (self.pk, self.name)
+
+
+class ModelTrimesterForm(ModelForm):
+    class Meta:
+        model = ModelTrimester
+        fields = '__all__'
 
 
 class Company(models.Model):
@@ -53,7 +68,7 @@ class Company(models.Model):
     years = models.ManyToManyField(Year, blank=True)
     active = models.BooleanField(_('active'), default=False)
     favorite = models.BooleanField(_('favorite'), default=False)
-    trimester_template = models.ForeignKey(TemplateTrimester,null=True,blank=True)
+    model_trimester = models.ForeignKey(ModelTrimester, null=True, blank=True)
 
     def as_json(self):
         return dict(id=self.id, name=self.name)
