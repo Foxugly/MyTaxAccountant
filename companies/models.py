@@ -53,7 +53,7 @@ class Company(models.Model):
     years = models.ManyToManyField(Year, blank=True)
     active = models.BooleanField(_('active'), default=False)
     favorite = models.BooleanField(_('favorite'), default=False)
-    trimester_template = models.ForeignKey(TemplateTrimester, blank=True, default=None)
+    trimester_template = models.ForeignKey(TemplateTrimester,null=True,blank=True)
 
     def as_json(self):
         return dict(id=self.id, name=self.name)
