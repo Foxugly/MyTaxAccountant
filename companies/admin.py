@@ -8,9 +8,15 @@
 # your option) any later version.
 
 from django.contrib import admin
-from companies.models import Company
+from companies.models import Company, ModelTrimester
+
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
     filter_horizontal = ('years',)
+
+
+@admin.register(ModelTrimester)
+class ModelTrimesterAdmin(admin.ModelAdmin):
+    filter_horizontal = ('categories',)
 
