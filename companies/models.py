@@ -14,7 +14,7 @@ from django import forms
 from django.forms import ModelForm
 from utils.models import Country, TemplateTrimester
 from years.models import Year
-from categories.models import Category
+from categories.models import TypeCategory
 from django.conf import settings
 from django.utils.text import slugify
 import os
@@ -23,7 +23,7 @@ import uuid
 
 class ModelTrimester(models.Model):
     name = models.TextField(_("Name of the model trimester"))
-    categories = models.ManyToManyField(Category, verbose_name=_('categories'), blank=True)
+    categories = models.ManyToManyField(TypeCategory, verbose_name=_('Types of category'), blank=True)
 
     def __str__(self):
         return '[%d] %s' % (self.pk, self.name)
