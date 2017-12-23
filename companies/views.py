@@ -50,7 +50,7 @@ def admin_companies(request):
     trimester_current = next(t for t in trimesters if t.favorite is True)
     c = dict(companies=companies, company_current=company_current, years=years, year_current=year_current,
              trimesters=trimesters, trimester_current=trimester_current, view='list', list=Company.objects.all(),
-             form=[UserProfileForm(), UserCreateForm(), CompanyForm()], url='/company/add/')
+             forms=[UserProfileForm(), UserCreateForm(), CompanyForm()], url='/company/add/')
     return render(request, 'list.tpl', c)
 
 
