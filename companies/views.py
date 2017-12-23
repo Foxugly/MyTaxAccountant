@@ -42,7 +42,15 @@ def list_year(request, company_id):
 
 
 def admin_companies(request):
-    c = {'list': Company.objects.all(), 'form': [UserProfileForm(), UserCreateForm(), CompanyForm()], 'url': '/company/add/'}
+    companies = request.user.userprofile.companies.all()
+    company_current = companies[0]
+    years = company_current.years.all()
+    year_current = next(y for y in years if y.favorite is True)
+    trimesters = year_current.trimesters.all()
+    trimester_current = next(t for t in trimesters if t.favorite is True)
+    c = dict(companies=companies, company_current=company_current, years=years, year_current=year_current,
+             trimesters=trimesters, trimester_current=trimester_current, view='list', list=Company.objects.all(),
+             form=[UserProfileForm(), UserCreateForm(), CompanyForm()], url='/company/add/')
     return render(request, 'list.tpl', c)
 
 
