@@ -20,9 +20,9 @@
            {% for field in form %}
               <div class="form-group">
                     <label {% if field.required %}class="col-md-3 control-label required"{% else %}class="col-md-3 control-label" style="font-weight: normal !important;"{% endif %} for="{{field.label}}">
-                    |{{ field.required }}|{% bootstrap_label field.label %}
+                    |{{ field.required }}|
                  </label>
-                 <div class="col-md-9">{{ field.field }}</div>
+                 <div class="col-md-9">{{ field }}</div>
               </div>
            {% endfor %}
         {%  endfor %}
