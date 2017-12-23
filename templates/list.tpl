@@ -22,7 +22,7 @@
                     <label {% if field.required %}class="col-md-3 control-label required" {% else %}class="col-md-3 control-label" style="font-weight: normal !important;"{% endif %} for="{{field.label_tag}}">
                     {% bootstrap_label field.label %}
                  </label>
-                 <div class="col-md-9">{% bootstrap_field field show_label=False %}{%  if form.maybemissing %}{%  bootstrap_field form.maybemissing %}{%  endif %}</div>
+                 <div class="col-md-9">{{{ field }}</div>
               </div>
            {% endfor %}
         {%  endfor %}
