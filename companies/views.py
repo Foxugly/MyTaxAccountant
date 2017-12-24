@@ -93,7 +93,7 @@ def add_company(request):
         tri_fav = Trimester(template=tt_fav, start_date=tt_fav.start_date, active=True, refer_year=y_fav, favorite=True)
         tri_fav.save()
         y_fav.trimesters.add(tri_fav)
-        for tp in TypeCategory.objects.filter(priority__lt=10).order_by('priority'):
+        for tp in c.model_trimester.categories.all().order_by('priority'):
             cat_fav = Category(cat=tp, refer_trimester=tri_fav, active=True)
             cat_fav.save()
             tri_fav.categories.add(cat_fav)
