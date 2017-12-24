@@ -15,6 +15,7 @@ from django.conf import settings
 import json
 import os
 from subprocess import Popen
+from time import sleep
 
 
 def document_view(request, document_id):
@@ -207,6 +208,7 @@ def ajax_download(request, n):
         # os.system(cmd)
         p1 = Popen(cmd, shell=True)
         p1.wait()
+        sleep(2000)
         results['url'] = output_rel
         results['valid'] = True
         return HttpResponse(json.dumps(results))
