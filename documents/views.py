@@ -14,7 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 import json
 import os
-from time import sleep
+from subprocess import Popen
 
 
 def document_view(request, document_id):
@@ -39,9 +39,9 @@ def update_ajax(request, document_id):
             form = DocumentAdminForm(request.GET, instance=doc)
         else:
             form = DocumentForm(request.GET, instance=doc)
-        results['n'] = doc.refer_category.count_docs();
+        results['n'] = doc.refer_category.count_docs()
         if form.is_valid():
-            form.save
+            form.save()
             results['return'] = True
         else:
             results['return'] = False
@@ -107,7 +107,7 @@ def move_document(doc_id, cat_id):
         cmd = "mv " + p.get_absolute_path() + " " + new_cat.get_absolute_path() + "/"
         os.system(cmd)
     doc.refer_category = new_cat
-    doc.save
+    doc.save()
     old_cat.documents.remove(doc)
     new_cat.documents.add(doc)
     return True
@@ -115,8 +115,7 @@ def move_document(doc_id, cat_id):
 
 def ajax_move_doc(request, doc_id, cat_id):
     if request.is_ajax():
-        results = {}
-        results['valid'] = move_document(doc_id, cat_id)
+        results = {'valid': move_document(doc_id, cat_id)}
         return HttpResponse(json.dumps(results))
 
 
@@ -159,12 +158,12 @@ def split_doc(request):
                 new_doc.pages.add(p)
                 new_doc.size += p.get_size()
                 p.refer_document = new_doc
-                p.save
+                p.save()
                 doc.size -= p.get_size()
                 doc.pages.remove(p)
             i += 1
         doc.refer_category.documents.add(new_doc)
-        doc.save
+        doc.save()
         new_doc.save()
         results['valid'] = True
         return HttpResponse(json.dumps(results))
@@ -180,12 +179,12 @@ def merge_doc(request):
             for p in old_doc.all_pages():
                 doc.pages.add(p)
                 p.refer_document = doc
-                p.save
+                p.save()
                 old_doc.pages.remove(p)
-                old_doc.save
+                old_doc.save()
                 doc.size += p.get_size()
             old_doc.delete()
-        doc.save
+        doc.save()
         results['valid'] = True
         return HttpResponse(json.dumps(results))
 
@@ -205,8 +204,9 @@ def ajax_download(request, n):
         cmd += output_abs
         if os.path.exists(output_abs):
             os.system("rm " + output_abs)
-        os.system(cmd)
-        sleep(10)
+        # os.system(cmd)
+        p1 = Popen([cmd])
+        p1.wait()
         results['url'] = output_rel
         results['valid'] = True
         return HttpResponse(json.dumps(results))
