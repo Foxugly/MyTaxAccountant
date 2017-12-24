@@ -6,6 +6,7 @@
 {% load details_cat %}
 {% load tools %}
 {% load i18n %}
+
 {% block content %}
 {% if user.is_superuser %}
 {%  if return %}
@@ -71,6 +72,10 @@
 <script>
 $(document).ready(function() {
     var datatable = $('#datatable').DataTable();
+    $('.datepicker').datetimepicker({
+        locale: '{{ LANGUAGE_CODE }}',
+        format: 'L'
+    });
 });
 </script>
 {% endblock %}
