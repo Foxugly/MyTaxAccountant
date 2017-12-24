@@ -8,23 +8,41 @@
 {% load i18n %}
 {% block content %}
 {% if user.is_superuser %}
+{%  if return %}
 <div class="row">
     <div class="col-md-12">
-        {%  if return %}
         <div class="alert alert-success" role="alert">User and company added</div>
-        {%  endif %}
+    </div>
+</div>
+{%  endif %}
+{%  if companies %}
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Name of company</th>
+            <th>model trimester</th>
+          </tr>
+        </thead>
+        <tbody>
+        {%  for c in companies %}
+          <tr>
+            <td>{{ c.name }}</td>
+            <td>{{ c.model_trimester }}</td>
+          </tr>
+        {%  endfor %}
+        </tbody>
+      </table>
+    </div>
+</div>
+{% endif %}
+<div class="row">
+    <div class="col-md-12">
         <form class="form-horizontal" method="post" action="{{url}}">
         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
         {%  for form in forms %}
             {% bootstrap_form form layout="horizontal"%}
-            <!-- {% for field in form %}
-              <div class="form-group">
-                    <label {% if field.required %}class="col-md-3 control-label required"{% else %}class="col-md-3 control-label" style="font-weight: normal !important;"{% endif %} for="{{field.id_for_label}}">
-                    {{field.label}}|{{ field.required }}|
-                 </label>
-                 <div class="col-md-9">{{ field }}</div>
-              </div>
-           {% endfor %}-->
         {%  endfor %}
         <div class="row">
             <div class="form_group">
@@ -36,37 +54,6 @@
         </form>
     </div>
 </div>
-    <!--
-<div class="row">
-    <div class="col-md-12">
-        <table id="datatable" class="table table-striped table-bordered" width="100%" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>{% trans "FiscalID" %}</th>
-                    <th>{% trans "Name" %}</th>
-                    <th>{% trans "Date" %}</th>
-                    <th>{% trans "Comments" %}</th>
-                    <th>{% trans "Lock" %}</th>
-                    <th>{% trans "Operations" %}</th>
-                </tr>
-            </thead>
-     
-            <tfoot>
-                <tr>
-                    <th>{% trans "FiscalID" %}</th>
-                    <th>{% trans "Name" %}</th>
-                    <th>{% trans "Date" %}</th>
-                    <th>{% trans "Comments" %}</th>
-                    <th>{% trans "Lock" %}</th>
-                    <th>{% trans "Operations" %}</th>
-                </tr>
-            </tfoot>
-     
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-</div> -->
 {%  endif %}
 {% endblock %}
 
