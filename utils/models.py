@@ -15,7 +15,7 @@ from django.forms import ModelForm
 
 class Country(models.Model):
     name = models.TextField(_("Country"))
-    
+
     def __str__(self):
         return self.name
 
@@ -27,7 +27,7 @@ class CountryForm(ModelForm):
 
 
 class FiscalYear(models.Model):
-    name = models.TextField(_("Fiscal year"), max_length=20)
+    name = models.CharField(_("Fiscal year"), max_length=20)
     init = models.BooleanField(default=False)
     favorite = models.BooleanField(default=False)
 
@@ -41,7 +41,21 @@ class FiscalYear(models.Model):
 class FiscalYearForm(ModelForm):
     class Meta:
         model = FiscalYear
-        fields = ['name']
+        fields = ['name', 'init', 'favorite']
+
+    def save(self):
+        print('save1')
+        instance = super(FiscalYearForm, self).save(commit=False)
+        print('save2')
+        if instance.favorite:
+            for tt in FiscalYear.objects.all():
+                if tt.favorite:
+                    tt.favorite = False
+                    tt.save()
+        print('save5')
+        instance.save()
+        print('save6')
+        return instance
 
 
 class TemplateTrimester(models.Model):
@@ -58,3 +72,21 @@ class TemplateTrimesterForm(ModelForm):
     class Meta:
         model = TemplateTrimester
         fields = '__all__'
+
+    def __init__(self, *args, **kw):
+        super(TemplateTrimesterForm, self).__init__(*args, **kw)
+        self.fields['start_date'].widget.attrs['class'] = 'datepicker'
+
+    def save(self):
+        print('save1')
+        instance = super(TemplateTrimesterForm, self).save(commit=False)
+        print('save2')
+        if instance.favorite:
+            for tt in TemplateTrimester.objects.all():
+                if tt.favorite:
+                    tt.favorite = False
+                    tt.save()
+        print('save5')
+        instance.save()
+        print('save6')
+        return instance

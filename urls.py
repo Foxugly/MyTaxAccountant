@@ -49,6 +49,7 @@ urlpatterns = [
     url(r'^user/', include('users.urls'), name='users'),
     url(r'^company/', include('companies.urls'), name='companies'),
     url(r'^year/', include('years.urls'), name='years'),
+    url(r'^utils/', include('utils.urls'), name='utils'),
     url(r'^document/', include('documents.urls'), name='documents'),
     url(r'^trimester/', include('trimesters.urls'), name='trimesters'),
     url(r'^category/', include('categories.urls'), name='categories'),

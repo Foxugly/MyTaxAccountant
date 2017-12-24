@@ -40,7 +40,7 @@ def update_ajax(request, document_id):
             form = DocumentForm(request.GET, instance=doc)
         results['n'] = doc.refer_category.count_docs();
         if form.is_valid():
-            form.save()
+            form.save
             results['return'] = True
         else:
             results['return'] = False
@@ -106,7 +106,7 @@ def move_document(doc_id, cat_id):
         cmd = "mv " + p.get_absolute_path() + " " + new_cat.get_absolute_path() + "/"
         os.system(cmd)
     doc.refer_category = new_cat
-    doc.save()
+    doc.save
     old_cat.documents.remove(doc)
     new_cat.documents.add(doc)
     return True
@@ -159,12 +159,12 @@ def split_doc(request):
                 new_doc.pages.add(p)
                 new_doc.size += p.get_size()
                 p.refer_document = new_doc
-                p.save()
+                p.save
                 doc.size -= p.get_size()
                 doc.pages.remove(p)
             i += 1
         doc.refer_category.documents.add(new_doc)
-        doc.save()
+        doc.save
         new_doc.save()
         results['valid'] = True
         return HttpResponse(json.dumps(results))
@@ -180,12 +180,12 @@ def merge_doc(request):
             for p in old_doc.all_pages():
                 doc.pages.add(p)
                 p.refer_document = doc
-                p.save()
+                p.save
                 old_doc.pages.remove(p)
-                old_doc.save()
+                old_doc.save
                 doc.size += p.get_size()
             old_doc.delete()
-        doc.save()
+        doc.save
         results['valid'] = True
         return HttpResponse(json.dumps(results))
 

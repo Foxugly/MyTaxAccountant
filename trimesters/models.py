@@ -55,10 +55,10 @@ class Trimester(models.Model):
         return dict(id=self.id, name=self.get_name())
 
     def add_categories(self):
-        for c in TypeCategory.objects.filter(active=True, default=True).order_by('priority'):
-            new_cat = Category(cat=c, refer_trimester=self)
-            new_cat.save()
-            self.categories.add(new_cat)
+        for c in self.refer_year.refer_company.model_trimester.categories.all().order_by('priority'):
+            new_cat, created = Category.objects.get_or_create(cat=c, refer_trimester=self, active=True)
+            if created:
+                self.categories.add(new_cat)
 
     def get_absolute_path(self):
         return os.path.join(self.refer_year.get_absolute_path(), "%s_%s" % (str(self.template.number), self.random))

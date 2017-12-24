@@ -51,7 +51,7 @@ def admin_trimesters(request):
 def add_templatetrimester(request):
     form = TemplateTrimesterForm(request.POST)
     if form.is_valid():
-        tt = form.save()
+        tt = form.save
 
 
 def apply_templatetrimester(request, tt_id):

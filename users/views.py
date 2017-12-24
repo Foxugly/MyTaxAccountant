@@ -54,8 +54,8 @@ def personal_data(request):
         user_form = UserForm(request.POST, instance=request.user)
         userprofile_form = UserProfileForm(request.POST, instance=request.user.userprofile)
         if user_form.is_valid() and userprofile_form.is_valid():
-            user_form.save()
-            userprofile_form.save()
+            user_form.save
+            userprofile_form.save
             results['return'] = True
         else:
             combo = userprofile_form.errors

@@ -102,7 +102,7 @@ def convert_pdf_to_jpg(request, cat, path, f, doc):
         w, h = im.size
         doc.add_page(doc.get_npages() + 1, name_page, w, h)
     doc.complete = True
-    doc.save()
+    doc.save
     return 1
 
 

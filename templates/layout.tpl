@@ -130,8 +130,7 @@
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span><span class="caret"></span></a>
                   <ul class="dropdown-menu">
-                    <li><a href="{%  url 'years' %}">{% blocktrans %} years{% endblocktrans %}</a></li>
-                    <li><a href="{%  url 'trimesters' %}">{% blocktrans %} trimesters{% endblocktrans %} </a></li>
+                    <li><a href="{%  url 'utils' %}">{% blocktrans %} Fiscal years & template trimesters {% endblocktrans %} </a></li>
                     <li><a href="{%  url 'companies' %}">{% blocktrans %} companies{% endblocktrans %} </a></li>
                   </ul>
                 </li>

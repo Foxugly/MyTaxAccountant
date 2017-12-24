@@ -21,7 +21,7 @@ import uuid
 
 
 class ModelTrimester(models.Model):
-    name = models.TextField(_("Name of the model trimester"))
+    name = models.CharField(_("Name of the model trimester"), max_length=128)
     categories = models.ManyToManyField(TypeCategory, verbose_name=_('Types of category'), blank=True)
 
     def __str__(self):

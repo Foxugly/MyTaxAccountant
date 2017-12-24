@@ -20,18 +20,18 @@ else:
 
 for t1 in TemplateTrimester.objects.all():
     t1.favorite = False
-    t1.save()
+    t1.save
 
 for t2 in Trimester.objects.all():
     t2.favorite = False
-    t2.save()
+    t2.save
 
 tts = TemplateTrimester.objects.filter(number=trim, year=fy)
 if len(tts):
     tt = tts[0]
     tt.favorite = True
     tt.start_date = date
-    tt.save()
+    tt.save
 else:
     tt = TemplateTrimester(number=trim, year=fy, favorite=True, start_date=date)
     tt.save()
@@ -40,7 +40,7 @@ for c in Company.objects.all():
     for old_year in c.years.filter(favorite=True, refer_company=c):
         if old_year.fiscal_year != fy:
             old_year.favorite = False
-            old_year.save()
+            old_year.save
             actual_year = Year(fiscal_year=fy, refer_company=c, active=True, favorite=True)
             actual_year.save()
             c.add_year(actual_year)
