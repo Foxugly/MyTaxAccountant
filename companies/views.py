@@ -70,14 +70,12 @@ def add_company(request):
         for user in User.objects.filter(is_superuser=True):
             user.userprofile.companies.add(c)
             user.userprofile.save()
-        # add dossier global
+        # add year dossier global
         fy_init = FiscalYear.objects.filter(init=True)[0]
         y_init = Year(fiscal_year=fy_init, active=True, refer_company=c, favorite=False)
         y_init.save()
         c.years.add(y_init)
-        tt_init = TemplateTrimester.objects.filter(year=fy_init, favorite=True)[0]
-        #BUG ICI
-        print(tt_init)
+        tt_init = TemplateTrimester.objects.filter(year=fy_init)[0]
         tri_init = Trimester(template=tt_init, start_date=tt_init.start_date, active=True, refer_year=y_init,
                              favorite=True)
         tri_init.save()
