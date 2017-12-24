@@ -208,7 +208,7 @@ def ajax_download(request, n):
         # os.system(cmd)
         p1 = Popen(cmd, shell=True)
         p1.wait()
-        sleep(2000)
+        sleep(2)
         results['url'] = output_rel
         results['valid'] = True
         return HttpResponse(json.dumps(results))
