@@ -101,7 +101,7 @@ def add_company(request):
              'form': [UserProfileCreateForm(), UserCreateForm(), CompanyCreateForm()], 'url': '/company/add/'}
         return render(request, 'list.tpl', c)
     else:
-        c = {'view_form': True, 'list': Company.objects.all(), 'form': [form1(), form2(), form3()]}
+        c = {'view_form': True, 'list': Company.objects.all(), 'form': [form1, form2, form3]}
         return render(request, 'list.tpl', c)
 
 
