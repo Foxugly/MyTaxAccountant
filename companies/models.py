@@ -35,7 +35,7 @@ class ModelTrimesterForm(ModelForm):
 
 
 class Company(models.Model):
-    name = models.TextField(_("Name of the company"))
+    name = models.CharField(_("Name of the company"), max_length=128)
     slug = models.SlugField(unique=True)
     description = models.TextField(_("Description of the company"), blank=True, null=True)
     vat_number = models.CharField(_("TVA number"), unique=True, max_length=10, blank=True, null=True)
