@@ -8,6 +8,7 @@
 # your option) any later version.
 
 from django.http import HttpResponse
+from django.shortcuts import render
 from documents.models import Document, DocumentAdminForm, DocumentForm
 from categories.models import Category
 from django.utils.translation import ugettext_lazy as _
@@ -16,6 +17,21 @@ import json
 import os
 from subprocess import Popen
 from time import sleep
+
+
+def view(request, doc_id):
+    if request.user.is_authenticated:
+        d = Document.objects.get(id=doc_id)
+        if d.refer_category.refer_trimester.refer_year.refer_company in request.user.userprofile.companies.all():
+            img = ''
+            for p in d.pages.all().order_by('num'):
+                img += '<img style="max-width:100%;" src="' + unicode(p.get_relative_path()) + '" />'
+            c = dict(img=img)
+        else:
+            c = dict(img='<div class="text-center">You are not authentified !</div>')
+    else:
+        c = dict(img='<div class="text-center">You are not authentified !</div>')
+    return render(request, 'doc.tpl', c)
 
 
 def document_view(request, document_id):
@@ -208,7 +224,7 @@ def ajax_download(request, n):
         # os.system(cmd)
         p1 = Popen(cmd, shell=True)
         p1.wait()
-        sleep(2)
+        sleep(1)
         results['url'] = output_rel
         results['valid'] = True
         return HttpResponse(json.dumps(results))

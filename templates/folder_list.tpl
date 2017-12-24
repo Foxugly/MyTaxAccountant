@@ -64,7 +64,8 @@
                     <td></td>
                     {%  endif %}
                     {%  if doc.complete %}
-                    <td><a id="btn_vi_{{ doc.id }}" class="btn btn-xs btn-default view_modal" data-id="{{ doc.id }}" title="View"><span class="glyphicon glyphicon-file"></span></a>
+                    <td><a id="btn_vi_{{ doc.id }}" class="btn btn-xs btn-default view" data-id="{{ doc.id }}" title="View"><span class="glyphicon glyphicon-eye-open"></span></a>
+                        <a id="btn_fi_{{ doc.id }}" class="btn btn-xs btn-default fiche_modal" data-id="{{ doc.id }}" title="Fiche"><span class="glyphicon glyphicon-file"></span></a>
                         <a id="btn_sp_{{ doc.id }}" class="btn btn-xs btn-default split_modal" data-id="{{ doc.id }}" title="Split" data-toggle="modal" data-target="#modal_split"><span class="glyphicon glyphicon-resize-full"></span></a>
                         <a id="btn_me_{{ doc.id }}" class="btn btn-xs btn-default merge_modal" data-id="{{ doc.id }}" title="Merge" data-toggle="modal" data-target="#modal_merge"><span class="glyphicon glyphicon-resize-small"></span></a>
                         <a id="btn_mv_{{ doc.id }}" class="btn btn-xs btn-default move_modal" data-id="{{ doc.id }}" title="Move" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer"></span></a>
@@ -456,7 +457,7 @@ $(document).ready(function() {
             },
         });
     });
-    $('.view_modal').click(function(e) {
+    $('.fiche_modal').click(function(e) {
         var pathname = window.location.pathname; // Returns path only
         var parts = pathname.split('/');
         var field = $('#datatable').dataTable().fnSettings().aaSorting[0][0];

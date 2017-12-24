@@ -52,10 +52,12 @@ def view_category(request, category_id):
              trimesters=trimesters, trimester_current=trimester_current, categories=categories,
              category_current=category_current, docs=docs, view='list')
 
-    # il faut continuer et envoyer au template
-    if request.user.is_authenticated():
-            return render(request, 'folder_list.tpl', c)
-    return render(request, "layout.tpl", c)
+    if trimester_current.refer_year.refer_company in request.user.userprofile.companies.all():
+        # il faut continuer et envoyer au template
+        if request.user.is_authenticated():
+                return render(request, 'folder_list.tpl', c)
+    else:
+        return render(request, "layout.tpl", c)
 
 
 def convert_pdf_to_jpg(request, cat, path, f, doc):
@@ -285,6 +287,8 @@ def view_form(request, category_id, field, sens, n):
     trimesters = year_current.trimesters.all()
     categories = trimester_current.categories.all()
     docs_all = category_current.documents.all()
+    if company_current in request.user.userprofile.companies.all():
+        return render(request, "layout.tpl")
     arg = ''
     if sens == 'desc':
         arg += '-'

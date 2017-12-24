@@ -159,6 +159,7 @@ $(document).ready(function() {
     $(".merge_modal").click(function(){merge_modal($(this));});
     $(".split_modal").click(function(){split_modal($(this));});
     $(".download").click(function(){download($(this));});
+    $(".view").click(function(){view($(this));});
     $(".del_modal").click(function(e){
         var btn = $('ul.nav-pills li.active a')[0];
         bootbox.confirm({
@@ -578,6 +579,15 @@ $(document).ready(function() {
         });
     }
 
+    function view(e){
+        var url = '/document/view/' + e[0]['dataset'].id + '/';
+        if (DEBUG) {
+             console.log("view");
+             console.log(url);
+        }
+         window.open(url, '_blank');
+    }
+
     function del_modal(e){
         var url = '/document/ajax/delete/' +e.currentTarget['dataset'].id + '/';
         if (DEBUG) {
@@ -612,7 +622,8 @@ $(document).ready(function() {
         var repeat = false;
         var out = '<td>';
         if (data['complete']){
-            out += '<a id="btn_vi_'+ data['id']+'" class="btn btn-xs btn-default view_modal" data-id="'+ data['id']+'" title="View"><span class="glyphicon glyphicon-file"></span></a>';
+            out += '<a id="btn_vi_'+ data['id']+'" class="btn btn-xs btn-default" data-id="'+ data['id']+'" title="View"><span class="glyphicon glyphicon-eye-open"></span></a>';
+            out += '<a id="btn_fi_'+ data['id']+'" class="btn btn-xs btn-default fiche_modal" data-id="'+ data['id']+'" title="Fiche"><span class="glyphicon glyphicon-file"></span></a>';
             out += '<a id="btn_sp_'+ data['id']+'" class="btn btn-xs btn-default split_modal" data-id="'+ data['id'] +'" title="Split" data-toggle="modal" data-target="#modal_split"><span class="glyphicon glyphicon-resize-full"></span></a>';
             out += '<a id="btn_me_'+ data['id']+'" class="btn btn-xs btn-default merge_modal" data-id="'+ data['id'] +'" title="Merge" data-toggle="modal" data-target="#modal_merge"><span class="glyphicon glyphicon-resize-small"></span></a>';
             out += '<a id="btn_mv_'+ data['id']+'" class="btn btn-xs btn-default move_modal" data-id="'+ data['id'] +'" title="Move" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer"></span></a>';

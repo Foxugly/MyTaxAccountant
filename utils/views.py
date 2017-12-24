@@ -16,8 +16,6 @@ from utils.models import FiscalYear, FiscalYearForm, TemplateTrimester, Template
 from django.shortcuts import render
 from companies.models import Company
 from trimesters.models import Trimester
-from categories.models import Category
-from years.models import Year
 
 
 def lang(request):
