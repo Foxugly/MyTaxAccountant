@@ -76,11 +76,13 @@ def add_company(request):
         y_init.save()
         c.years.add(y_init)
         tt_init = TemplateTrimester.objects.filter(year=fy_init, favorite=True)[0]
+        #BUG ICI
+        print(tt_init)
         tri_init = Trimester(template=tt_init, start_date=tt_init.start_date, active=True, refer_year=y_init,
                              favorite=True)
         tri_init.save()
         y_init.trimesters.add(tri_init)
-        tp_init = TypeCategory.objects.filter(priority=10)[0]
+        tp_init = TypeCategory.objects.get(priority=2000)
         cat_init = Category(cat=tp_init, refer_trimester=tri_init, active=True)
         cat_init.save()
         tri_init.categories.add(cat_init)
