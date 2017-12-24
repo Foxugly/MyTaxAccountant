@@ -203,9 +203,9 @@ def ajax_download(request, n):
         for p in doc.all_pages():
             cmd += p.get_absolute_path() + " "
         cmd += output_abs
-        os.system(cmd)
         if os.path.exists(output_abs):
             os.system("rm " + output_abs)
+        os.system(cmd)
         results['url'] = output_rel
         results['valid'] = True
         return HttpResponse(json.dumps(results))
