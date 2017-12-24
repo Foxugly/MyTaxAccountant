@@ -205,7 +205,7 @@ def ajax_download(request, n):
         if os.path.exists(output_abs):
             os.system("rm " + output_abs)
         # os.system(cmd)
-        p1 = Popen([cmd])
+        p1 = Popen([cmd, '1'])
         p1.wait()
         results['url'] = output_rel
         results['valid'] = True
