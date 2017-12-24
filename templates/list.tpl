@@ -40,6 +40,8 @@
 <div class="row">
     <div class="col-md-12">
         <form class="form-horizontal" method="post" action="{{url}}">
+        <fieldset>
+            <legend>New Company and user</legend>
         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
         {%  for form in forms %}
             {% bootstrap_form form layout="horizontal"%}
@@ -51,6 +53,7 @@
                 </div>
             </div>
         </div>
+        </fieldset>
         </form>
     </div>
 </div>
