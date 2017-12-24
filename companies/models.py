@@ -139,7 +139,7 @@ class CompanyForm(ModelForm):
         return instance
 
 
-class CompanyCreateForm(CompanyForm):
+class CompanyCreateForm(ModelForm):
 
     class Meta:
         model = Company
