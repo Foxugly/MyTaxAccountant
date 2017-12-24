@@ -568,7 +568,7 @@ $(document).ready(function() {
              dataType: "json",
              success: function(result){
                  if (result["valid"]) {
-                      window.open(result['url'], '_blank');
+                      setTimeout(window.open(result['url'], '_blank'), 1000);
                  }
             },
             error: function(){
