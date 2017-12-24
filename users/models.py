@@ -77,6 +77,18 @@ class UserProfileForm(ModelForm):
         self.fields['birth_date'].widget.attrs['class'] = 'datepicker'
 
 
+class UserProfileCreateForm(UserProfileForm):
+    n = 'userprofileform'
+
+    class Meta:
+        model = UserProfile
+        fields = ['language']
+
+    def __init__(self, *args, **kw):
+        super(UserProfileForm, self).__init__(*args, **kw)
+        self.fields['language'].widget.attrs['class'] = 'select2100-nosearch'
+
+
 class Log(models.Model):
     userprofile = models.ForeignKey(UserProfile, null=True)
     fileupload = models.ForeignKey(FileUpload, null=True)

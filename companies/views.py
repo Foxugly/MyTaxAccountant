@@ -11,7 +11,7 @@
 from django.shortcuts import render_to_response, render, redirect
 from django.http import HttpResponse
 import json
-from users.models import UserProfile, UserProfileForm, UserCreateForm
+from users.models import UserProfile, UserProfileCreateForm, UserCreateForm
 from companies.models import Company, CompanyForm
 from utils.models import FiscalYear, TemplateTrimester
 from years.models import Year
@@ -50,7 +50,7 @@ def admin_companies(request):
     trimester_current = next(t for t in trimesters if t.favorite is True)
     c = dict(companies=companies, company_current=company_current, years=years, year_current=year_current,
              trimesters=trimesters, trimester_current=trimester_current, view='list', list=Company.objects.all(),
-             forms=[UserProfileForm(), UserCreateForm(), CompanyForm()], url='/company/add/')
+             forms=[UserProfileCreateForm(), UserCreateForm(), CompanyForm()], url='/company/add/')
     return render(request, 'list.tpl', c)
 
 
