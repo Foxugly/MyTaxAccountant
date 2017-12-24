@@ -14,6 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 import json
 import os
+from time import sleep
 
 
 def document_view(request, document_id):
@@ -115,7 +116,6 @@ def move_document(doc_id, cat_id):
 def ajax_move_doc(request, doc_id, cat_id):
     if request.is_ajax():
         results = {}
-
         results['valid'] = move_document(doc_id, cat_id)
         return HttpResponse(json.dumps(results))
 
@@ -206,6 +206,7 @@ def ajax_download(request, n):
         if os.path.exists(output_abs):
             os.system("rm " + output_abs)
         os.system(cmd)
+        sleep(10)
         results['url'] = output_rel
         results['valid'] = True
         return HttpResponse(json.dumps(results))
