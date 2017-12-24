@@ -10,7 +10,6 @@
 
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
-from django import forms
 from django.forms import ModelForm
 from utils.models import Country, TemplateTrimester
 from years.models import Year
@@ -118,8 +117,6 @@ class Company(models.Model):
 
 
 class CompanyForm(ModelForm):
-    n = 'companyform'
-    name = forms.CharField()
 
     class Meta:
         model = Company
@@ -136,6 +133,30 @@ class CompanyForm(ModelForm):
 
     def save(self):
         instance = super(CompanyForm, self).save(commit=False)
+        if not instance.slug:
+            instance.slug = slugify(instance.name)
+        instance.save()
+        return instance
+
+
+class CompanyCreateForm(CompanyForm):
+
+    class Meta:
+        model = Company
+        fields = ['name', 'description', 'vat_number', 'creation_date', 'sales_revenue', 'number_employees',
+                  'address_1', 'address_2', 'zip_code', 'city', 'country', 'model_trimester']
+
+    def __init__(self, *args, **kw):
+        super(CompanyCreateForm, self).__init__(*args, **kw)
+        self.fields['country'].widget.attrs['class'] = 'select2100-nosearch'
+        self.fields['sales_revenue'].widget.attrs['class'] = 'select2100-nosearch'
+        self.fields['number_employees'].widget.attrs['class'] = 'select2100-nosearch'
+        self.fields['creation_date'].widget.attrs['class'] = 'datepicker'
+        self.fields['description'].widget.attrs['rows'] = 2
+        self.fields['model_trimester'].widget.attrs['class'] = 'select2100-nosearch'
+
+    def save(self):
+        instance = super(CompanyCreateForm, self).save(commit=False)
         if not instance.slug:
             instance.slug = slugify(instance.name)
         instance.save()

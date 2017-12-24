@@ -8,11 +8,11 @@
 # your option) any later version.
 
 
-from django.shortcuts import render_to_response, render, redirect
+from django.shortcuts import render_to_response, render
 from django.http import HttpResponse
 import json
 from users.models import UserProfile, UserProfileCreateForm, UserCreateForm
-from companies.models import Company, CompanyForm
+from companies.models import Company, CompanyForm, CompanyCreateForm
 from utils.models import FiscalYear, TemplateTrimester
 from years.models import Year
 from trimesters.models import Trimester
@@ -28,9 +28,8 @@ def favorite_year(company):
         return y[0]
 
 
-def company_view(request, company_id):
-    userprofile = UserProfile.objects.get(user=request.user)
-    return render_to_response('folder.tpl', {'userprofile': userprofile})
+def company_view(request):
+    return render_to_response('folder.tpl', {'userprofile': UserProfile.objects.get(user=request.user)})
 
 
 def list_year(request, company_id):
@@ -50,14 +49,14 @@ def admin_companies(request):
     trimester_current = next(t for t in trimesters if t.favorite is True)
     c = dict(companies=companies, company_current=company_current, years=years, year_current=year_current,
              trimesters=trimesters, trimester_current=trimester_current, view='list', list=Company.objects.all(),
-             forms=[UserProfileCreateForm(), UserCreateForm(), CompanyForm()], url='/company/add/')
+             forms=[UserProfileCreateForm(), UserCreateForm(), CompanyCreateForm()], url='/company/add/')
     return render(request, 'list.tpl', c)
 
 
 def add_company(request):
-    form1 = UserProfileForm(request.POST)
+    form1 = UserProfileCreateForm(request.POST)
     form2 = UserCreateForm(request.POST)
-    form3 = CompanyForm(request.POST)
+    form3 = CompanyCreateForm(request.POST)
     if form1.is_valid() and form2.is_valid() and form3.is_valid():
         up = form1.save(commit=False)
         c = form3.save()
@@ -77,7 +76,8 @@ def add_company(request):
         y_init.save()
         c.years.add(y_init)
         tt_init = TemplateTrimester.objects.filter(year=fy_init, favorite=True)[0]
-        tri_init = Trimester(template=tt_init, start_date=tt_init.start_date, active=True, refer_year=y_init, favorite=True)
+        tri_init = Trimester(template=tt_init, start_date=tt_init.start_date, active=True, refer_year=y_init,
+                             favorite=True)
         tri_init.save()
         y_init.trimesters.add(tri_init)
         tp_init = TypeCategory.objects.filter(priority=10)[0]
@@ -97,7 +97,8 @@ def add_company(request):
             cat_fav = Category(cat=tp, refer_trimester=tri_fav, active=True)
             cat_fav.save()
             tri_fav.categories.add(cat_fav)
-        c = {'return': True, 'list': Company.objects.all(), 'form': [UserProfileForm(), UserCreateForm(), CompanyForm()], 'url': '/company/add/'}
+        c = {'return': True, 'list': Company.objects.all(),
+             'form': [UserProfileCreateForm(), UserCreateForm(), CompanyCreateForm()], 'url': '/company/add/'}
         return render(request, 'list.tpl', c)
     else:
         c = {'view_form': True, 'list': Company.objects.all(), 'form': [form1(), form2(), form3()]}
