@@ -18,4 +18,7 @@ def id(inst):
 
 @register.filter()
 def current_trimester(inst):
-    return inst.years.filter(favorite=True)[0].trimesters.filter(favorite=True)[0]
+    try:
+        return inst.years.filter(favorite=True)[0].trimesters.filter(favorite=True)[0]
+    except:
+        return '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>'
