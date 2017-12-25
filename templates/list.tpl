@@ -37,7 +37,7 @@
                         <td>{{ c.name }}</td>
                         <td>{{ c.model_trimester }}</td>
                         <td>{% if c.active %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% endif %}</td>
-                        <td>{{ c | current_trimester }}</td>
+                        <td>{% autoescape off %}{{ c | current_trimester }}{% endautoescape %}</td>
                     </tr>
                 {%  endfor %}
                 </tbody>
