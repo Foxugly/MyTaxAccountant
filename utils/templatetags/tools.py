@@ -8,10 +8,14 @@
 # your option) any later version.
 
 from django import template
-
 register = template.Library()
 
 
 @register.filter()
 def id(inst):
     return inst[0].id
+
+
+@register.filter()
+def current_trimester(inst):
+    return inst.years.filter(favorite=True)[0].trimesters.filter(favorite=True)[0]

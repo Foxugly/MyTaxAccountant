@@ -70,7 +70,7 @@ def add_model_trimester(request):
 
 def add_trimesters(request):
     tt = TemplateTrimester.objects.get(favorite=True)
-    for com in Company.objects.all():
+    for com in Company.objects.filter(active=True):
         year_new, created = com.years.get_or_create(fiscal_year=tt.year, active=True, refer_company=com, favorite=True)
         if created:
             for year_old in com.years.filter(favorite=True):

@@ -24,17 +24,21 @@
             <div class="panel-body">
                 <table class="table table-bordered">
                 <thead>
-                  <tr>
-                    <th>Name of company</th>
-                    <th>model trimester</th>
+                    <tr>
+                        <th>Name of company</th>
+                        <th>Model trimester</th>
+                        <th>Active</th>
+                        <th>Last Trimester</th>
                   </tr>
                 </thead>
                 <tbody>
                 {%  for c in companies %}
-                  <tr>
-                    <td>{{ c.name }}</td>
-                    <td>{{ c.model_trimester }}</td>
-                  </tr>
+                    <tr>
+                        <td>{{ c.name }}</td>
+                        <td>{{ c.model_trimester }}</td>
+                        <td>{% if c.active %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% endif %}</td>
+                        <td>{{ c | current_trimester }}</td>
+                    </tr>
                 {%  endfor %}
                 </tbody>
               </table>
