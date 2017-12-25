@@ -17,6 +17,7 @@ import json
 import os
 from subprocess import Popen
 from time import sleep
+from django.core.exceptions import PermissionDenied
 
 
 def view(request, doc_id):
@@ -27,11 +28,11 @@ def view(request, doc_id):
             for p in d.pages.all().order_by('num'):
                 img += '<img style="max-width:100%;" src="' + unicode(p.get_relative_path()) + '" />'
             c = dict(img=img)
+            return render(request, 'doc.tpl', c)
         else:
-            c = dict(img='<div class="text-center">You are not authentified !</div>')
+            raise PermissionDenied
     else:
-        c = dict(img='<div class="text-center">You are not authentified !</div>')
-    return render(request, 'doc.tpl', c)
+        raise PermissionDenied
 
 
 def document_view(request, document_id):
@@ -137,6 +138,7 @@ def ajax_move_doc(request, doc_id, cat_id):
 
 
 def delete_document(doc_id):
+    print('delete_document')
     doc = Document.objects.get(pk=int(doc_id))
     cat = doc.refer_category
     cat.documents.remove(doc)
@@ -145,6 +147,7 @@ def delete_document(doc_id):
 
 
 def ajax_delete(request, doc_id):
+    print('ajax_delete')
     if request.is_ajax():
         results = {'valid': delete_document(doc_id)}
         return HttpResponse(json.dumps(results))

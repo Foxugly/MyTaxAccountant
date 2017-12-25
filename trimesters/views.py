@@ -9,11 +9,8 @@
 
 
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from trimesters.models import Trimester
-from utils.models import TemplateTrimesterForm, TemplateTrimester
-from companies.models import Company
-
 import json
 
 
@@ -41,20 +38,3 @@ def list_categories(request, trimester_id):
         result['nav_list'] = nav_list
         result['title_trimester'] = str(t)
         return HttpResponse(json.dumps(result))
-
-
-def admin_trimesters(request):
-    c = {'list': TemplateTrimester.objects.all(), 'form': [TemplateTrimesterForm()], 'url': '/trimesters/template/add/'}
-    return render(request, 'list.tpl', c)
-
-
-def add_templatetrimester(request):
-    form = TemplateTrimesterForm(request.POST)
-    if form.is_valid():
-        tt = form.save
-
-
-def apply_templatetrimester(request, tt_id):
-    tt = TemplateTrimester.objects.get(id=tt_id)
-    for c in Company.objects.filter(active=True):
-        t = Trimester()

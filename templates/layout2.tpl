@@ -84,47 +84,6 @@
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           {% if user.is_authenticated %}
-          <form class="navbar-form navbar-left" role="search">
-            <div class='form-group'>
-              <select id="sel_company" class="form-control  select2-nosearch" >
-                <optgroup label = "Choose a company">
-                  {% for c in companies %}
-                    {% if  c == company_current %}
-                      <option value='{{c.id}}' selected>{{ c|name }}</option>
-                    {% else %}
-                      <option value='{{c.id}}'>{{ c|name }}</option>
-                    {% endif %}
-                  {% endfor %}
-                </optgroup>
-              </select>
-            </div>
-              <div class='form-group'>
-                <select id="sel_year" class="form-control  select2-nosearch" style="width:200px;">
-                    <optgroup label = "Choose a company">
-                  {% for y in years %}
-                    {% if  y == year_current %}
-                      <option value='{{y.id}}' selected>{{ y|name }}</option>
-                    {% else %}
-                      <option value='{{y.id}}'>{{ y|name }}</option>
-                    {% endif %}
-                  {% endfor %}
-                </optgroup>
-                </select>
-              </div>
-              <div class='form-group'>
-                <select id="sel_trimester" class="form-control  select2-nosearch" style="width:200px;">
-                    <optgroup label = "Choose a company">
-                  {% for t in trimesters %}
-                    {% if  t == trimester_current %}
-                      <option value='{{t.id}}' selected>{{ t|name }}</option>
-                    {% else %}
-                      <option value='{{t.id}}'>{{ t|name }}</option>
-                    {% endif %}
-                  {% endfor %}
-                </optgroup>
-                </select>
-              </div>
-          </form>
               {% if user.is_superuser %}
               <ul class="nav navbar-nav navbar-left">
                 <li class="dropdown">

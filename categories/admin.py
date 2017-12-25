@@ -13,9 +13,9 @@ from categories.models import Category, TypeCategory
 
 @admin.register(TypeCategory)
 class TypeCategoryAdmin(admin.ModelAdmin):
-	pass
+    pass
 
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-	filter_horizontal = ('documents',)
+    filter_horizontal = ('documents',)

@@ -58,18 +58,18 @@ def add_company(request):
     form2 = UserCreateForm(request.POST)
     form3 = CompanyCreateForm(request.POST)
     if form1.is_valid() and form2.is_valid() and form3.is_valid():
-        up = form1.save
+        up = form1.save()
         c = form3.save()
         c.active = True
         c.favorite = True
-        c.save
+        c.save()
         u = form2.save()
         up.user = u
-        up.save
+        up.save()
         up.companies.add(c)
         for user in User.objects.filter(is_superuser=True):
             user.userprofile.companies.add(c)
-            user.userprofile.save
+            user.userprofile.save()
         # add year dossier global
         fy_init = FiscalYear.objects.filter(init=True)[0]
         y_init = Year(fiscal_year=fy_init, active=True, refer_company=c, favorite=False)

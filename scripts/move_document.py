@@ -11,7 +11,7 @@ def move_doc(doc_id, cat_id):
         cmd = "mv " + p.get_absolute_path() + " " + new_cat.get_absolute_path() + "/"
         os.system(cmd)
     doc.refer_category = new_cat
-    doc.save
+    doc.save()
     old_cat.documents.remove(doc)
     new_cat.documents.add(doc)
 

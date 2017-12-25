@@ -374,9 +374,9 @@ $(document).ready(function() {
             {% if LANGUAGE_CODE == "fr" %}
                 "url": "//cdn.datatables.net/plug-ins/1.10.13/i18n/French.json",
             {% elif  LANGUAGE_CODE == "nl" %}
-                "url": "cdn.datatables.net/plug-ins/1.10.13/i18n/Dutch.json",
+                "url": "//cdn.datatables.net/plug-ins/1.10.13/i18n/Dutch.json",
             {% elif  LANGUAGE_CODE == "en" %}
-                "url": "cdn.datatables.net/plug-ins/1.10.13/i18n/English.json",
+                "url": "//cdn.datatables.net/plug-ins/1.10.13/i18n/English.json",
             {% endif %}
         },
         'columnDefs': [
@@ -468,6 +468,7 @@ $(document).ready(function() {
         var n = (n_length_page * n_current_page) + n_in_page;
         var url = parts[0] + '/' + parts[1] + '/' + parts[2] + '/form/' + field + '/' + sens + '/' + n + '/';
         console.log(url);
+        window.location.replace(url);
         window.location.replace(url);
     });
 });

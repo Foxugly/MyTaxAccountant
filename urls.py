@@ -23,22 +23,15 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-from django.conf.urls import include, url, handler404, handler500
+from django.conf.urls import include, url, handler403, handler404, handler500
 from django.contrib import admin
 from django.conf import settings
 from django.shortcuts import render
 from django.conf.urls.static import static
+# from django.views.defaults import page_not_found, server_error, permission_denied
 from utils.views import lang
 from users.views import home
 admin.autodiscover()
-
-
-def custom_404(request):
-    return render(request, "404.tpl")
-
-
-def custom_500(request):
-    return render(request, "500.tpl")
 
 
 def test(request):
@@ -62,5 +55,6 @@ urlpatterns = [
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)\
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
-handler404 = 'urls.custom_404'
-handler500 = 'urls.custom_500'
+handler403 = 'utils.views.custom_403'
+handler404 = 'utils.views.custom_404'
+handler500 = 'utils.views.custom_500'

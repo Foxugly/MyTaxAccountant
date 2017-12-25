@@ -32,7 +32,8 @@ class Page(models.Model):
         return os.path.join(self.refer_document.refer_category.get_relative_path(), self.filename)
 
     def as_img(self, size=100):
-        return '<img style="max-width: ' + str(size) + '%;" data-original="' + unicode(self.get_relative_path()) + '" src="' + unicode(self.get_relative_path()) + '" />'
+        return '<img style="max-width: ' + str(size) + '%;" data-original="' + unicode(self.get_relative_path()) + \
+               '" src="' + unicode(self.get_relative_path()) + '" />'
 
     def get_size(self):
         s = os.path.getsize(unicode(self.get_absolute_path()))
@@ -55,7 +56,9 @@ class Document(models.Model):
     pages = models.ManyToManyField(Page, blank=True)
     date = models.DateTimeField(_('date'), default=timezone.now, null=False)
     description = models.TextField(_('description'), blank=True, null=True)
-    fiscal_regex = RegexValidator(regex=r'^[0-9]{8}$', message=_("Fiscal ID must be entered in the format: 'YYYYNNNN' where YYYY is the year and NNNN the id. Only 8 digits allowed."), code='invalid_ID_fiscal')
+    fiscal_regex = RegexValidator(regex=r'^[0-9]{8}$', message=_(
+            "Fiscal ID must be entered in the format: 'YYYYNNNN' where YYYY is the year and NNNN the id. "
+            "Only 8 digits allowed."), code='invalid_ID_fiscal')
     fiscal_id = models.CharField(_('Fiscal ID'), validators=[fiscal_regex], max_length=100, blank=True, null=True)
     complete = models.BooleanField(_('complete'), default=False)
     lock = models.BooleanField(_('locked'), default=False)
@@ -68,7 +71,7 @@ class Document(models.Model):
         self.save()
 
     def add_page(self, num, fname, w, h):
-        #print(fname)
+        # print(fname)
         p = Page(num=num, filename=fname, width=w, height=h, refer_document=self)
         p.save()
         self.size += p.get_size()
@@ -91,7 +94,7 @@ class Document(models.Model):
         return self.name
 
     def as_json(self):
-        return dict(id=self.id, name=self.name, date=self.date.strftime('%d/%m/%Y'), description=self.description,
+        return dict(id=self.id, name=self.name, date=self.date.strftime('%d/%m/%Y %H:%M'), description=self.description,
                     complete=self.complete, fiscal_id=self.fiscal_id, lock=self.lock, img=self.as_img())
 
     def delete(self, **kwargs):
@@ -145,7 +148,7 @@ class DocumentForm(DocumentAdminForm):
         super(DocumentForm, self).__init__(*args, **kwargs)
         for field in iter(self.fields):
             self.fields[field].widget.attrs.update({'class': 'form-control'})
-            #if str(field) == 'lock' or str(field) == 'owner':
+            # if str(field) == 'lock' or str(field) == 'owner':
             #    self.fields[field].widget.attrs['readonly'] = True
             #    self.fields[field].widget.attrs['disabled'] = 'disabled'
 

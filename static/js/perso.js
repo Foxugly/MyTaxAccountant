@@ -160,6 +160,7 @@ $(document).ready(function() {
     $(".split_modal").click(function(){split_modal($(this));});
     $(".download").click(function(){download($(this));});
     $(".view").click(function(){view($(this));});
+    $(".fiche").click(function(){fiche($(this));});
     $(".del_modal").click(function(e){
         var btn = $('ul.nav-pills li.active a')[0];
         bootbox.confirm({
@@ -581,11 +582,25 @@ $(document).ready(function() {
 
     function view(e){
         var url = '/document/view/' + e[0]['dataset'].id + '/';
-        if (DEBUG) {
+        if (true) {
              console.log("view");
              console.log(url);
         }
          window.open(url, '_blank');
+    }
+
+    function fiche(e){
+        var pathname = window.location.pathname; // Returns path only
+        var parts = pathname.split('/');
+        var field = $('#datatable').dataTable().fnSettings().aaSorting[0][0];
+        var sens = $('#datatable').dataTable().fnSettings().aaSorting[0][1];
+        var n_in_page = e.closest('tr').index() + 1;
+        var n_length_page = $('#datatable').DataTable().page.info().length;
+        var n_current_page = $('#datatable').DataTable().page.info().page;
+        var n = (n_length_page * n_current_page) + n_in_page;
+        var url = parts[0] + '/' + parts[1] + '/' + parts[2] + '/form/' + field + '/' + sens + '/' + n + '/';
+        console.log(url);
+        window.location.replace(url);
     }
 
     function del_modal(e){
@@ -623,7 +638,7 @@ $(document).ready(function() {
         var out = '<td>';
         if (data['complete']){
             out += '<a id="btn_vi_'+ data['id']+'" class="btn btn-xs btn-default" data-id="'+ data['id']+'" title="View"><span class="glyphicon glyphicon-eye-open"></span></a>';
-            out += '<a id="btn_fi_'+ data['id']+'" class="btn btn-xs btn-default fiche_modal" data-id="'+ data['id']+'" title="Fiche"><span class="glyphicon glyphicon-file"></span></a>';
+            out += '<a id="btn_fi_'+ data['id']+'" class="btn btn-xs btn-default" data-id="'+ data['id']+'" title="Fiche"><span class="glyphicon glyphicon-file"></span></a>';
             out += '<a id="btn_sp_'+ data['id']+'" class="btn btn-xs btn-default split_modal" data-id="'+ data['id'] +'" title="Split" data-toggle="modal" data-target="#modal_split"><span class="glyphicon glyphicon-resize-full"></span></a>';
             out += '<a id="btn_me_'+ data['id']+'" class="btn btn-xs btn-default merge_modal" data-id="'+ data['id'] +'" title="Merge" data-toggle="modal" data-target="#modal_merge"><span class="glyphicon glyphicon-resize-small"></span></a>';
             out += '<a id="btn_mv_'+ data['id']+'" class="btn btn-xs btn-default move_modal" data-id="'+ data['id'] +'" title="Move" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer"></span></a>';
@@ -646,7 +661,8 @@ $(document).ready(function() {
             out
         ]);
         $("#"+data['id']).click(function(){img_modal($(this));});
-
+        $("#btn_vi_"+data['id']).click(function(){view($(this));});
+        $("#btn_fi_"+data['id']).click(function(){fiche($(this));});
         $("#btn_mv_"+data['id']).click(function(){move_modal($(this));});
         $("#btn_me_"+data['id']).click(function(){merge_modal($(this));});
         $("#btn_sp_"+data['id']).click(function(){split_modal($(this));});

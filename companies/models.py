@@ -131,7 +131,7 @@ class CompanyForm(ModelForm):
         self.fields['creation_date'].widget.attrs['class'] = 'datepicker'
         self.fields['description'].widget.attrs['rows'] = 2
 
-    def save(self):
+    def save(self, *args, **kwargs):
         instance = super(CompanyForm, self).save(commit=False)
         if not instance.slug:
             instance.slug = slugify(instance.name)
@@ -155,7 +155,7 @@ class CompanyCreateForm(ModelForm):
         self.fields['description'].widget.attrs['rows'] = 2
         self.fields['model_trimester'].widget.attrs['class'] = 'select2100-nosearch'
 
-    def save(self):
+    def save(self, *args, **kwargs):
         instance = super(CompanyCreateForm, self).save(commit=False)
         if not instance.slug:
             instance.slug = slugify(instance.name)

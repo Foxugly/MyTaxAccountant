@@ -36,13 +36,11 @@ def home(request):
 @login_required
 def user_settings(request):
     companies = request.user.userprofile.companies.all()
-    companiesForm = [(c.id, CompanyForm(instance=c)) for c in companies]
+    companiesform = [(c.id, CompanyForm(instance=c)) for c in companies]
     c = {'user_form': UserForm(instance=request.user),
          'userprofile_form': UserProfileForm(instance=request.user.userprofile),
-         'password_change_form': PasswordChangeForm(user=request.user),
-         'companies': companies,
-         'companiesForm': companiesForm
-
+         'password_change_form': PasswordChangeForm(user=request.user), 'companies': companies,
+         'companiesForm': companiesform
          }
     return render(request, 'config.tpl', c)
 
@@ -54,8 +52,8 @@ def personal_data(request):
         user_form = UserForm(request.POST, instance=request.user)
         userprofile_form = UserProfileForm(request.POST, instance=request.user.userprofile)
         if user_form.is_valid() and userprofile_form.is_valid():
-            user_form.save
-            userprofile_form.save
+            user_form.save()
+            userprofile_form.save()
             results['return'] = True
         else:
             combo = userprofile_form.errors

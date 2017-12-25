@@ -28,6 +28,7 @@ from error.models import Error
 from django.http import Http404
 from unidecode import unidecode
 from django.template.defaultfilters import slugify
+from django.core.exceptions import PermissionDenied
 
 
 def view_category(request, category_id):
@@ -57,7 +58,7 @@ def view_category(request, category_id):
         if request.user.is_authenticated():
                 return render(request, 'folder_list.tpl', c)
     else:
-        return render(request, "layout.tpl", c)
+        raise PermissionDenied
 
 
 def convert_pdf_to_jpg(request, cat, path, f, doc):
@@ -93,7 +94,7 @@ def convert_pdf_to_jpg(request, cat, path, f, doc):
         print(cmd)
     l = Log(userprofile=request.user.userprofile, category=cat, cmd=cmd)
     l.save()
-    #os.system(cmd)
+    # os.system(cmd)
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     p.wait()
     time.sleep(2)
@@ -104,7 +105,7 @@ def convert_pdf_to_jpg(request, cat, path, f, doc):
         w, h = im.size
         doc.add_page(doc.get_npages() + 1, name_page, w, h)
     doc.complete = True
-    doc.save
+    doc.save()
     return 1
 
 
@@ -165,7 +166,7 @@ def add_documents(request, category_id):
             cmd = ['mv', pathfile, pathfile_new]
             subprocess.call(cmd)
             mime = MimeTypes()
-            #if settings.DEBUG:
+            # if settings.DEBUG:
             #    print('[INFO] add %s to %s' % (unidecode(fu), cat))
             m = mime.guess_type(pathfile_new)[0]
             d = create_document(pathname_new, request.user, cat)
@@ -272,7 +273,7 @@ def view_form(request, category_id, field, sens, n):
     if settings.DEBUG:
         print("view_form")
     if not request.user.is_authenticated():
-        return render(request, "layout.tpl")
+        raise PermissionDenied
     try:
             category_current = Category.objects.get(id=category_id)
     except ObjectDoesNotExist:
@@ -287,8 +288,8 @@ def view_form(request, category_id, field, sens, n):
     trimesters = year_current.trimesters.all()
     categories = trimester_current.categories.all()
     docs_all = category_current.documents.all()
-    if company_current in request.user.userprofile.companies.all():
-        return render(request, "layout.tpl")
+    if company_current not in request.user.userprofile.companies.all():
+        raise PermissionDenied
     arg = ''
     if sens == 'desc':
         arg += '-'
@@ -311,5 +312,6 @@ def view_form(request, category_id, field, sens, n):
             form = DocumentForm(instance=doc)
     c = dict(companies=companies, company_current=company_current, years=years, year_current=year_current,
              trimesters=trimesters, trimester_current=trimester_current, categories=categories, view='form',
-             category_current=category_current, doc_form=form, doc_id=doc.id,n_max=len(docs), n_cur=int(n), img=doc.as_img)
+             category_current=category_current, doc_form=form, doc_id=doc.id, n_max=len(docs), n_cur=int(n),
+             img=doc.as_img)
     return render(request, 'folder_form.tpl', c)

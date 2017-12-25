@@ -43,7 +43,7 @@ class FiscalYearForm(ModelForm):
         model = FiscalYear
         fields = ['name', 'init', 'favorite']
 
-    def save(self):
+    def save(self, *args, **kwargs):
         print('save1')
         instance = super(FiscalYearForm, self).save(commit=False)
         print('save2')
@@ -77,7 +77,7 @@ class TemplateTrimesterForm(ModelForm):
         super(TemplateTrimesterForm, self).__init__(*args, **kw)
         self.fields['start_date'].widget.attrs['class'] = 'datepicker'
 
-    def save(self):
+    def save(self, *args, **kwargs):
         print('save1')
         instance = super(TemplateTrimesterForm, self).save(commit=False)
         print('save2')

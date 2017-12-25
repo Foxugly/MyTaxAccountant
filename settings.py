@@ -28,7 +28,7 @@ BASE_DIR = os.path.dirname(__file__)
 SECRET_KEY = '-b+&3%*nxun2l+id*85aou#vpkw%uhd3ko&b06jmkr#ke)6k3k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ['*']
 DATABASES = database.db
 
@@ -94,7 +94,7 @@ MEDIA_URL = '/media/'
 UPLOAD_DIR = 'upload'
 STOCK_DIR = 'folders'
 # ACTIVE TO PROD / COMMENT TO TEST
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 TMP_ROOT = MEDIA_ROOT + '/tmp/'
 TMP_URL = MEDIA_URL + 'tmp/'
@@ -103,11 +103,11 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
 
 
-#STATICFILES_FINDERS = (
+# STATICFILES_FINDERS = (
 #    'django.contrib.staticfiles.finders.FileSystemFinder',
 #    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
-#)
+# )
 
 TEMPLATES = [
     {

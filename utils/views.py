@@ -96,3 +96,15 @@ def add_trimesters(request):
              fiscalyear_url='/utils/add_fiscal_year/', templatetrimesters=TemplateTrimester.objects.all(),
              templatetrimester_form=TemplateTrimesterForm, templatetrimester_url='/utils/add_model_trimester/')
     return render(request, 'utils.tpl', c)
+
+
+def custom_403(request):
+    return render(request, "403.tpl")
+
+
+def custom_404(request):
+    return render(request, "404.tpl")
+
+
+def custom_500(request):
+    return render(request, "500.tpl")

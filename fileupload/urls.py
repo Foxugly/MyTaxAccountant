@@ -9,7 +9,7 @@
 
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
-from fileupload.views import FileUploadCreateView, FileUploadDeleteView, FileUploadListView , remove_upload
+from fileupload.views import FileUploadCreateView, FileUploadDeleteView, FileUploadListView, remove_upload
 
 
 urlpatterns = (

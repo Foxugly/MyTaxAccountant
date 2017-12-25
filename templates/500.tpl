@@ -1,6 +1,15 @@
-{% extends "layout.tpl" %}
+{% extends "layout2.tpl" %}
 {% load bootstrap3 %}
 {% load i18n %}
 {% block content %}
-<div class="alert alert-danger" role="alert"><b>500</b> {% blocktrans %}server error{% endblocktrans %}</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-error">
+                <div class="panel-heading">{% trans 'Server Error' %}</div>
+                <div class="panel-body">{% trans "Internal error." %}</div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
