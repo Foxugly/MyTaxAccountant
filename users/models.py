@@ -84,7 +84,7 @@ class UserProfileCreateForm(ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = "__all__"
+        fields = ['phone_number', 'birth_date', 'language']
 
     def __init__(self, *args, **kw):
         super(ModelForm, self).__init__(*args, **kw)
