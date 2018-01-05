@@ -58,7 +58,7 @@ def add_company(request):
     form2 = UserCreateForm(request.POST)
     form3 = CompanyCreateForm(request.POST)
     if form1.is_valid() and form2.is_valid() and form3.is_valid():
-        up = form1.save()
+        up = form1.save(False)
         c = form3.save()
         c.active = True
         c.favorite = True
