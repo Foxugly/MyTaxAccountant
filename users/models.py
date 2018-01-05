@@ -84,7 +84,7 @@ class UserProfileCreateForm(UserProfileForm):
 
     class Meta:
         model = UserProfile
-        fields = ['language']
+        fields = "__all__"
 
     def __init__(self, *args, **kw):
         super(UserProfileForm, self).__init__(*args, **kw)
