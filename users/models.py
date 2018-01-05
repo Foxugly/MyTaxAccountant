@@ -87,7 +87,7 @@ class UserProfileCreateForm(ModelForm):
         fields = "__all__"
 
     def __init__(self, *args, **kw):
-        super(UserProfileForm, self).__init__(*args, **kw)
+        super(ModelForm, self).__init__(*args, **kw)
         self.fields['language'].widget.attrs['class'] = 'select2100-nosearch'
         self.fields['birth_date'].widget.attrs['class'] = 'datepicker'
 
