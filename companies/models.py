@@ -149,6 +149,10 @@ class CompanyCreateForm(ModelForm):
         model = Company
         fields = ['name', 'description', 'vat_number', 'creation_date', 'sales_revenue', 'number_employees',
                   'address_1', 'address_2', 'zip_code', 'city', 'country', 'model_trimester']
+        help_texts = {
+            'vat_number': _(
+        "10 digits."),
+        }
 
     def __init__(self, *args, **kw):
         super(CompanyCreateForm, self).__init__(*args, **kw)
