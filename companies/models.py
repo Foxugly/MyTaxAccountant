@@ -111,7 +111,7 @@ class Company(models.Model):
 
     def delete(self, **kwargs):
         for y in self.years.all():
-            y.delete(kwargs)
+            y.delete()
         os.rmdir(self.get_absolute_path())
         super(Company, self).delete()
 
