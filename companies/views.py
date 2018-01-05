@@ -98,7 +98,7 @@ def add_company(request):
             cat_fav.save()
             tri_fav.categories.add(cat_fav)
         c = {'return': True, 'companies': Company.objects.all(),
-             'form': [UserProfileCreateForm(), UserCreateForm(), CompanyCreateForm()], 'url': '/company/add/'}
+             'forms': [UserProfileCreateForm(), UserCreateForm(), CompanyCreateForm()], 'url': '/company/add/'}
         return render(request, 'list.tpl', c)
     else:
         c = {'view_form': True, 'list': Company.objects.all(), 'form': [form1, form2, form3]}
