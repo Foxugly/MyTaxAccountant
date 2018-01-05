@@ -72,6 +72,10 @@ class UserProfileForm(ModelForm):
     class Meta:
         model = UserProfile
         fields = ['phone_number', 'birth_date', 'language']
+        help_texts = {
+            'phone_number': _(
+        "Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."),
+        }
 
     def __init__(self, *args, **kw):
         super(UserProfileForm, self).__init__(*args, **kw)
@@ -85,6 +89,10 @@ class UserProfileCreateForm(ModelForm):
     class Meta:
         model = UserProfile
         fields = ['phone_number', 'birth_date', 'language']
+        help_texts = {
+            'phone_number': _(
+        "Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."),
+        }
 
     def __init__(self, *args, **kw):
         super(ModelForm, self).__init__(*args, **kw)
