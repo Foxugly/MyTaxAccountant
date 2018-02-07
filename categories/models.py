@@ -56,10 +56,10 @@ class Category(models.Model):
         return dict(id=self.id, name=name, n=str(self.count_docs()), )
 
     def get_relative_path(self):
-        return os.path.join(self.refer_trimester.get_relative_path(), self.cat.name + "_" + self.random)
+        return os.path.join(self.refer_trimester.get_relative_path(), self.cat.name.replace(" ", "_") + "_" + self.random)
 
     def get_absolute_path(self):
-        return os.path.join(self.refer_trimester.get_absolute_path(), self.cat.name + "_" + self.random)
+        return os.path.join(self.refer_trimester.get_absolute_path(), self.cat.name.replace(" ", "_") + "_" + self.random)
 
     def save(self, *args, **kwargs):
         if not self.random:
