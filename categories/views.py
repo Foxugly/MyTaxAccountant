@@ -30,7 +30,7 @@ from unidecode import unidecode
 from django.template.defaultfilters import slugify
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
-from datetime import timedelta
+import datetime
 
 
 def view_category(request, category_id):
@@ -130,7 +130,7 @@ def manage_convert_doc_to_pdf(request, liste):
 
 
 def create_document(name, owner, cat, i):
-    d = Document(name=name, owner=owner, refer_category=cat, date=timezone.now + timedelta(seconds=i))
+    d = Document(name=name, owner=owner, refer_category=cat, date=timezone.now() + datetime.timedelta(seconds=i))
     d.save()
     cat.add_doc(d)
     return d
