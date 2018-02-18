@@ -13,4 +13,4 @@ for c in cat:
                 sd.date = sd.date + timedelta(seconds=i)
                 sd.save()
                 print('%s %s %s' % (sd.id, sd.date, sd))
-                i+=1
+                i += 1
