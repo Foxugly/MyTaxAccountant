@@ -52,7 +52,7 @@
                     <td>{%  if doc.fiscal_id %}{{ doc.fiscal_id }}{% endif %}</td>
                     <td>{{ doc.id }}</td>
                     <td><a id="{{ doc.id }}" class="img_modal" data-id="{{ doc.id }}" data-toggle="modal" data-target="#myModal">{{ doc.name }}</a></td>
-                    <td>{% if doc.date.day < 10%}0{% endif %}{{ doc.date.day }}/{% if doc.date.month < 10%}0{% endif %}{{ doc.date.month }}/{{ doc.date.year }} {% if doc.date.hour < 10%}0{% endif %}{{ doc.date.hour }}:{% if doc.date.minute < 10%}0{% endif %}{{ doc.date.minute }}:{% if doc.date.second < 10%}0{% endif %}{{ doc.date.second }}:{{ doc.date.microsecond }}</td>
+                    <td>{% if doc.date.day < 10%}0{% endif %}{{ doc.date.day }}/{% if doc.date.month < 10%}0{% endif %}{{ doc.date.month }}/{{ doc.date.year }} {% if doc.date.hour < 10%}0{% endif %}{{ doc.date.hour }}:{% if doc.date.minute < 10%}0{% endif %}{{ doc.date.minute }}:{% if doc.date.second < 10%}0{% endif %}{{ doc.date.second }}</td>
                     {%  if  doc.description %}
                         <td>{{ doc.description }}</td>
                     {%  else  %}
