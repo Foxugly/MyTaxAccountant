@@ -297,7 +297,7 @@ def view_form(request, category_id, field, sens, n):
     arg = ''
     if sens == 'desc':
         arg += '-'
-    l = [None, 'id', None, 'name', 'date', 'description', 'lock', 'complete']
+    l = [None, 'fiscal_id', 'id', 'name', 'date', 'description', 'lock', 'complete']
     arg += l[int(field)]
     docs = docs_all.order_by(arg)
     indice = int(n)-1
