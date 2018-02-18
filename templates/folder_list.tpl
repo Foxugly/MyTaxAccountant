@@ -37,7 +37,7 @@
                 <tr>
                     <th><input name="select_all" value="1" id="select-all" type="checkbox" /></th>
                     <th>{% trans "Fiscal ID" %}</th>
-                    <th>{% trans "Document ID" %}</th>
+                    <th>|{% trans "Document ID" %}|</th>
                     <th>{% trans "Name" %}</th>
                     <th>{% trans "Date" %}</th>
                     <th>{% trans "Comments" %}</th>
@@ -50,7 +50,7 @@
                     <tr>
                     <td></td>
                     <td>{%  if doc.fiscal_id %}{{ doc.fiscal_id }}{% endif %}</td>
-                    <td>{{ doc.id }}</td>
+                    <td>|{{ doc.id }}|</td>
                     <td><a id="{{ doc.id }}" class="img_modal" data-id="{{ doc.id }}" data-toggle="modal" data-target="#myModal">{{ doc.name }}</a></td>
                     <td>{% if doc.date.day < 10%}0{% endif %}{{ doc.date.day }}/{% if doc.date.month < 10%}0{% endif %}{{ doc.date.month }}/{{ doc.date.year }} {% if doc.date.hour < 10%}0{% endif %}{{ doc.date.hour }}:{% if doc.date.minute < 10%}0{% endif %}{{ doc.date.minute }}</td>
                     {%  if  doc.description %}
@@ -80,7 +80,7 @@
             <tfoot>
                 <tr>
                     <th><input name="select_all" value="1" id="select-all" type="checkbox" /></th>
-                    <th>{% trans "Fiscal ID" %}</th>
+                    <th>|{% trans "Fiscal ID" %}|</th>
                     <th>{% trans "Document ID" %}</th>
                     <th>{% trans "Name" %}</th>
                     <th>{% trans "Date" %}</th>
@@ -386,7 +386,7 @@ $(document).ready(function() {
                 }
             },
             { targets: 1, orderable : true },
-            { targets: 2, orderable: true, visible: false },
+            { targets: 2, orderable: true },
             { targets: 3, orderable: true},
             { targets: 4, orderable: true, type: "date-euro" },
             { targets: 5, orderable: true },
@@ -396,7 +396,7 @@ $(document).ready(function() {
             style:    'os',
             selector: 'td:first-child'
         },
-        'order': [[4, 'asc']]
+        'order': [[2, 'asc']]
     });
 
 
