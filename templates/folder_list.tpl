@@ -7,7 +7,6 @@
 {% load i18n %}
 {% block doc_content %}
 {% if user.is_authenticated %}
-<div class="container">
 <div class="row" style="margin-top:10px;margin-bottom:10px;">
     <div class="col-md-2">
        <span class="btn btn-success fileinput-button">
@@ -238,7 +237,6 @@
             </div>
         </div>
     </div>
-</div>
 </div>
 {%  endif %}
 {% endblock %}

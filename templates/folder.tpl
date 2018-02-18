@@ -7,9 +7,8 @@
 {% load i18n %}
 {% block content %}
     {% if user.is_authenticated %}
-<div class="container">
     <div class="row">
-        <div class="col-md-12"> <!-- 10 -->
+        <div class="col-md-10">
             <ul class="nav nav-tabs nav-pills" role="tablist">
                 {% for c in categories %}
                     {%if c == category_current %}
@@ -50,7 +49,6 @@
             </script>
         </div>
     </div>
-</div>
 {% block doc_content %}
 {% endblock %}
     {%  endif %}
