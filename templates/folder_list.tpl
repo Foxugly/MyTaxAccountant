@@ -36,7 +36,6 @@
             <thead>
                 <tr>
                     <th><input name="select_all" value="1" id="select-all" type="checkbox" /></th>
-                    <th>{% trans "ID" %}</th>
                     <th>{% trans "Fiscal ID" %}</th>
                     <th>{% trans "Document ID" %}</th>
                     <th>{% trans "Name" %}</th>
@@ -50,7 +49,6 @@
                 {% for doc in docs %}
                     <tr>
                     <td></td>
-                    <td>{{ doc.id }}</td>
                     <td>{%  if doc.fiscal_id %}{{ doc.fiscal_id }}{% endif %}</td>
                     <td>{{ doc.id }}</td>
                     <td><a id="{{ doc.id }}" class="img_modal" data-id="{{ doc.id }}" data-toggle="modal" data-target="#myModal">{{ doc.name }}</a></td>
@@ -82,7 +80,6 @@
             <tfoot>
                 <tr>
                     <th><input name="select_all" value="1" id="select-all" type="checkbox" /></th>
-                    <th>{% trans "ID" %}</th>
                     <th>{% trans "Fiscal ID" %}</th>
                     <th>{% trans "Document ID" %}</th>
                     <th>{% trans "Name" %}</th>
