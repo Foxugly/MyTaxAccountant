@@ -29,6 +29,8 @@ from django.http import Http404
 from unidecode import unidecode
 from django.template.defaultfilters import slugify
 from django.core.exceptions import PermissionDenied
+from django.utils import timezone
+from datetime import timedelta
 
 
 def view_category(request, category_id):
@@ -127,8 +129,8 @@ def manage_convert_doc_to_pdf(request, liste):
         l['fileupload'].delete()
 
 
-def create_document(name, owner, cat):
-    d = Document(name=name, owner=owner, refer_category=cat)
+def create_document(name, owner, cat, i):
+    d = Document(name=name, owner=owner, refer_category=cat, date=timezone.now + timedelta(seconds=i))
     d.save()
     cat.add_doc(d)
     return d
@@ -145,6 +147,7 @@ def add_documents(request, category_id):
             return HttpResponse(json.dumps({}))
         l_doc = []
         l_pdf = []
+        i = 0
         for f in list(files):
             fu = None
             fu_list = FileUpload.objects.filter(slug=f)
@@ -169,7 +172,8 @@ def add_documents(request, category_id):
             # if settings.DEBUG:
             #    print('[INFO] add %s to %s' % (unidecode(fu), cat))
             m = mime.guess_type(pathfile_new)[0]
-            d = create_document(pathname_new, request.user, cat)
+            d = create_document(pathname_new, request.user, cat, i)
+            i += 1
             if m == 'application/pdf':
                 l_pdf.append((cat, pathfile_new, pathname_new, d))
             elif m in ['image/png', 'image/jpeg', 'image/bmp']:
