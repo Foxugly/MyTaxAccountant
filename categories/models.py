@@ -12,7 +12,7 @@ from django.db import models
 from documents.models import Document
 import os
 import uuid
-
+import json
 
 class TypeCategory(models.Model):
     name = models.CharField(_("Type of documents"), max_length=128)
@@ -73,3 +73,7 @@ class Category(models.Model):
             d.delete()
         os.rmdir(self.get_absolute_path())
         super(Category, self).delete()
+
+    def treeview(self):
+        n = len(self.documents.filter(lock=False))
+        return n, dict(text=str(self.cat.name), href=str('/category/%d/' % self.id), tags=["%d" % n])

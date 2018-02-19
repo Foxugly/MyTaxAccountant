@@ -1,4 +1,4 @@
-{% extends "layout2.tpl" %}
+{% extends "base.tpl" %}
 {% load bootstrap3 %}
 {% load staticfiles %}
 {% load favorite %}

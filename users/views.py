@@ -12,9 +12,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.http import HttpResponse
-import json
+from django.core import serializers
 from users.models import UserForm, UserProfileForm
-from companies.models import CompanyForm
+from companies.models import CompanyForm, Company
+import json
 # Create your views here.
 
 
@@ -38,6 +39,18 @@ def home(request):
         return redirect('/category/%s/' % cat.id)
     return render(request, "layout.tpl", c)
 
+
+@login_required
+def treeview(request):
+    context = {}
+    sum_json = []
+    for c in Company.objects.all():
+        n, c_json = c.treeview_favorite()
+        if n:
+            sum_json.append(json.dumps(c_json))
+    context['tree'] = sum_json
+
+    return render(request, "treeview.tpl", context)
 
 @login_required
 def user_settings(request):

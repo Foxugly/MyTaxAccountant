@@ -14,6 +14,7 @@ from utils.models import FiscalYear
 import os
 from django.utils.translation import ugettext_lazy as _
 import uuid
+import json
 
 
 class Year(models.Model):
@@ -68,6 +69,16 @@ class Year(models.Model):
             t.delete()
         os.rmdir(self.get_absolute_path())
         super(Year, self).delete(kwargs)
+
+    def treeview(self):
+        sum_json = []
+        sum_n = 0
+        for t in self.get_trimesters():
+            (n, json) = t.treeview()
+            if n:
+                sum_n += n
+                sum_json.append(json)
+        return sum_n, dict(text=str(self.fiscal_year), href=str('#%s' % self.id), tags=["%d" % sum_n], nodes=sum_json)
 
 
 class YearForm(ModelForm):

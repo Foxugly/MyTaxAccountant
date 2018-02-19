@@ -35,6 +35,7 @@
     <link rel="stylesheet" type="text/css" href='{% static "select2-4.0.1/dist/css/select2.min.css" %}'  />
     <link rel="stylesheet" type="text/css" href='{% static "bootstrap-datetimepicker-master/build/css/bootstrap-datetimepicker.min.css" %}' />
     <link rel="stylesheet" type="text/css" href="{% static "viewer/viewer.min.css"%}" />
+    <link rel="stylesheet" type="text/css" href="{% static "treeview/bootstrap-treeview.min.css"%}" />
     {% block css %}
     {% endblock %}
     <link rel="stylesheet" type="text/css" href='{% static "css/perso.css" %}'/>
@@ -53,6 +54,7 @@
     <script type="text/javascript" src="{% static "bootpag/jquery.bootpag.min.js" %}"></script>
     <script type="text/javascript" src="{% static "bootbox/bootbox.min.js" %}"></script>
     <script type="text/javascript" src="{% static "select2-4.0.1/dist/js/select2.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "treeview/bootstrap-treeview.min.js" %}"></script>
     {% if LANGUAGE_CODE != 'en' %}
         {% with 'select2-4.0.1/dist/js/i18n/'|add:LANGUAGE_CODE|add:'.js' as select2_lang %}
         <script type="text/javascript" src='{% static select2_lang %}'></script>
@@ -84,13 +86,16 @@
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           {% if user.is_authenticated %}
+              {% block navigation %}
+              {%  endblock %}
               {% if user.is_superuser %}
               <ul class="nav navbar-nav navbar-left">
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span><span class="caret"></span></a>
                   <ul class="dropdown-menu">
                     <li><a href="{%  url 'utils' %}">{% blocktrans %} Fiscal years & template trimesters {% endblocktrans %} </a></li>
-                    <li><a href="{%  url 'companies' %}">{% blocktrans %} companies{% endblocktrans %} </a></li>
+                    <li><a href="{%  url 'companies' %}">{% blocktrans %}Companies{% endblocktrans %} </a></li>
+                    <li><a href="{%  url 'treeview' %}">{% blocktrans %}Tree of unlocked documents{% endblocktrans %} </a></li>
                   </ul>
                 </li>
               </ul>

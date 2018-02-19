@@ -115,6 +115,19 @@ class Company(models.Model):
         os.rmdir(self.get_absolute_path())
         super(Company, self).delete()
 
+    def treeview_favorite(self):
+        sum_json = []
+        sum_n = 0
+        for y in self.years.filter(favorite=True):
+            (n, json) = y.treeview()
+            if n:
+                sum_n += n
+                sum_json.append(json)
+        out = dict(text=str(self.name), href=str('#%s' % self.name), tags=["%d" % sum_n])
+        if sum_n:
+            out['nodes'] = sum_json
+        return sum_n, out
+
 
 class CompanyForm(ModelForm):
 

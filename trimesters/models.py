@@ -16,6 +16,7 @@ from django.utils.translation import ugettext_lazy as _
 from utils.models import TemplateTrimester
 import os
 import uuid
+import json
 
 
 class Trimester(models.Model):
@@ -42,6 +43,10 @@ class Trimester(models.Model):
 
     def get_year(self):
         return self.refer_year
+
+    def get_name_short(self):
+        t = _('trimester')
+        return '%s %s' % (t, str(self.template.number))
 
     def get_name(self):
         t = _('trimester')
@@ -82,6 +87,15 @@ class Trimester(models.Model):
         os.rmdir(self.get_absolute_path())
         super(Trimester, self).delete()
 
+    def treeview(self):
+        sum_json = []
+        sum_n = 0
+        for c in self.get_categories():
+            (n, json) = c.treeview()
+            if n:
+                sum_n += n
+                sum_json.append(json)
+        return sum_n, dict(text=str(self.get_name_short()), href=str('#%d' % self.id), tags=["%d" % sum_n], nodes=sum_json)
 
 class TrimesterForm(ModelForm):
     class Meta:
