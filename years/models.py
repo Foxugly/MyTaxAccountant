@@ -35,6 +35,9 @@ class Year(models.Model):
     def get_trimesters(self):
         return self.trimesters.all().order_by('template__number')
 
+    def get_active_trimesters(self):
+        return self.trimesters.filter(active=True).order_by('template__number')
+
     def add_trimester(self, trimester):
         self.trimesters.add(trimester)
 

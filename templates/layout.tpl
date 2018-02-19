@@ -87,7 +87,7 @@
           <form class="navbar-form navbar-left" role="search">
             <div class='form-group'>
               <select id="sel_company" class="form-control  select2-nosearch" >
-                <optgroup label = "Choose a company">
+                <optgroup label = "{% blocktrans %}Choose a company{% endblocktrans %}">
                   {% for c in companies %}
                     {% if  c == company_current %}
                       <option value='{{c.id}}' selected>{{ c|name }}</option>
@@ -100,7 +100,7 @@
             </div>
               <div class='form-group'>
                 <select id="sel_year" class="form-control  select2-nosearch" style="width:200px;">
-                    <optgroup label = "Choose a company">
+                    <optgroup label = "{% blocktrans %}Choose a fiscal year{% endblocktrans %}">
                   {% for y in years %}
                     {% if  y == year_current %}
                       <option value='{{y.id}}' selected>{{ y|name }}</option>
@@ -113,7 +113,7 @@
               </div>
               <div class='form-group'>
                 <select id="sel_trimester" class="form-control  select2-nosearch" style="width:200px;">
-                    <optgroup label = "Choose a company">
+                    <optgroup label = "{% blocktrans %}Choose a trimester{% endblocktrans %}">
                   {% for t in trimesters %}
                     {% if  t == trimester_current %}
                       <option value='{{t.id}}' selected>{{ t|name }}</option>

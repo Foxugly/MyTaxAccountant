@@ -30,6 +30,7 @@ class FiscalYear(models.Model):
     name = models.CharField(_("Fiscal year"), max_length=20)
     init = models.BooleanField(default=False)
     favorite = models.BooleanField(default=False)
+    priority = models.IntegerField(_('Priority'), null=True)
 
     def __str__(self):
         return self.name
@@ -44,17 +45,15 @@ class FiscalYearForm(ModelForm):
         fields = ['name', 'init', 'favorite']
 
     def save(self, *args, **kwargs):
-        print('save1')
         instance = super(FiscalYearForm, self).save(commit=False)
-        print('save2')
+        if not instance.priority:
+            instance.priority = instance.id
         if instance.favorite:
             for tt in FiscalYear.objects.all():
                 if tt.favorite:
                     tt.favorite = False
                     tt.save()
-        print('save5')
         instance.save()
-        print('save6')
         return instance
 
 

@@ -79,10 +79,10 @@ class Company(models.Model):
         self.years.add(year)
     
     def get_years(self):
-        return self.years.order_by('fiscal_year__id')
+        return self.years.all().order_by('fiscal_year__priority')
 
     def get_active_years(self):
-        return self.years.filter(active=True).order_by('fiscal_year__id')
+        return self.years.filter(active=True).order_by('fiscal_year__priority')
         
     def __str__(self):
         return '%s' % (self.get_name())

@@ -23,12 +23,18 @@ def home(request):
     if request.user.is_authenticated():
         companies = request.user.userprofile.companies.all()
         company_current = companies[0]
-        years = company_current.years.all()
+        if request.user.is_staff:
+            years = company_current.get_active_years()
+        else:
+            years = company_current.get_years()
         year_current = next(y for y in years if y.favorite is True)
-        trimesters = year_current.trimesters.all()
+        if request.user.is_staff:
+            trimesters = year_current.get_active_trimesters()
+        else:
+            trimesters = year_current.get_trimesters()
         trimester_current = next(t for t in trimesters if t.favorite is True)
-        categories = trimester_current.categories.all()
-        cat = categories.order_by('cat__priority')[0]
+        categories = trimester_current.get_categories()
+        cat = categories[0]
         return redirect('/category/%s/' % cat.id)
     return render(request, "layout.tpl", c)
 

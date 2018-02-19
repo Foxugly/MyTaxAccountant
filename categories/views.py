@@ -47,10 +47,10 @@ def view_category(request, category_id):
     year_current = trimester_current.refer_year
     company_current = year_current.refer_company
     companies = request.user.userprofile.companies.all()
-    years = company_current.years.all()
-    trimesters = year_current.trimesters.all()
-    categories = trimester_current.categories.all()
-    docs = category_current.documents.all()
+    years = company_current.get_years()
+    trimesters = year_current.get_trimesters()
+    categories = trimester_current.get_categories()
+    docs = category_current.get_docs()
     c = dict(companies=companies, company_current=company_current, years=years, year_current=year_current,
              trimesters=trimesters, trimester_current=trimester_current, categories=categories,
              category_current=category_current, docs=docs, view='list')
@@ -63,7 +63,7 @@ def view_category(request, category_id):
         raise PermissionDenied
 
 
-def convert_pdf_to_jpg(request, cat, path, f, doc):
+def convert_pdf_to_jpg(request, cat, path, f, doc, fu):
     try:
         PdfFileReader(open(unidecode(path), 'rb')).getNumPages()
     except:
@@ -108,14 +108,15 @@ def convert_pdf_to_jpg(request, cat, path, f, doc):
         doc.add_page(doc.get_npages() + 1, name_page, w, h)
     doc.complete = True
     doc.save()
+    fu.delete()
     return 1
 
 
 def manage_convert_pdf_to_jpg(request, l):
     if settings.DEBUG:
         print("convert_pdf_to_jpg")
-    for (cat, path, f, doc) in l:
-        convert_pdf_to_jpg(request, cat, path, f, doc)
+    for (cat, path, f, doc, fu) in l:
+        convert_pdf_to_jpg(request, cat, path, f, doc, fu)
 
 
 def manage_convert_doc_to_pdf(request, liste):
@@ -125,8 +126,7 @@ def manage_convert_doc_to_pdf(request, liste):
         if settings.DEBUG:
             print(l['cmd'])
         os.system(l['cmd'])
-        convert_pdf_to_jpg(request, l['cat'], l['path'], l['filename'], l['document'])
-        l['fileupload'].delete()
+        convert_pdf_to_jpg(request, l['cat'], l['path'], l['filename'], l['document'], l['fileupload'])
 
 
 def create_document(name, owner, cat, i):
@@ -147,6 +147,7 @@ def add_documents(request, category_id):
             return HttpResponse(json.dumps({}))
         l_doc = []
         l_pdf = []
+        error_list = []
         i = 0
         for f in list(files):
             fu = None
@@ -175,14 +176,13 @@ def add_documents(request, category_id):
             d = create_document(pathname_new, request.user, cat, i)
             i += 1
             if m == 'application/pdf':
-                l_pdf.append((cat, pathfile_new, pathname_new, d))
+                l_pdf.append((cat, pathfile_new, pathname_new, d, fu))
             elif m in ['image/png', 'image/jpeg', 'image/bmp']:
                 im = Image.open(pathfile_new)
                 w, h = im.size
                 new_filename = '%s_%s' % (str(d.id), pathname_new)
                 new_path = os.path.join(cat.get_absolute_path(), new_filename)
                 cmd = ['cp', pathfile_new, new_path]
-                print(cmd)
                 subprocess.call(cmd)
                 d.add_page(d.get_npages() + 1, new_filename, w, h)
                 d.complete = True
@@ -205,13 +205,15 @@ def add_documents(request, category_id):
             else:
                 e = Error(user=request.user, detail='[add_documents] FileUpload id : %s Format error' % fu.id)
                 e.save()
+                error_list.append(d.as_json())
+                d.delete()
         if len(l_doc):
             thread1 = Timer(0, manage_convert_doc_to_pdf, (request, l_doc,))
             thread1.start()
         if len(l_pdf):
             thread = Timer(0, manage_convert_pdf_to_jpg, (request, l_pdf,))
             thread.start()
-        results = {'doc_list': [d.as_json() for d in cat.get_docs()], 'n': cat.count_docs()}
+        results = {'doc_list': [d.as_json() for d in cat.get_docs()], 'n': cat.count_docs(), }
         return HttpResponse(json.dumps(results))
 
 

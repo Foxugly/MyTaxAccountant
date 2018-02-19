@@ -60,6 +60,9 @@ class Trimester(models.Model):
             if created:
                 self.categories.add(new_cat)
 
+    def get_categories(self):
+        return self.categories.all().order_by('cat__priority')
+
     def get_absolute_path(self):
         return os.path.join(self.refer_year.get_absolute_path(), "%s_%s" % (str(self.template.number), self.random))
 
