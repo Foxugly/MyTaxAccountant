@@ -1,5 +1,6 @@
 *~
 *.pyc
+media
 db.db
 settings.py
 db.sqlite3
