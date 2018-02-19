@@ -94,7 +94,7 @@ class Document(models.Model):
         return self.name
 
     def as_json(self):
-        return dict(id=self.id, name=self.name, date=self.date.strftime('%d/%m/%Y %H:%M'), description=self.description,
+        return dict(id=self.id, name=self.name, date=self.date.strftime('%d/%m/%Y %H:%M:%S'), description=self.description,
                     complete=self.complete, fiscal_id=self.fiscal_id, lock=self.lock, img=self.as_img())
 
     def delete(self, **kwargs):
