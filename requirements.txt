@@ -5,6 +5,7 @@ argparse>=1.2.1
 django-bootstrap3>=6.2.2
 PyPDF2
 psycopg2
+psycopg2-binary
 django-hijack
 django-hijack-admin
 unidecode
