@@ -14,11 +14,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='document',
             name='refer_category',
-            field=models.ForeignKey(related_name='back_category', verbose_name='category', to='categories.Category', null=True),
+            field=models.ForeignKey(related_name='back_category', verbose_name='category', to='categories.Category', null=True, on_delete=models.CASCADE),
         ),
         migrations.AlterField(
             model_name='page',
             name='refer_document',
-            field=models.ForeignKey(related_name='back_document', verbose_name='document', to='documents.Document', null=True),
+            field=models.ForeignKey(related_name='back_document', verbose_name='document', to='documents.Document', null=True, on_delete=models.CASCADE),
         ),
     ]

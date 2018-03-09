@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='category',
             name='cat',
-            field=models.ForeignKey(to='categories.TypeCategory'),
+            field=models.ForeignKey(to='categories.TypeCategory', on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='category',

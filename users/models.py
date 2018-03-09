@@ -33,7 +33,7 @@ class UserCreateForm(UserCreationForm):
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, verbose_name=_('user'))
+    user = models.OneToOneField(User, verbose_name=_('user'), on_delete=models.CASCADE)
     language = models.CharField(verbose_name=_(u'language'), max_length=8, choices=settings.LANGUAGES, default=1)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message=_(
         "Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."))
@@ -101,9 +101,9 @@ class UserProfileCreateForm(ModelForm):
 
 
 class Log(models.Model):
-    userprofile = models.ForeignKey(UserProfile, null=True)
-    fileupload = models.ForeignKey(FileUpload, null=True)
-    category = models.ForeignKey(Category, null=True)
+    userprofile = models.ForeignKey(UserProfile, null=True, on_delete=models.CASCADE)
+    fileupload = models.ForeignKey(FileUpload, null=True, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, null=True, on_delete=models.CASCADE)
     cmd = models.TextField(null=True)
 
     def __str__(self):

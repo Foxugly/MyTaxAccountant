@@ -2,7 +2,7 @@
 {% load bootstrap3 %}
 {% load i18n %}
 {% load favorite %}
-{% load staticfiles %}
+{% load static %}
 {% load hijack_tags %}
 
 {% block navigation %}

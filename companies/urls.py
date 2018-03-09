@@ -11,8 +11,8 @@ from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 from companies.views import *
 
-
 urlpatterns = (
+    url(r'^(?P<company_id>[0-9]+)/forward/$', login_required(forward_year), name='forward_year'),
     url(r'^(?P<company_id>[0-9]+)/list/$', login_required(list_year), name='list_year'),
     url(r'^(?P<company_id>[0-9]+)/$', login_required(company_view), name='company_view'),
     url(r'^$', login_required(admin_companies), name='companies'),

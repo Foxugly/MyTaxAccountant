@@ -59,7 +59,7 @@ class FiscalYearForm(ModelForm):
 
 class TemplateTrimester(models.Model):
     number = models.IntegerField(_('trimester number'), null=True)
-    year = models.ForeignKey(FiscalYear, null=True)
+    year = models.ForeignKey(FiscalYear, on_delete=models.CASCADE)
     favorite = models.BooleanField(_('favorite'), default=False)
     start_date = models.DateField(_('start date'), null=True)
 

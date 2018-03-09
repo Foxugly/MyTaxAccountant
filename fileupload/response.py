@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# encoding: utf-8
 #
 # Copyright 2015, Foxugly. All rights reserved.
 #
@@ -6,8 +6,6 @@
 # under the terms of the GNU Affero General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or (at
 # your option) any later version.
-
-
 from django.http import HttpResponse
 import json
 

@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 ('number', models.IntegerField(null=True, verbose_name='trimester number')),
                 ('favorite', models.BooleanField(default=False, verbose_name='favorite')),
                 ('start_date', models.DateField(null=True, verbose_name='start date')),
-                ('year', models.ForeignKey(to='utils.FiscalYear', null=True)),
+                ('year', models.ForeignKey(to='utils.FiscalYear', null=True, on_delete=models.CASCADE)),
             ],
         ),
     ]

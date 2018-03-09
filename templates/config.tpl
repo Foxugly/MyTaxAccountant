@@ -3,7 +3,7 @@
 {% load i18n %}
 {% load l10n %}
 {% load tools %}
-{% load staticfiles %}
+{% load static %}
 
 
 {% block js %}

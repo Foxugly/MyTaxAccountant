@@ -21,7 +21,7 @@ import json
 
 def home(request):
     c = {}
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         companies = request.user.userprofile.companies.all()
         company_current = companies[0]
         if request.user.is_staff:

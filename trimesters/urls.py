@@ -9,10 +9,11 @@
 
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
-from trimesters.views import list_categories, view_trimester
+from trimesters.views import list_categories, view_trimester, forward_categorie
 
 
 urlpatterns = (
+    url(r'^(?P<trimester_id>[0-9]+)/forward/$', login_required(forward_categorie), name='forward_categories'),
     url(r'^(?P<trimester_id>[0-9]+)/list/$', login_required(list_categories), name='list_categories'),
     url(r'^(?P<trimester_id>[0-9]+)/$', login_required(view_trimester), name='view_trimester'),
 )

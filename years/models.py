@@ -18,11 +18,11 @@ import json
 
 
 class Year(models.Model):
-    fiscal_year = models.ForeignKey(FiscalYear)
+    fiscal_year = models.ForeignKey(FiscalYear, on_delete=models.CASCADE)
     active = models.BooleanField(_('active'), default=False)
     trimesters = models.ManyToManyField(Trimester, blank=True)
     refer_company = models.ForeignKey('companies.Company', verbose_name=_('company'), related_name="back_company",
-                                      blank=True, null=True)
+                                      blank=True, null=True, on_delete=models.CASCADE)
     favorite = models.BooleanField(_('favorite'), default=False)
     random = models.CharField(max_length=16, blank=True, null=True)
     admin = models.BooleanField(_('admin'), default=False)
@@ -62,7 +62,7 @@ class Year(models.Model):
             self.random = str(uuid.uuid4().hex.upper()[0:16])
         super(Year, self).save(*args, **kwargs)
         if not os.path.isdir(self.get_absolute_path()):
-            os.mkdir(self.get_absolute_path(), 0o711)
+            os.mkdir(self.get_absolute_path(), 0o771)
 
     def delete(self, **kwargs):
         for t in self.trimesters.all():
@@ -79,6 +79,14 @@ class Year(models.Model):
                 sum_n += n
                 sum_json.append(json)
         return sum_n, dict(text=str(self.fiscal_year), href=str('#%s' % self.id), tags=["%d" % sum_n], nodes=sum_json)
+
+    def get_favorite_trimester(self):
+        tris = self.trimesters.filter(favorite=True)
+        if len(tris) > 0:
+            t = tris[0]
+        if not t:
+            t = self.trimesters.filter(active=True).order_by('template__number')[-1]
+        return t
 
 
 class YearForm(ModelForm):

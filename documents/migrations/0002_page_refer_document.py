@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='page',
             name='refer_document',
-            field=models.ForeignKey(related_name='back_document', to='documents.Document', null=True),
+            field=models.ForeignKey(related_name='back_document', to='documents.Document', null=True, on_delete=models.CASCADE),
         ),
     ]

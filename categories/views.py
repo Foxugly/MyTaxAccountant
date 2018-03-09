@@ -57,7 +57,7 @@ def view_category(request, category_id):
 
     if trimester_current.refer_year.refer_company in request.user.userprofile.companies.all():
         # il faut continuer et envoyer au template
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
                 return render(request, 'folder_list.tpl', c)
     else:
         raise PermissionDenied
@@ -108,6 +108,7 @@ def convert_pdf_to_jpg(request, cat, path, f, doc, fu):
         doc.add_page(doc.get_npages() + 1, name_page, w, h)
     doc.complete = True
     doc.save()
+    print("DELETE %s" % fu)
     fu.delete()
     return 1
 
@@ -150,6 +151,7 @@ def add_documents(request, category_id):
         error_list = []
         i = 0
         for f in list(files):
+            print(f)
             fu = None
             fu_list = FileUpload.objects.filter(slug=f)
             if len(fu_list) == 1:
@@ -159,9 +161,10 @@ def add_documents(request, category_id):
                 if len(fu_list2) == 1:
                     fu = fu_list2[0]
             if not fu:
-                e = Error(user=request.user, detail='[add_documents] FileUpload id : %s error' % fu.id)
+                e = Error(user=request.user, detail='[add_documents] FileUpload id error : %s ' % f)
                 e.save()
                 return 0
+
             pathname = fu.file.name.split('/')[1]
             pathfile = os.path.join(settings.MEDIA_ROOT, fu.file.name)
             k = pathname.rfind(".")
@@ -278,7 +281,7 @@ def form_document(request, category_id, n):
 def view_form(request, category_id, field, sens, n):
     if settings.DEBUG:
         print("view_form")
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         raise PermissionDenied
     try:
             category_current = Category.objects.get(id=category_id)

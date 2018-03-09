@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='trimester',
             name='refer_year',
-            field=models.ForeignKey(related_name='back_year', to='years.Year', null=True),
+            field=models.ForeignKey(related_name='back_year', to='years.Year', null=True, on_delete=models.CASCADE),
         ),
     ]

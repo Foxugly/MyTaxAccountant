@@ -19,6 +19,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='trimester',
             name='template',
-            field=models.ForeignKey(blank=True, to='utils.TemplateTrimester', null=True),
+            field=models.ForeignKey(blank=True, to='utils.TemplateTrimester', null=True, on_delete=models.CASCADE),
         ),
     ]

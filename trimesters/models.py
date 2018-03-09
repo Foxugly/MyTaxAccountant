@@ -20,12 +20,12 @@ import json
 
 
 class Trimester(models.Model):
-    template = models.ForeignKey(TemplateTrimester, null=True, blank=True)
+    template = models.ForeignKey(TemplateTrimester, null=True, blank=True, on_delete=models.CASCADE)
     start_date = models.DateField(_('start date'), null=True)
     end_date = models.DateField(_('end_date'), null=True, blank=True)
     active = models.BooleanField(_('active'), default=False)
     categories = models.ManyToManyField(Category, verbose_name=_('categories'), blank=True)
-    refer_year = models.ForeignKey('years.Year', verbose_name=_('year'), related_name="back_year", null=True)
+    refer_year = models.ForeignKey('years.Year', verbose_name=_('year'), related_name="back_year", null=True, on_delete=models.CASCADE)
     favorite = models.BooleanField(_('favorite'), default=False)
     random = models.CharField(max_length=16, blank=True, null=True)
 
@@ -79,7 +79,7 @@ class Trimester(models.Model):
             self.random = str(uuid.uuid4().hex.upper()[0:16])
         super(Trimester, self).save(*args, **kwargs)
         if not os.path.isdir(self.get_absolute_path()):
-            os.mkdir(self.get_absolute_path(), 0o711)
+            os.mkdir(self.get_absolute_path(), 0o771)
 
     def delete(self, **kwargs):
         for c in self.categories.all():
@@ -96,6 +96,11 @@ class Trimester(models.Model):
                 sum_n += n
                 sum_json.append(json)
         return sum_n, dict(text=str(self.get_name_short()), href=str('#%d' % self.id), tags=["%d" % sum_n], nodes=sum_json)
+
+    def get_favorite_category(self):
+        c = self.categories.all().order_by('cat__priority')[0]
+        return c
+
 
 class TrimesterForm(ModelForm):
     class Meta:

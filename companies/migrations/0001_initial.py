@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                 ('city', models.CharField(max_length=128, null=True, verbose_name='city', blank=True)),
                 ('active', models.BooleanField(default=False, verbose_name='active')),
                 ('favorite', models.BooleanField(default=False, verbose_name='favorite')),
-                ('country', models.ForeignKey(to='utils.Country', blank=True)),
+                ('country', models.ForeignKey(to='utils.Country', blank=True, on_delete=models.CASCADE)),
                 ('years', models.ManyToManyField(to='years.Year', blank=True)),
             ],
         ),

@@ -38,3 +38,9 @@ def list_categories(request, trimester_id):
         result['nav_list'] = nav_list
         result['title_trimester'] = str(t)
         return HttpResponse(json.dumps(result))
+
+
+def forward_categorie(request, trimester_id):
+    if request.is_ajax():
+        url_cat = t.get_favorite_category_url()
+        return HttpResponse(json.dumps({'forward': url_cat}))

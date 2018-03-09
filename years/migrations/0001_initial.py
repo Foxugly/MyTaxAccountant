@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('active', models.BooleanField(default=False, verbose_name='active')),
                 ('favorite', models.BooleanField(default=False, verbose_name='favorite')),
-                ('fiscal_year', models.ForeignKey(to='utils.FiscalYear')),
+                ('fiscal_year', models.ForeignKey(to='utils.FiscalYear', on_delete=models.CASCADE)),
                 ('trimesters', models.ManyToManyField(to='trimesters.Trimester', blank=True)),
             ],
         ),

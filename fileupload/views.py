@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# encoding: utf-8
 #
 # Copyright 2015, Foxugly. All rights reserved.
 #
@@ -19,7 +19,6 @@ from fileupload.serialize import serialize
 class FileUploadCreateView(CreateView):
     model = FileUpload
     fields = "__all__"
-    template_name_suffix = '_basic_form'
 
     def form_valid(self, form):
         self.object = form.save()
@@ -49,6 +48,7 @@ class FileUploadListView(ListView):
     model = FileUpload
 
     def render_to_response(self, context, **response_kwargs):
+        print('FileUploadListView')
         files = [serialize(p) for p in self.get_queryset()]
         data = {'files': files}
         response = JSONResponse(data, mimetype=response_mimetype(self.request))

@@ -11,7 +11,7 @@
 {% load bootstrap3 %}
 {% load i18n %}
 {% load favorite %}
-{% load staticfiles %}
+{% load static %}
 {% load hijack_tags %}
 <!DOCTYPE HTML>
 <html lang="en">
@@ -26,7 +26,7 @@
     <![endif]-->
     <!--  CSS -->
 
-    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="{% static "hijack/hijack-styles.css" %}" />
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.3.1/css/buttons.dataTables.min.css" />
@@ -40,9 +40,11 @@
     {% endblock %}
     <link rel="stylesheet" type="text/css" href='{% static "css/perso.css" %}'/>
     <!--  JS -->
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+    <!--<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>-->
     <script type="text/javascript" src="//momentjs.com/downloads/moment-with-locales.js"></script>
-    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
     <script type="text/javascript" src="//cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
     <script type="text/javascript" src="//cdn.datatables.net/buttons/1.3.1/js/dataTables.buttons.min.js"></script>
@@ -50,7 +52,49 @@
     <script type="text/javascript" src="{% static "upload/js/vendor/jquery.ui.widget.js" %}"></script>
     <script type="text/javascript" src="{% static "upload/js/jquery.iframe-transport.js" %}"></script>
     <script type="text/javascript" src="{% static "upload/js/jquery.fileupload.js" %}"></script>
+
     <script type="text/javascript" src="{% static "upload/js/jquery.cookie.js" %}"></script>
+
+    <script>
+    /*jslint unparam: true */
+    /*global window, $ */
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $(function () {
+        'use strict';
+        // Change this to the location of your server-side upload handler:
+        var url = '/upload/basic/';
+        var csrftoken = $.cookie('csrftoken');
+        $('#fileupload').fileupload({
+            url: url,
+            crossDomain: false,
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type)) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            dataType: 'json',
+            done: function (e, data) {
+                $.each(data.result.files, function (index, file) {
+                    $('<p/>').text(file.name).appendTo('#files');
+                });
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#progress .progress-bar').css(
+                    'width',
+                    progress + '%'
+                );
+            }
+        }).prop('disabled', !$.support.fileInput)
+            .parent().addClass($.support.fileInput ? undefined : 'disabled');
+    });
+    </script>
+
+
+
     <script type="text/javascript" src="{% static "bootpag/jquery.bootpag.min.js" %}"></script>
     <script type="text/javascript" src="{% static "bootbox/bootbox.min.js" %}"></script>
     <script type="text/javascript" src="{% static "select2-4.0.1/dist/js/select2.min.js" %}"></script>

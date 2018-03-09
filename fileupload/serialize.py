@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# encoding: utf-8
 #
 # Copyright 2015, Foxugly. All rights reserved.
 #
@@ -10,7 +10,7 @@
 
 import mimetypes
 import re
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 
 def order_name(name):
@@ -21,7 +21,9 @@ def order_name(name):
 
     """
     name = re.sub(r'^.*/', '', name)
-    return name
+    if len(name) <= 20:
+        return name
+    return name[:10] + "..." + name[-7:]
 
 
 def serialize(instance, file_attr='file'):
@@ -40,7 +42,6 @@ def serialize(instance, file_attr='file'):
         'size': obj.size,
         'deleteUrl': reverse('upload-delete', args=[instance.pk]),
         'deleteType': 'DELETE',
-        'id': instance.pk
     }
 
 

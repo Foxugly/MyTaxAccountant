@@ -118,3 +118,10 @@ def update_company(request, company_id):
     else:
         results['return'] = False
     return HttpResponse(json.dumps(results))
+
+
+def forward_year(request, company_id):
+    if request.is_ajax():
+        c = Company.objects.get(id=company_id)
+        cat = c.get_favorite_year().get_favorite_trimester().get_favorite_category()
+        return HttpResponse(json.dumps({'forward': cat.get_url()}))

@@ -1,6 +1,6 @@
 {% extends "base.tpl" %}
 {% load bootstrap3 %}
-{% load staticfiles %}
+{% load static %}
 {% load favorite %}
 {% load upload_tags %}
 {% load details_cat %}

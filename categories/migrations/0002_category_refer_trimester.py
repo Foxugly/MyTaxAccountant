@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='category',
             name='refer_trimester',
-            field=models.ForeignKey(related_name='back_trimester', to='trimesters.Trimester', null=True),
+            field=models.ForeignKey(related_name='back_trimester', to='trimesters.Trimester', null=True, on_delete=models.CASCADE),
         ),
     ]

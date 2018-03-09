@@ -1,5 +1,5 @@
 {% extends "layout.tpl" %}
-{% load staticfiles %}
+{% load static %}
 {% block content %}
 {% if next %}
     {% if user.is_authenticated %}

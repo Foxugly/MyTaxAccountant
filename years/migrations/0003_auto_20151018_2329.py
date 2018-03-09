@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='year',
             name='refer_company',
-            field=models.ForeignKey(related_name='back_company', verbose_name='company', blank=True, to='companies.Company', null=True),
+            field=models.ForeignKey(related_name='back_company', verbose_name='company', blank=True, to='companies.Company', null=True, on_delete=models.CASCADE),
         ),
     ]

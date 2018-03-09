@@ -26,7 +26,8 @@ def view(request, doc_id):
         if d.refer_category.refer_trimester.refer_year.refer_company in request.user.userprofile.companies.all():
             img = ''
             for p in d.pages.all().order_by('num'):
-                img += '<img style="max-width:100%;" src="' + unicode(p.get_relative_path()) + '" />'
+                print(p.get_relative_path())
+                img += r"<img style=""max-width:100%%"" src=""%s"" />" % p.get_relative_path()
             c = dict(img=img)
             return render(request, 'doc.tpl', c)
         else:
@@ -41,8 +42,8 @@ def document_view(request, document_id):
         result = {'name': d.name, 'img': ''}
         i = 1
         for p in d.pages.all().order_by('num'):
-            result['img'] += '<img style="max-width:100%;" src="' + unicode(p.get_relative_path()) + '" />'
-            result['img'] += '<div class="text-center">%s %d</div>' % (_('Page'), i)
+            result['img'] += r"<img style=""max-width:100%%"" src=""%s"" />" % p.get_relative_path()
+            result['img'] += r"<div class=""text-center"">%s %d</div>" % (_('Page'), i)
             i += 1
         return HttpResponse(json.dumps(result))
 
@@ -259,7 +260,7 @@ def ajax_multiple_download(request):
     if request.is_ajax():
         results = {}
         for key, val in dict(request.GET).items():
-            print '%s : %s' % (key, val)
+            print('%s : %s' % (key, val))
 
         results['valid'] = True
         return HttpResponse(json.dumps(results))

@@ -7,15 +7,15 @@
 # the Free Software Foundation, either version 3 of the License, or (at
 # your option) any later version.
 
-from django.conf.urls import url
-from django.contrib.auth.decorators import login_required
+from django.urls import path
 from fileupload.views import FileUploadCreateView, FileUploadDeleteView, FileUploadListView, remove_upload
 
 
 urlpatterns = (
-    url(r'^basic/$', FileUploadCreateView.as_view(), name='upload-basic'),
-    url(r'^new/$', FileUploadCreateView.as_view(), name='upload-new'),
-    url(r'^delete/(?P<pk>\d+)$', FileUploadDeleteView.as_view(), name='upload-delete'),
-    url(r'^view/$', FileUploadListView.as_view(), name='upload-view'),
-    url(r'^remove/(?P<fileupload_id>[0-9]+)/$', login_required(remove_upload), name='remove_upload'),
+    path('', FileUploadCreateView.as_view(), name='upload-basic1'),
+    path('basic/', FileUploadCreateView.as_view(), name='upload-basic'),
+    path('new/', FileUploadCreateView.as_view(), name='upload-new'),
+    path('delete/<int:pk>/', FileUploadDeleteView.as_view(), name='upload-delete'),
+    path('view/', FileUploadListView.as_view(), name='upload-view'),
+    path('remove/<int:fileupload_id>/', remove_upload, name='remove_upload'),
 )

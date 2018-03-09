@@ -8,6 +8,6 @@ from django.utils.translation import ugettext_lazy as _
 
 # Create your models here.
 class Error(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateTimeField(_('date'), default=timezone.now, null=False)
     detail = models.TextField(_('description'), blank=True, null=True)

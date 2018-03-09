@@ -1,5 +1,5 @@
 {% extends "folder.tpl" %}
-{% load staticfiles %}
+{% load static %}
 {% load favorite %}
 {% load upload_tags %}
 {% load details_cat %}

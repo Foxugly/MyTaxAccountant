@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('date', models.DateTimeField(auto_now=True, verbose_name='date')),
                 ('description', models.TextField(verbose_name='description')),
                 ('complete', models.BooleanField(default=False, verbose_name='complete')),
-                ('owner', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('owner', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
         ),
         migrations.CreateModel(

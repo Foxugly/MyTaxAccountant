@@ -23,7 +23,7 @@ class Page(models.Model):
     width = models.IntegerField(_('width'))
     height = models.IntegerField(_('height'))
     refer_document = models.ForeignKey('documents.Document', verbose_name=_('document'), related_name="back_document",
-                                       null=True)
+                                       null=True, on_delete=models.CASCADE)
 
     def get_absolute_path(self):
         return os.path.join(self.refer_document.refer_category.get_absolute_path(), self.filename)
@@ -32,26 +32,27 @@ class Page(models.Model):
         return os.path.join(self.refer_document.refer_category.get_relative_path(), self.filename)
 
     def as_img(self, size=100):
-        return '<img style="max-width: ' + str(size) + '%;" data-original="' + unicode(self.get_relative_path()) + \
-               '" src="' + unicode(self.get_relative_path()) + '" />'
+        #return '<img style="max-width: ' + str(size) + '%;" data-original="' + self.get_relative_path() + \
+        #       '" src="' + self.get_relative_path() + '" />'
+        return "<img style=""max-width: %d %%;"" data-original=""%s"" src=""%s"" />" % (size, self.get_relative_path(), self.get_relative_path())
 
     def get_size(self):
-        s = os.path.getsize(unicode(self.get_absolute_path()))
+        s = os.path.getsize(self.get_absolute_path())
         return s
 
     def __str__(self):
         return '%s - %s' % (self.filename, self.num)
 
     def delete(self, **kwargs):
-        os.remove(unicode(self.get_absolute_path()))
+        os.remove(self.get_absolute_path())
         super(Page, self).delete(kwargs)
 
 
 class Document(models.Model):
     name = models.TextField(_('filename'))
-    owner = models.ForeignKey(User)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     refer_category = models.ForeignKey('categories.Category', verbose_name=_('category'), related_name="back_category",
-                                       null=True)
+                                       null=True, on_delete=models.CASCADE)
     size = models.IntegerField(_('size'), default=0)
     pages = models.ManyToManyField(Page, blank=True)
     date = models.DateTimeField(_('date'), default=timezone.now, null=False)
@@ -181,7 +182,7 @@ class DocumentReadOnlyForm(DocumentAdminForm):
         for f in self:
             txt += '<div class="form-group">\n'
             txt += f.label_tag().replace('<label ', '<label class="col-md-4 control-label" ') + '\n'
-            txt += '<div class="col-md-8">' + unicode(f) + '</div>\n<span class="help-block"></span>\n'
+            txt += '<div class="col-md-8">%s</div>\n<span class="help-block"></span>\n' % f
             txt += '</div>\n'
         txt += '</fieldset>\n</form>'
         return txt

@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='document',
             name='refer_category',
-            field=models.ForeignKey(related_name='back_category', to='categories.Category', null=True),
+            field=models.ForeignKey(related_name='back_category', to='categories.Category', null=True, on_delete=models.CASCADE),
         ),
     ]

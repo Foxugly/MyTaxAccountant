@@ -1,0 +1,14 @@
+As root
+pip3 install --upgrade pip
+pip3 install django
+pip3 install jupyter
+pip3 install django_extensions
+
+as user
+jupyter notebook --generate-config
+configure config files. see : http://jupyter-notebook.readthedocs.io/en/stable/public_server.html
+python3 manage.py shell_plus --notebook &
+
+dans les fenetres :
+import django
+django.setup()

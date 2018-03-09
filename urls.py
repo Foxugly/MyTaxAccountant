@@ -30,7 +30,11 @@ from django.shortcuts import render
 from django.conf.urls.static import static
 # from django.views.defaults import page_not_found, server_error, permission_denied
 from utils.views import lang
+from django.contrib.auth.decorators import login_required
 from users.views import home
+from django.urls import path
+
+
 admin.autodiscover()
 
 
@@ -38,23 +42,25 @@ def test(request):
     return render(request, "test.tpl")
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^user/', include('users.urls'), name='users'),
-    url(r'^company/', include('companies.urls'), name='companies'),
-    url(r'^year/', include('years.urls'), name='years'),
-    url(r'^utils/', include('utils.urls'), name='utils'),
-    url(r'^document/', include('documents.urls'), name='documents'),
-    url(r'^trimester/', include('trimesters.urls'), name='trimesters'),
-    url(r'^category/', include('categories.urls'), name='categories'),
-    url(r'^lang/$', lang, name="lang"),
-    url(r'^i18n/', include('django.conf.urls.i18n')),
-    url(r'^upload/', include('fileupload.urls')),
-    url(r'^$', home, name='index'),
-    url(r'^hijack/', include('hijack.urls')),
-] \
-    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)\
-    + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path('', login_required(home)),
+    path('lang/', lang),
+    path('test/', test),
+    path('admin/', admin.site.urls),
+    path('category/', include('categories.urls')),
+    path('company/', include('companies.urls')),
+    path('document/', include('documents.urls')),
+    path('hijack/', include('hijack.urls')),
+    path('i18n/', include('django.conf.urls.i18n')),
+    path('upload/', include('fileupload.urls')),
+    path('user/', include('users.urls')),
+    path('utils/', include('utils.urls')),
+    path('trimester/', include('trimesters.urls')),
+    path('year/', include('years.urls'))
+              ] \
+              + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
+              + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-handler403 = 'utils.views.custom_403'
-handler404 = 'utils.views.custom_404'
-handler500 = 'utils.views.custom_500'
+
+#handler403 = 'utils.views.custom_403'
+#handler404 = 'utils.views.custom_404'
+#handler500 = 'utils.views.custom_500'

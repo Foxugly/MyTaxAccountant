@@ -1,10 +1,12 @@
 pip>=9.0.1
-Django==1.10.5
+Django>=2.0.2
 Pillow
-argparse==1.2.1
-django-bootstrap3==6.2.2
+argparse>=1.2.1
+django-bootstrap3>=6.2.2
 PyPDF2
 psycopg2
 django-hijack
 django-hijack-admin
 unidecode
+django_extensions
+jupyter

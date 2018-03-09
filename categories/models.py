@@ -25,10 +25,10 @@ class TypeCategory(models.Model):
 
 
 class Category(models.Model):
-    cat = models.ForeignKey(TypeCategory)
+    cat = models.ForeignKey(TypeCategory, on_delete=models.CASCADE)
     documents = models.ManyToManyField(Document, verbose_name=_('documents'), blank=True)
     refer_trimester = models.ForeignKey('trimesters.Trimester', verbose_name=_('trimester'),
-                                        related_name="back_trimester", null=True)
+                                        related_name="back_trimester", null=True, on_delete=models.CASCADE)
     active = models.BooleanField(_('active'), default=True)
     random = models.CharField(max_length=24, blank=True, null=True)
 
@@ -61,12 +61,15 @@ class Category(models.Model):
     def get_absolute_path(self):
         return os.path.join(self.refer_trimester.get_absolute_path(), self.cat.name.replace(" ", "_") + "_" + self.random)
 
+    def get_url(self):
+        return '/category/%d/' % self.id
+
     def save(self, *args, **kwargs):
         if not self.random:
             self.random = str(uuid.uuid4().hex.upper()[0:16])
         super(Category, self).save(*args, **kwargs)
         if not os.path.isdir(self.get_absolute_path()):
-            os.mkdir(self.get_absolute_path(), 0o711)
+            os.mkdir(self.get_absolute_path(), 0o771)
 
     def delete(self, **kwargs):
         for d in self.documents.all():

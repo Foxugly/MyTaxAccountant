@@ -43,7 +43,7 @@ class Company(models.Model):
     address_2 = models.CharField(_("address cont'd"), max_length=128, blank=True, null=True)
     zip_code = models.CharField(_("zip code"), max_length=5, blank=True, null=True)
     city = models.CharField(_("city"), max_length=128, blank=True, null=True)
-    country = models.ForeignKey(Country, blank=True)
+    country = models.ForeignKey(Country, blank=True, on_delete=models.CASCADE)
     random = models.CharField(max_length=16, blank=True, null=True)
     sales_revenue = models.IntegerField(_("Sales revenue"),
                                         choices=(
@@ -67,13 +67,13 @@ class Company(models.Model):
     years = models.ManyToManyField(Year, blank=True)
     active = models.BooleanField(_('active'), default=False)
     favorite = models.BooleanField(_('favorite'), default=False)
-    model_trimester = models.ForeignKey(ModelTrimester, null=True, blank=True)
+    model_trimester = models.ForeignKey(ModelTrimester, null=True, blank=True, on_delete=models.CASCADE)
 
     def as_json(self):
         return dict(id=self.id, name=self.name)
 
     def get_name(self):
-        return self.name.encode('utf-8')
+        return self.name
 
     def add_year(self, year):
         self.years.add(year)
@@ -96,7 +96,7 @@ class Company(models.Model):
 
     def create_directory(self):
         if not os.path.isdir(self.get_absolute_path()):
-            os.mkdir(self.get_absolute_path(), 0o711)
+            os.mkdir(self.get_absolute_path(), 0o771)
 
     def save(self, *args, **kwargs):
         if not self.random:
@@ -128,6 +128,11 @@ class Company(models.Model):
             out['nodes'] = sum_json
         return sum_n, out
 
+    def get_favorite_year(self):
+        y = self.years.filter(favorite=True)[0]
+        if not y:
+            t = self.years.filter(active=True).order_by('fiscal_year__priority')[0]
+        return y
 
 class CompanyForm(ModelForm):
 

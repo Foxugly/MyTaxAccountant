@@ -47,35 +47,6 @@ $(document).ajaxSend(function(event, xhr, settings) {
 
 $(document).ready(function() {
 
-    function csrfSafeMethod(method) {
-        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-    }
-
-
-    $(function () {
-    'use strict';
-    // Change this to the location of your server-side upload handler:
-    var url = window.location.hostname === 'blueimp.github.io' ?
-                '//jquery-file-upload.appspot.com/' : 'server/php/';
-    $('#fileupload').fileupload({
-        url: url,
-        dataType: 'json',
-        done: function (e, data) {
-            $.each(data.result.files, function (index, file) {
-                $('<p/>').text(file.name).appendTo('#files');
-            });
-        },
-        progressall: function (e, data) {
-            var progress = parseInt(data.loaded / data.total * 100, 10);
-            $('#progress .progress-bar').css(
-                'width',
-                progress + '%'
-            );
-        }
-    }).prop('disabled', !$.support.fileInput)
-        .parent().addClass($.support.fileInput ? undefined : 'disabled');
-});
-
     $(function () {
         'use strict';
         var url = '/upload/basic/';
@@ -188,30 +159,17 @@ $(document).ready(function() {
         if (DEBUG) {
             console.log('update_categories');
         }
-        var url = '/trimester/' + $('#sel_trimester').val() + '/list/';
+        var url = '/trimester/' + $('#sel_trimester').val() + '/forward/';
         $.ajax({
             url: url,
             type: 'GET',
             traditional: true,
             dataType: 'json',
             success: function(result){
-                for (var i = 0; i < result['nav_list'].length; i++) {
-                    $("ul.nav-pills li:eq(" + i + ") a").html(result['nav_list'][i]['name'] + ' <span class="badge">'+ result['nav_list'][i]['n'] +'</span>');
-                    $("ul.nav-pills li:eq(" + i + ") a").attr( "data-id", result['nav_list'][i]['id']);
+                if (result['forward']) {
+                    console.log(result['forward']);
+                    window.location.replace(result['forward']);
                 }
-                var size = $("ul.nav-pills")[0].childElementCount;
-                if (result['nav_list'].length == 1){
-                    for (var i = 1 ; i < size; i++){
-                        $("ul.nav-pills li:eq(" + i + ")").hide();
-                    }
-                    $("ul.nav-pills")[0].click();
-                }
-                else{
-                    for (var i = 1 ; i < size; i++){
-                        $("ul.nav-pills li:eq(" + i + ")").show();
-                    }
-                }
-                nav_click($('ul.nav-pills li.active a'));
             },
             error: function(){
                 bootbox.alert("[update_categories] ERROR with " + url);
@@ -221,20 +179,17 @@ $(document).ready(function() {
     }
 
     function update_trimesters(){
-        var url = '/year/' + $('#sel_year').val() + '/list/';
+        var url = '/year/' + $('#sel_year').val() + '/forward/';
         $.ajax({
             url: url,
             type: 'GET',
             traditional: true,
             dataType: 'json',
             success: function(result){
-                $('#sel_trimester').empty().append('<optgroup label = "Choose a trimester">');
-                for( var i = 0; i < result['list'].length; i++ ) {
-                    $('#sel_trimester').append('<option value="'+ result['list'][i].id + '">'+ result['list'][i].name +'</option>');
+                if (result['forward']) {
+                    console.log(result['forward']);
+                    window.location.replace(result['forward']);
                 }
-                $('#sel_trimester').append('</optgroup>');
-                $('#sel_trimester').val(result['favorite'].id).trigger('change');
-                update_data(true, 4);
             },
             error: function(){
                 bootbox.alert("[update_trimesters] ERROR with " + url);
@@ -244,20 +199,18 @@ $(document).ready(function() {
     }
 
     function update_years(){
-        var url = '/company/' + $('#sel_company').val() + '/list/';
+        var url = '/company/' + $('#sel_company').val() + '/forward/';
+        console.lo
         $.ajax({
             url: url,
             type: 'GET',
             traditional: true,
             dataType: 'json',
             success: function(result){
-                $('#sel_year').empty().append('<optgroup label = "Choose a tax year">');
-                for( var i = 0, len = result['list'].length; i < len; i++ ) {
-                    $('#sel_year').append('<option value="'+ result['list'][i].id + '">'+ result['list'][i].name +'</option>');
+                if (result['forward']) {
+                    console.log(result['forward']);
+                    window.location.replace(result['forward']);
                 }
-                $('#sel_year').append('</optgroup>');
-                $('#sel_year').val(result['favorite'].id).trigger('change');
-                update_trimesters();
             },
             error: function(){
                 bootbox.alert("[update_years] ERROR with " + url);
