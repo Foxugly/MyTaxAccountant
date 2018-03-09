@@ -8,5 +8,5 @@ psycopg2
 django-hijack
 django-hijack-admin
 unidecode
-django_extensions
+django-extensions
 jupyter
