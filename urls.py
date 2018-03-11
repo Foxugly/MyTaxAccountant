@@ -23,12 +23,11 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-from django.conf.urls import include, url, handler403, handler404, handler500
+from django.conf.urls import include
 from django.contrib import admin
 from django.conf import settings
 from django.shortcuts import render
 from django.conf.urls.static import static
-# from django.views.defaults import page_not_found, server_error, permission_denied
 from utils.views import lang
 from django.contrib.auth.decorators import login_required
 from users.views import home
@@ -57,11 +56,11 @@ urlpatterns = [
     path('utils/', include('utils.urls')),
     path('trimester/', include('trimesters.urls')),
     path('year/', include('years.urls'))
-              ] \
-              + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
-              + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+              ]
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
-#handler403 = 'utils.views.custom_403'
-#handler404 = 'utils.views.custom_404'
-#handler500 = 'utils.views.custom_500'
+handler403 = 'utils.views.custom_403'
+handler404 = 'utils.views.custom_404'
+handler500 = 'utils.views.custom_500'

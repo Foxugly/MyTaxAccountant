@@ -72,7 +72,6 @@ class Document(models.Model):
         self.save()
 
     def add_page(self, num, fname, w, h):
-        # print(fname)
         p = Page(num=num, filename=fname, width=w, height=h, refer_document=self)
         p.save()
         self.size += p.get_size()

@@ -48,7 +48,6 @@ class FileUploadListView(ListView):
     model = FileUpload
 
     def render_to_response(self, context, **response_kwargs):
-        print('FileUploadListView')
         files = [serialize(p) for p in self.get_queryset()]
         data = {'files': files}
         response = JSONResponse(data, mimetype=response_mimetype(self.request))

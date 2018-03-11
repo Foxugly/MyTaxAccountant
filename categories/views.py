@@ -108,7 +108,6 @@ def convert_pdf_to_jpg(request, cat, path, f, doc, fu):
         doc.add_page(doc.get_npages() + 1, name_page, w, h)
     doc.complete = True
     doc.save()
-    print("DELETE %s" % fu)
     fu.delete()
     return 1
 
@@ -151,7 +150,6 @@ def add_documents(request, category_id):
         error_list = []
         i = 0
         for f in list(files):
-            print(f)
             fu = None
             fu_list = FileUpload.objects.filter(slug=f)
             if len(fu_list) == 1:
@@ -173,8 +171,6 @@ def add_documents(request, category_id):
             cmd = ['mv', pathfile, pathfile_new]
             subprocess.call(cmd)
             mime = MimeTypes()
-            # if settings.DEBUG:
-            #    print('[INFO] add %s to %s' % (unidecode(fu), cat))
             m = mime.guess_type(pathfile_new)[0]
             d = create_document(pathname_new, request.user, cat, i)
             i += 1
@@ -198,7 +194,6 @@ def add_documents(request, category_id):
                 new_path = pathfile_new.replace(pathname_new, new_f)
                 cmd = 'soffice --headless --convert-to pdf %s --outdir %s/upload' % (pathfile_new, settings.MEDIA_ROOT)
                 l_doc.append(dict(filename=pathname_new, path=new_path, cmd=cmd, fileupload=fu, document=d, cat=cat))
-                print(l_doc)
             elif m in ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']:
                 p = re.compile(r'.[Xx][Ll][Ss][xX]?$')
                 new_f = p.sub('.pdf', pathname_new)

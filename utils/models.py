@@ -77,15 +77,11 @@ class TemplateTrimesterForm(ModelForm):
         self.fields['start_date'].widget.attrs['class'] = 'datepicker'
 
     def save(self, *args, **kwargs):
-        print('save1')
         instance = super(TemplateTrimesterForm, self).save(commit=False)
-        print('save2')
         if instance.favorite:
             for tt in TemplateTrimester.objects.all():
                 if tt.favorite:
                     tt.favorite = False
                     tt.save()
-        print('save5')
         instance.save()
-        print('save6')
         return instance

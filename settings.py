@@ -28,7 +28,7 @@ BASE_DIR = os.path.dirname(__file__)
 SECRET_KEY = '-b+&3%*nxun2l+id*85aou#vpkw%uhd3ko&b06jmkr#ke)6k3k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ['*']
 DATABASES = database.db
 
@@ -54,7 +54,6 @@ INSTALLED_APPS = (
     'documents',
     'utils',
     'users',
-    #'fileupload',
     'error',
     'webshell',
 )

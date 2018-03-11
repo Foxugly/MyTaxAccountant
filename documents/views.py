@@ -26,7 +26,6 @@ def view(request, doc_id):
         if d.refer_category.refer_trimester.refer_year.refer_company in request.user.userprofile.companies.all():
             img = ''
             for p in d.pages.all().order_by('num'):
-                print(p.get_relative_path())
                 img += r"<img style=""max-width:100%%"" src=""%s"" />" % p.get_relative_path()
             c = dict(img=img)
             return render(request, 'doc.tpl', c)
@@ -65,8 +64,6 @@ def update_ajax(request, document_id):
         else:
             results['return'] = False
             results['errors'] = str(form.errors)
-            print(form.errors)
-            print(results)
         return HttpResponse(json.dumps(results))
 
 
@@ -139,7 +136,8 @@ def ajax_move_doc(request, doc_id, cat_id):
 
 
 def delete_document(doc_id):
-    print('delete_document')
+    if settings.DEBUG:
+        print('delete_document')
     doc = Document.objects.get(pk=int(doc_id))
     cat = doc.refer_category
     cat.documents.remove(doc)
@@ -148,13 +146,16 @@ def delete_document(doc_id):
 
 
 def ajax_delete(request, doc_id):
-    print('ajax_delete')
+    if settings.DEBUG:
+        print('ajax_delete')
     if request.is_ajax():
         results = {'valid': delete_document(doc_id)}
         return HttpResponse(json.dumps(results))
 
 
 def ajax_img(request, doc_id, num):
+    if settings.DEBUG:
+        print('ajax_img')
     if request.is_ajax():
         results = {}
         doc = Document.objects.get(pk=int(doc_id))
@@ -164,6 +165,8 @@ def ajax_img(request, doc_id, num):
 
 
 def split_doc(request):
+    if settings.DEBUG:
+        print('split_doc')
     if request.is_ajax():
         results = {}
         cut = int(request.GET['modal_split_cut'][0])
@@ -191,6 +194,8 @@ def split_doc(request):
 
 
 def merge_doc(request):
+    if settings.DEBUG:
+        print('merge_doc')
     if request.is_ajax():
         results = {}
         doc = Document.objects.get(pk=int(request.GET['modal_merge_doc_id']))
@@ -211,6 +216,8 @@ def merge_doc(request):
 
 
 def ajax_download(request, n):
+    if settings.DEBUG:
+        print('ajax_download')
     if request.is_ajax():
         results = {}
         doc = Document.objects.get(pk=int(n))
@@ -225,7 +232,6 @@ def ajax_download(request, n):
         cmd += output_abs
         if os.path.exists(output_abs):
             os.system("rm " + output_abs)
-        # os.system(cmd)
         p1 = Popen(cmd, shell=True)
         p1.wait()
         sleep(1)
@@ -235,32 +241,34 @@ def ajax_download(request, n):
 
 
 def ajax_multiple_move(request, cat_id):
-    print("ajax_multiple_move")
+    if settings.DEBUG:
+        print("ajax_multiple_move")
     if request.is_ajax():
         results = {}
         for key, val in dict(request.GET).items():
-            print(val)
             move_document(val[0], cat_id)
         results['valid'] = True
         return HttpResponse(json.dumps(results))
 
 
 def ajax_multiple_delete(request):
-    print("ajax_multiple_delete")
+    if settings.DEBUG:
+        print("ajax_multiple_delete")
     if request.is_ajax():
         results = {}
         for key, val in dict(request.GET).items():
-            print(val)
             delete_document(val[0])
         results['valid'] = True
         return HttpResponse(json.dumps(results))
 
 
 def ajax_multiple_download(request):
+    if settings.DEBUG:
+        print('ajax_multiple_download')
     if request.is_ajax():
         results = {}
         for key, val in dict(request.GET).items():
             print('%s : %s' % (key, val))
-
+        #TODO finish multiple download
         results['valid'] = True
         return HttpResponse(json.dumps(results))

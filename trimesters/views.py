@@ -12,16 +12,20 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from trimesters.models import Trimester
 import json
+from django.conf import settings
 
 
 def view_trimester(request, trimester_id):
-    print("view_trimester | id = "+str(trimester_id))
+    if settings.DEBUG:
+        print("view_trimester | id = %d" % trimester_id)
     t = Trimester.objects.get(id=trimester_id)
     cat = t.categories.filter(active=True).order_by('cat__priority')[0].id
     return redirect('/category/%s/' % cat)
 
 
 def favorite_trimester(year):
+    if settings.DEBUG:
+        print("favorite_trimester")
     t = year.trimesters.filter(active=True, favorite=True)
     if not t:
         t = [year.trimesters.filter(active=True)[0]]
@@ -29,6 +33,8 @@ def favorite_trimester(year):
 
 
 def list_categories(request, trimester_id):
+    if settings.DEBUG:
+        print("list_categories")
     if request.is_ajax():
         t = Trimester.objects.get(id=trimester_id)
         result = {}
@@ -41,6 +47,9 @@ def list_categories(request, trimester_id):
 
 
 def forward_categorie(request, trimester_id):
+    if settings.DEBUG:
+        print("forward_categorie")
     if request.is_ajax():
+        t = Trimester.objects.get(id=trimester_id)
         url_cat = t.get_favorite_category_url()
         return HttpResponse(json.dumps({'forward': url_cat}))

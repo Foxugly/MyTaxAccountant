@@ -36,12 +36,9 @@ def list_trimester(request, year_id):
 
 
 def forward_trimester(request, year_id):
-    print('yearforward')
     if request.is_ajax():
         y = Year.objects.get(id=year_id)
-        print(y)
         c = y.get_favorite_trimester().get_favorite_category()
-        print(c)
         if c:
             return HttpResponse(json.dumps({'forward': c.get_url()}))
         else:
