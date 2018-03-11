@@ -32,7 +32,6 @@
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.3.1/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href=" {% static "upload/css/style.css" %} " />
     <link rel="stylesheet" type="text/css" href=" {% static "upload/css/jquery.fileupload-ui.css" %}" />
-    <!-- <link rel="stylesheet" type="text/css" href='{% static "select2-4.0.1/dist/css/select2.min.css" %}'/> -->
     <link rel="stylesheet" type="text/css" href='{% static "select2-develop/dist/css/select2.min.css" %}'/>
     <link rel="stylesheet" type="text/css" href='{% static "bootstrap-datetimepicker-master/build/css/bootstrap-datetimepicker.min.css" %}' />
     <link rel="stylesheet" type="text/css" href="{% static "viewer/viewer.min.css"%}" />
@@ -98,11 +97,10 @@
 
     <script type="text/javascript" src="{% static "bootpag/jquery.bootpag.min.js" %}"></script>
     <script type="text/javascript" src="{% static "bootbox/bootbox.min.js" %}"></script>
-    <!-- <script type="text/javascript" src="{% static "select2-4.0.1/dist/js/select2.min.js" %}"></script> -->
     <script type="text/javascript" src="{% static "select2-develop/dist/js/select2.min.js" %}"></script>
     <script type="text/javascript" src="{% static "treeview/bootstrap-treeview.min.js" %}"></script>
     {% if LANGUAGE_CODE != 'en' %}
-        {% with 'select2-4.0.1/dist/js/i18n/'|add:LANGUAGE_CODE|add:'.js' as select2_lang %}
+        {% with 'select2-develop/dist/js/i18n/'|add:LANGUAGE_CODE|add:'.js' as select2_lang %}
         <script type="text/javascript" src='{% static select2_lang %}'></script>
         {% endwith %}
     {%  endif %}

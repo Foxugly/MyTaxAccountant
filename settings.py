@@ -167,12 +167,11 @@ HIJACK_USE_BOOTSTRAP = True
 HIJACK_ALLOW_GET_REQUESTS = True
 
 
-def show_toolbar(request):
-    if not request.is_ajax() and request.user and request.user.username == "renaud":
+if DEBUG:
+    def show_toolbar(request):
         return True
-    return False
 
 
-DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': 'settings.show_toolbar',
-}
+    DEBUG_TOOLBAR_CONFIG = {
+        'SHOW_TOOLBAR_CALLBACK': 'settings.show_toolbar',
+    }
