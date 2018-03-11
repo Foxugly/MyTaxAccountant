@@ -12,3 +12,5 @@ unidecode
 django-extensions
 jupyter
 django-webshell
+django-debug-toolbar
+

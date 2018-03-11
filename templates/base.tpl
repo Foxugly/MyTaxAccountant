@@ -32,7 +32,8 @@
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.3.1/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href=" {% static "upload/css/style.css" %} " />
     <link rel="stylesheet" type="text/css" href=" {% static "upload/css/jquery.fileupload-ui.css" %}" />
-    <link rel="stylesheet" type="text/css" href='{% static "select2-4.0.1/dist/css/select2.min.css" %}'  />
+    <!-- <link rel="stylesheet" type="text/css" href='{% static "select2-4.0.1/dist/css/select2.min.css" %}'/> -->
+    <link rel="stylesheet" type="text/css" href='{% static "select2-develop/dist/css/select2.min.css" %}'/>
     <link rel="stylesheet" type="text/css" href='{% static "bootstrap-datetimepicker-master/build/css/bootstrap-datetimepicker.min.css" %}' />
     <link rel="stylesheet" type="text/css" href="{% static "viewer/viewer.min.css"%}" />
     <link rel="stylesheet" type="text/css" href="{% static "treeview/bootstrap-treeview.min.css"%}" />
@@ -42,7 +43,7 @@
     <!--  JS -->
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 
-    <!--<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>-->
+    <!-- <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> -->
     <script type="text/javascript" src="//momentjs.com/downloads/moment-with-locales.js"></script>
     <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
@@ -97,7 +98,8 @@
 
     <script type="text/javascript" src="{% static "bootpag/jquery.bootpag.min.js" %}"></script>
     <script type="text/javascript" src="{% static "bootbox/bootbox.min.js" %}"></script>
-    <script type="text/javascript" src="{% static "select2-4.0.1/dist/js/select2.min.js" %}"></script>
+    <!-- <script type="text/javascript" src="{% static "select2-4.0.1/dist/js/select2.min.js" %}"></script> -->
+    <script type="text/javascript" src="{% static "select2-develop/dist/js/select2.min.js" %}"></script>
     <script type="text/javascript" src="{% static "treeview/bootstrap-treeview.min.js" %}"></script>
     {% if LANGUAGE_CODE != 'en' %}
         {% with 'select2-4.0.1/dist/js/i18n/'|add:LANGUAGE_CODE|add:'.js' as select2_lang %}

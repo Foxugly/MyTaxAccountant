@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'debug_toolbar',
     'hijack',
     'compat',
     'hijack_admin',
@@ -68,6 +69,7 @@ MIDDLEWARE = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
@@ -97,13 +99,13 @@ MEDIA_URL = '/media/'
 UPLOAD_DIR = 'upload'
 STOCK_DIR = 'folders'
 # ACTIVE TO PROD / COMMENT TO TEST
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 TMP_ROOT = MEDIA_ROOT + '/tmp/'
 TMP_URL = MEDIA_URL + 'tmp/'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 # COMMENT TO PROD / ACTIVE TO TEST
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
+#STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
 
 
 # STATICFILES_FINDERS = (
@@ -163,3 +165,14 @@ HIJACK_LOGOUT_REDIRECT_URL = '/admin/auth/user/'
 HIJACK_DISPLAY_WARNINGS = True
 HIJACK_USE_BOOTSTRAP = True
 HIJACK_ALLOW_GET_REQUESTS = True
+
+
+def show_toolbar(request):
+    if not request.is_ajax() and request.user and request.user.username == "renaud":
+        return True
+    return False
+
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': 'settings.show_toolbar',
+}
