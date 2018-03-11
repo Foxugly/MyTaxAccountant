@@ -56,6 +56,7 @@ INSTALLED_APPS = (
     'users',
     #'fileupload',
     'error',
+    'webshell',
 )
 
 MIDDLEWARE = (

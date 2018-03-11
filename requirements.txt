@@ -11,3 +11,4 @@ django-hijack-admin
 unidecode
 django-extensions
 jupyter
+django-webshell

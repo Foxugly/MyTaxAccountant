@@ -45,6 +45,7 @@ urlpatterns = [
     path('', login_required(home)),
     path('lang/', lang),
     path('test/', test),
+    path('admin/webshell/', include('webshell.urls')),
     path('admin/', admin.site.urls),
     path('category/', include('categories.urls')),
     path('company/', include('companies.urls')),
