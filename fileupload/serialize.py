@@ -21,9 +21,9 @@ def order_name(name):
 
     """
     name = re.sub(r'^.*/', '', name)
-    if len(name) <= 20:
-        return name
-    return name[:10] + "..." + name[-7:]
+    #if len(name) <= 20:
+    return name
+    #return name[:10] + "..." + name[-7:]
 
 
 def serialize(instance, file_attr='file'):

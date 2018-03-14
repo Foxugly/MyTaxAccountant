@@ -132,7 +132,8 @@ $(document).ready(function() {
     $(".download").click(function(){download($(this));});
     $(".view").click(function(){view($(this));});
     $(".fiche").click(function(){fiche($(this));});
-    $(".del_modal").click(function(e){
+    $(".del_modal").click(function(){
+        var obj = $(this);
         var btn = $('ul.nav-pills li.active a')[0];
         bootbox.confirm({
             message: "Are you sure ?",
@@ -148,8 +149,7 @@ $(document).ready(function() {
             },
             callback: function (result) {
                 if (result) {
-                    del_modal(e);
-                    window.location.reload();
+                    del_modal(obj);
                 }
             }
         });
@@ -557,7 +557,7 @@ $(document).ready(function() {
     }
 
     function del_modal(e){
-        var url = '/document/ajax/delete/' +e.currentTarget['dataset'].id + '/';
+        var url = '/document/ajax/delete/' + e[0]['dataset'].id + '/';
         if (DEBUG) {
             console.log("del_modal");
             console.log(url);
@@ -568,7 +568,8 @@ $(document).ready(function() {
             traditional: true,
             dataType: 'json',
             success: function(){
-                return 1;
+                console.log("SUCCESS")
+                window.location.reload();
             },
             error: function(){
                 bootbox.alert("[del_modal] ERROR with " + url);
@@ -590,12 +591,12 @@ $(document).ready(function() {
         var repeat = false;
         var out = '<td>';
         if (data['complete']){
-            out += '<a id="btn_vi_'+ data['id']+'" class="btn btn-xs btn-default" data-id="'+ data['id']+'" title="View"><span class="glyphicon glyphicon-eye-open"></span></a>';
-            out += '<a id="btn_fi_'+ data['id']+'" class="btn btn-xs btn-default" data-id="'+ data['id']+'" title="Fiche"><span class="glyphicon glyphicon-file"></span></a>';
+            out += '<a id="btn_vi_'+ data['id']+'" class="btn btn-xs btn-default view" data-id="'+ data['id']+'" title="View"><span class="glyphicon glyphicon-eye-open"></span></a>';
+            out += '<a id="btn_fi_'+ data['id']+'" class="btn btn-xs btn-default fiche" data-id="'+ data['id']+'" title="Fiche"><span class="glyphicon glyphicon-file"></span></a>';
             out += '<a id="btn_sp_'+ data['id']+'" class="btn btn-xs btn-default split_modal" data-id="'+ data['id'] +'" title="Split" data-toggle="modal" data-target="#modal_split"><span class="glyphicon glyphicon-resize-full"></span></a>';
             out += '<a id="btn_me_'+ data['id']+'" class="btn btn-xs btn-default merge_modal" data-id="'+ data['id'] +'" title="Merge" data-toggle="modal" data-target="#modal_merge"><span class="glyphicon glyphicon-resize-small"></span></a>';
             out += '<a id="btn_mv_'+ data['id']+'" class="btn btn-xs btn-default move_modal" data-id="'+ data['id'] +'" title="Move" data-toggle="modal" data-target="#modal_move"><span class="glyphicon glyphicon-transfer"></span></a>';
-            out += '<a id="btn_dl_'+ data['id']+'" class="btn btn-xs btn-default" data-id="'+ data['id'] +'" title="Download"><span class="glyphicon glyphicon-download-alt"></span></a>';
+            out += '<a id="btn_dl_'+ data['id']+'" class="btn btn-xs btn-default download" data-id="'+ data['id'] +'" title="Download"><span class="glyphicon glyphicon-download-alt"></span></a>';
             out += '<a id="btn_de_'+ data['id']+'" class="btn btn-xs btn-default del_modal" data-id="'+ data['id'] +'" title="Delete"><span class="glyphicon glyphicon-remove"></span></a>';
         }
         else{
@@ -637,7 +638,6 @@ $(document).ready(function() {
                 callback: function (result) {
                     if (result) {
                         del_modal(e);
-                        window.location.reload();
                     }
                 }
             });

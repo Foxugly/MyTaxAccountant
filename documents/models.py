@@ -122,7 +122,7 @@ class DocumentAdminForm(ModelForm):
         cleaned_data = super(DocumentAdminForm, self).clean()
         current_doc = self.instance
         fiscal_id = cleaned_data.get("fiscal_id")
-        if len(fiscal_id):
+        if fiscal_id:
             for tri in current_doc.refer_category.refer_trimester.refer_year.get_trimesters():
                 for doc in tri.get_docs():
                     if doc.pk is not current_doc.pk:

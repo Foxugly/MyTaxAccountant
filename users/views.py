@@ -22,7 +22,7 @@ import json
 def home(request):
     c = {}
     if request.user.is_authenticated:
-        companies = request.user.userprofile.companies.all()
+        companies = request.user.userprofile.companies.all().order_by('name')
         company_current = companies[0]
         if request.user.is_staff:
             years = company_current.get_active_years()

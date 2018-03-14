@@ -46,7 +46,7 @@ def view_category(request, category_id):
     trimester_current = category_current.refer_trimester
     year_current = trimester_current.refer_year
     company_current = year_current.refer_company
-    companies = request.user.userprofile.companies.all()
+    companies = request.user.userprofile.companies.all().order_by('name')
     years = company_current.get_years()
     trimesters = year_current.get_trimesters()
     categories = trimester_current.get_categories()
