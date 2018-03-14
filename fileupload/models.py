@@ -32,10 +32,4 @@ class FileUpload(models.Model):
         super(FileUpload, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        """delete -- Remove to leave file."""
-        self.file.delete()
-        try:
-            os.remove(self.get_absolute_path())
-        except OSError:
-            pass
         super(FileUpload, self).delete(*args, **kwargs)

@@ -168,6 +168,8 @@ def add_documents(request, category_id):
             k = pathname.rfind(".")
             pathname_new = '%s.%s' % (slugify(pathname[0:k]), pathname[k+1:])
             pathfile_new = os.path.join(settings.MEDIA_ROOT, settings.UPLOAD_DIR, pathname_new)
+            fu.file.name = os.path.join(settings.UPLOAD_DIR, pathname_new)
+            fu.save()
             cmd = ['mv', pathfile, pathfile_new]
             subprocess.call(cmd)
             mime = MimeTypes()
