@@ -24,6 +24,9 @@ class FileUpload(models.Model):
     def get_absolute_url(self):
         return ('upload-new', )
 
+    def get_absolute_path(self):
+        return os.path.join(settings.UPLOAD_DIR, self.file.path)
+
     def save(self, *args, **kwargs):
         self.slug = self.file.name
         super(FileUpload, self).save(*args, **kwargs)
@@ -32,7 +35,7 @@ class FileUpload(models.Model):
         """delete -- Remove to leave file."""
         self.file.delete()
         try:
-            os.remove(self.get_absolute_url())
+            os.remove(self.get_absolute_path())
         except OSError:
             pass
         super(FileUpload, self).delete(*args, **kwargs)

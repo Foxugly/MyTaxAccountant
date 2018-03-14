@@ -17,6 +17,7 @@ from django.forms import ModelForm
 from django.core.validators import RegexValidator
 from fileupload.models import FileUpload
 from categories.models import Category
+from django.utils import timezone
 
 
 class UserCreateForm(UserCreationForm):
@@ -102,7 +103,7 @@ class UserProfileCreateForm(ModelForm):
 
 class Log(models.Model):
     userprofile = models.ForeignKey(UserProfile, null=True, on_delete=models.CASCADE)
-    fileupload = models.ForeignKey(FileUpload, null=True, on_delete=models.CASCADE)
+    date = models.DateTimeField(_('date'), default=timezone.now, null=False)
     category = models.ForeignKey(Category, null=True, on_delete=models.CASCADE)
     cmd = models.TextField(null=True)
 
