@@ -10,6 +10,7 @@
 
 from django.db import models
 from django.conf import settings
+import os
 
 
 class FileUpload(models.Model):
@@ -30,4 +31,8 @@ class FileUpload(models.Model):
     def delete(self, *args, **kwargs):
         """delete -- Remove to leave file."""
         self.file.delete()
+        try:
+            os.remove(self.get_absolute_url())
+        except OSError:
+            pass
         super(FileUpload, self).delete(*args, **kwargs)
