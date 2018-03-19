@@ -15,4 +15,5 @@ django-extensions
 jupyter
 django-webshell
 django-debug-toolbar
+django-celery-results
 
