@@ -9,9 +9,8 @@
 
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
-from documents.views import document_view, update_ajax, ajax_move, ajax_merge, ajax_split, ajax_move_doc, ajax_delete, \
-    ajax_img, split_doc, merge_doc, ajax_download, ajax_multiple_move, ajax_multiple_delete, ajax_multiple_download, \
-    view
+from documents.views import *
+
 
 urlpatterns = (
     # url(r'^update/$', login_required(update_ajax), name='document_update_ajax'),

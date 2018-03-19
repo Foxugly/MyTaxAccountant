@@ -177,8 +177,9 @@
         </div>
       </div>
     </nav>
+    <div class="container-fluid">
     {% block content %}
-    <div class="container"><!--<div class="container-fluid">-->
+    <!--<div class="container"><div class="container-fluid">-->
         <!--[if lt IE 9]>
            	<div id="topwarning">
     		{% blocktrans %}
@@ -208,8 +209,8 @@
   	        </div>
           {% endif %}
       </div>
+    {% endblock %}
     </div>
-  {% endblock %}
   </body>
   <script type="text/javascript" src='{% static "js/perso.js" %}'></script>
 </html>

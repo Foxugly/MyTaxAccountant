@@ -6,31 +6,22 @@
 # under the terms of the GNU Affero General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or (at
 # your option) any later version.
-
-from django.http import HttpResponse
+from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.http import HttpResponse, Http404
 from django.shortcuts import render
+from django.template.defaultfilters import slugify
+from django.utils import timezone
 from categories.models import Category
 from mimetypes import MimeTypes
-import json
-from django.conf import settings
 from documents.models import Document, DocumentForm, DocumentAdminForm, DocumentReadOnlyForm
 from fileupload.models import FileUpload
-from PIL import Image
-import os
-from threading import Timer
-from PyPDF2 import PdfFileReader
-import re
-import subprocess
-from users.models import Log
-import time
-from django.core.exceptions import ObjectDoesNotExist
 from error.models import Error
-from django.http import Http404
-from unidecode import unidecode
-from django.template.defaultfilters import slugify
-from django.core.exceptions import PermissionDenied
-from django.utils import timezone
+from .tasks import add_pdf_document, add_img_document, add_doc_document, add_xls_document
 import datetime
+import os
+import shutil
+import json
 
 
 def view_category(request, category_id):
@@ -63,72 +54,6 @@ def view_category(request, category_id):
         raise PermissionDenied
 
 
-def convert_pdf_to_jpg(request, cat, path, f, doc, fu):
-    try:
-        PdfFileReader(open(unidecode(path), 'rb')).getNumPages()
-    except:
-        os.rename(path, path + '_old')
-        txt = 'mv %s %s \n' % (path, path + '_old')
-        cmd = 'gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=%s %s' % (path, path + '_old')
-        if settings.DEBUG:
-            print(cmd)
-        txt += cmd + '\n'
-        os.system(cmd)
-        cmd = 'rm -f %s' % (path + '_old')
-        if settings.DEBUG:
-            print(cmd)
-        txt += cmd + '\n'
-        os.system(cmd)
-        l = Log(userprofile=request.user.userprofile, category=cat, cmd=txt)
-        l.save()
-        pass
-    try:
-        pdf = PdfFileReader(open(unidecode(path), 'rb'))
-        n = pdf.getNumPages()
-    except:
-        print("ERREUR FORMAT PDF")
-        return None
-    p = re.compile(r'.[Pp][Dd][Ff]$')
-    filename = p.sub('.jpg', f)
-    new_path = '%s/%d' % (cat.get_absolute_path(), doc.id) + '_%03d_' + filename
-    cmd = 'gs -dBATCH -dNOPAUSE -sDEVICE=jpeg -r300x300 -sOutputFile=%s %s' % (new_path, path)
-    if settings.DEBUG:
-        print(cmd)
-    l = Log(userprofile=request.user.userprofile, category=cat, cmd=cmd)
-    l.save()
-    # os.system(cmd)
-    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    p.wait()
-    time.sleep(2)
-    for i in range(1, n+1):
-        name_page = str(doc.id) + "_%03d_" % i + filename
-        path_page = '%s/%s' % (cat.get_absolute_path(), name_page)
-        im = Image.open(path_page)
-        w, h = im.size
-        doc.add_page(doc.get_npages() + 1, name_page, w, h)
-    doc.complete = True
-    doc.save()
-    fu.delete()
-    return 1
-
-
-def manage_convert_pdf_to_jpg(request, l):
-    if settings.DEBUG:
-        print("convert_pdf_to_jpg")
-    for (cat, path, f, doc, fu) in l:
-        convert_pdf_to_jpg(request, cat, path, f, doc, fu)
-
-
-def manage_convert_doc_to_pdf(request, liste):
-    if settings.DEBUG:
-        print("manage_convert_doc_to_pdf")
-    for l in liste:
-        if settings.DEBUG:
-            print(l['cmd'])
-        os.system(l['cmd'])
-        convert_pdf_to_jpg(request, l['cat'], l['path'], l['filename'], l['document'], l['fileupload'])
-
-
 def create_document(name, owner, cat, i):
     d = Document(name=name, owner=owner, refer_category=cat, date=timezone.now() + datetime.timedelta(seconds=i))
     d.save()
@@ -145,8 +70,6 @@ def add_documents(request, category_id):
             e = Error(user=request.user, detail='[add_documents] Category id : %s does not exists' % category_id)
             e.save()
             return HttpResponse(json.dumps({}))
-        l_doc = []
-        l_pdf = []
         error_list = []
         i = 0
         for f in list(files):
@@ -162,57 +85,31 @@ def add_documents(request, category_id):
                 e = Error(user=request.user, detail='[add_documents] FileUpload id error : %s ' % f)
                 e.save()
                 return 0
-
-            pathname = fu.file.name.split('/')[1]
-            pathfile = os.path.join(settings.MEDIA_ROOT, fu.file.name)
+            pathname = os.path.basename(fu.file.name)
             k = pathname.rfind(".")
-            pathname_new = '%s.%s' % (slugify(pathname[0:k]), pathname[k+1:])
-            pathfile_new = os.path.join(settings.MEDIA_ROOT, settings.UPLOAD_DIR, pathname_new)
+            pathname_new = '%s.%s' % (slugify(pathname[0:k]), pathname[k + 1:])
+            shutil.move(os.path.join(settings.MEDIA_ROOT, fu.file.name),
+                        os.path.join(settings.MEDIA_ROOT, settings.UPLOAD_DIR, pathname_new))
             fu.file.name = os.path.join(settings.UPLOAD_DIR, pathname_new)
             fu.save()
-            cmd = ['mv', pathfile, pathfile_new]
-            subprocess.call(cmd)
             mime = MimeTypes()
-            m = mime.guess_type(pathfile_new)[0]
-            d = create_document(pathname_new, request.user, cat, i)
+            m = mime.guess_type(os.path.join(settings.MEDIA_ROOT, fu.file.name))[0]
+            d = create_document(os.path.basename(fu.file.name), request.user, cat, i)
             i += 1
             if m == 'application/pdf':
-                l_pdf.append((cat, pathfile_new, pathname_new, d, fu))
+                add_pdf_document.delay(cat.id, d.id, fu.id)
             elif m in ['image/png', 'image/jpeg', 'image/bmp']:
-                im = Image.open(pathfile_new)
-                w, h = im.size
-                new_filename = '%s_%s' % (str(d.id), pathname_new)
-                new_path = os.path.join(cat.get_absolute_path(), new_filename)
-                cmd = ['cp', pathfile_new, new_path]
-                subprocess.call(cmd)
-                d.add_page(d.get_npages() + 1, new_filename, w, h)
-                d.complete = True
-                d.save()
-                if isinstance(fu, FileUpload):
-                    fu.delete()
+                add_img_document(cat.id, d.id, fu.id)
             elif m in ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']:
-                p = re.compile(r'.[Dd][Oo][Cc][xX]?$')
-                new_f = p.sub('.pdf', pathname_new)
-                new_path = pathfile_new.replace(pathname_new, new_f)
-                cmd = 'soffice --headless --convert-to pdf %s --outdir %s/upload' % (pathfile_new, settings.MEDIA_ROOT)
-                l_doc.append(dict(filename=pathname_new, path=new_path, cmd=cmd, fileupload=fu, document=d, cat=cat))
+                add_doc_document.delay(cat.id, d.id, fu.id)
             elif m in ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']:
-                p = re.compile(r'.[Xx][Ll][Ss][xX]?$')
-                new_f = p.sub('.pdf', pathname_new)
-                new_path = pathfile_new.replace(pathname_new, new_f)
-                cmd = 'soffice --headless --convert-to pdf  %s --outdir %s/upload' % (pathfile_new, settings.MEDIA_ROOT)
-                l_doc.append(dict(filename=pathname_new, path=new_path, cmd=cmd, fileupload=fu, document=d, cat=cat))
+                add_xls_document.delay(cat.id, d.id, fu.id)
             else:
                 e = Error(user=request.user, detail='[add_documents] FileUpload id : %s Format error' % fu.id)
                 e.save()
                 error_list.append(d.as_json())
                 d.delete()
-        if len(l_doc):
-            thread1 = Timer(0, manage_convert_doc_to_pdf, (request, l_doc,))
-            thread1.start()
-        if len(l_pdf):
-            thread = Timer(0, manage_convert_pdf_to_jpg, (request, l_pdf,))
-            thread.start()
+            # TODO Gestion des mauvais fichiers
         results = {'doc_list': [d.as_json() for d in cat.get_docs()], 'n': cat.count_docs(), }
         return HttpResponse(json.dumps(results))
 
@@ -299,8 +196,8 @@ def view_form(request, category_id, field, sens, n):
     arg = ''
     if sens == 'desc':
         arg += '-'
-    l = [None, 'fiscal_id', 'id', 'name', 'date', 'description', 'lock', 'complete']
-    arg += l[int(field)]
+    list_fields = [None, 'fiscal_id', 'id', 'name', 'date', 'description', 'lock', 'complete']
+    arg += list_fields[int(field)]
     docs = docs_all.order_by(arg)
     indice = int(n)-1
     try:

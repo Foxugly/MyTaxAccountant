@@ -26,13 +26,14 @@ Including another URLconf
 from django.conf.urls import include
 from django.contrib import admin
 from django.conf import settings
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.conf.urls.static import static
 from utils.views import lang
 from django.contrib.auth.decorators import login_required
 from users.views import home
 from django.urls import path
-
+from categories.tasks import add
 
 admin.autodiscover()
 
@@ -40,10 +41,16 @@ admin.autodiscover()
 def test(request):
     return render(request, "test.tpl")
 
+
+def addition(request, a , b):
+    return HttpResponse("Result = %s" % add.delay(a, b))
+
+
 urlpatterns = [
     path('', login_required(home)),
     path('lang/', lang),
     path('test/', test),
+    path('celery/<int:a>/<int:b>/', addition),
     path('admin/webshell/', include('webshell.urls')),
     path('admin/', admin.site.urls),
     path('category/', include('categories.urls')),

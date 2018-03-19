@@ -24,7 +24,7 @@ class FileUpload(models.Model):
     def get_absolute_url(self):
         return ('upload-new', )
 
-    def get_absolute_path(self):
+    def get_relative_path(self):
         return os.path.join(settings.UPLOAD_DIR, self.file.path)
 
     def save(self, *args, **kwargs):
@@ -32,4 +32,5 @@ class FileUpload(models.Model):
         super(FileUpload, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
+        os.remove(os.path.join(settings.MEDIA_ROOT, self.file.name))
         super(FileUpload, self).delete(*args, **kwargs)
