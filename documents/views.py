@@ -23,7 +23,7 @@ from django.core.exceptions import PermissionDenied
 def view(request, doc_id):
     if request.user.is_authenticated:
         d = Document.objects.get(id=doc_id)
-        if d.refer_category.refer_trimester.refer_year.refer_company in request.user.userprofile.companies.all():
+        if d.refer_category.refer_trimester.refer_year.refer_company in request.user.userprofile.companies.all().order_by('name'):
             img = ''
             for p in d.pages.all().order_by('num'):
                 img += r"<img style=""max-width:100%%"" src=""%s"" />" % p.get_relative_path()
@@ -85,7 +85,7 @@ def ajax_move(request, n):
             results['trimester'] = tri.as_json()
             results['year'] = year.as_json()
             results['company'] = company.as_json()
-            results['companies'] = [c.as_json() for c in request.user.userprofile.companies.all()]
+            results['companies'] = [c.as_json() for c in request.user.userprofile.companies.all().order_by('name')]
             results['valid'] = True
         else:
             results['valid'] = False
