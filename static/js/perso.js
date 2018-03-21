@@ -587,7 +587,7 @@ $(document).ready(function() {
     }
 
     function del_modal(e){
-        var url = '/document/ajax/delete/' + e.currentTarget['dataset'].id + '/';
+        var url = '/document/ajax/delete/' + e[0]['dataset'].id + '/';
         if (DEBUG) {
             console.log("del_modal");
             console.log(url);
@@ -650,7 +650,7 @@ $(document).ready(function() {
         $("#btn_me_"+data['id']).click(function(){merge_modal($(this));});
         $("#btn_sp_"+data['id']).click(function(){split_modal($(this));});
         $("#btn_dl_"+data['id']).click(function(){download($(this));});
-        $("#btn_de_"+data['id']).click(function(e){
+        $("#btn_de_"+data['id']).click(function(){
             var btn = $('ul.nav-pills li.active a')[0];
             bootbox.confirm({
                 message: "Are you sure ?",
@@ -666,7 +666,7 @@ $(document).ready(function() {
                 },
                 callback: function (result) {
                     if (result) {
-                        del_modal(e);
+                        del_modal($(this));
                     }
                 }
             });
