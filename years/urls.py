@@ -7,13 +7,13 @@
 # the Free Software Foundation, either version 3 of the License, or (at
 # your option) any later version.
 
-from django.conf.urls import url
+from django.urls import path
 from django.contrib.auth.decorators import login_required
 from years.views import list_trimesters, year_view, forward_trimester
 
 
 urlpatterns = (
-    url(r'^(?P<year_id>[0-9]+)/forward/$', login_required(forward_trimester), name='forward_trimister'),
-    url(r'^(?P<year_id>[0-9]+)/list/$', login_required(list_trimesters), name='list_trimisters'),
-    url(r'^(?P<year_id>[0-9]+)/$', login_required(year_view), name='year_view'),
+    path('<int:year_id>/forward/', login_required(forward_trimester), name='forward_trimister'),
+    path('<int:year_id>/list/', login_required(list_trimesters), name='list_trimisters'),
+    path('<int:year_id>/', login_required(year_view), name='year_view'),
 )
