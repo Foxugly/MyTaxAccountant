@@ -18,9 +18,16 @@ from years.models import Year
 from trimesters.models import Trimester
 from categories.models import Category, TypeCategory
 from django.contrib.auth.models import User
+from django.conf import settings
+import logging
+
+
+logger = logging.getLogger(__name__)
+logger.setLevel(settings.LOGGER)
 
 
 def favorite_year(company):
+    logger.debug("favorite_year | company = %s" % company)
     y = company.years.filter(active=True, favorite=True)
     if not y:
         return company.years.filter(active=True)[0]
@@ -29,23 +36,26 @@ def favorite_year(company):
 
 
 def company_view(request):
+    logger.debug("company_view")
     return render_to_response('folder.tpl', {'userprofile': UserProfile.objects.get(user=request.user)})
 
 
 def list_year(request, company_id):
+    logger.debug("list_year | company_id = %d " % company_id)
     if request.is_ajax():
-        c = Company.objects.get(id=company_id)
+        c = get_object_or_404(Company, id=company_id)
         results = {'list': [y.as_json() for y in c.years.filter(active=True)], 'return': True,
                    'favorite': favorite_year(c).as_json()}
         return HttpResponse(json.dumps(results))
 
 
 def admin_companies(request):
-    companies = request.user.userprofile.companies.all()
+    logger.debug("admin_companies")
+    companies = request.user.userprofile.get_companies()
     company_current = companies[0]
-    years = company_current.years.all()
+    years = company_current.get_years()
     year_current = next(y for y in years if y.favorite is True)
-    trimesters = year_current.trimesters.all()
+    trimesters = year_current.get_trimesters()
     trimester_current = next(t for t in trimesters if t.favorite is True)
     c = dict(companies=companies, company_current=company_current, years=years, year_current=year_current,
              trimesters=trimesters, trimester_current=trimester_current, view='list', list=Company.objects.all(),
@@ -54,6 +64,7 @@ def admin_companies(request):
 
 
 def add_company(request):
+    logger.debug("add_company")
     form1 = UserProfileCreateForm(request.POST)
     form2 = UserCreateForm(request.POST)
     form3 = CompanyCreateForm(request.POST)
@@ -106,6 +117,7 @@ def add_company(request):
 
 
 def update_company(request, company_id):
+    logger.debug("update_company | company_id = %d" % company_id)
     results = {}
     if request.is_ajax():
         company_form = CompanyForm(request.POST, instance=Company.objects.get(id=company_id))
@@ -121,7 +133,8 @@ def update_company(request, company_id):
 
 
 def forward_year(request, company_id):
+    logger.debug("forward_year | company_id = %d" % company_id)
     if request.is_ajax():
-        c = Company.objects.get(id=company_id)
+        c = get_object_or_404(Company, id=company_id)
         cat = c.get_favorite_year().get_favorite_trimester().get_favorite_category()
         return HttpResponse(json.dumps({'forward': cat.get_url()}))
