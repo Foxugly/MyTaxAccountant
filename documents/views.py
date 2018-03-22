@@ -225,18 +225,11 @@ def ajax_download(request, doc_id):
             name += ".pdf"
         output_abs = settings.TMP_ROOT + name
         output_rel = settings.TMP_URL + name
-        # TODO change ouvrir popup avec lien et utiliser le broker
-        cmd = "convert "
-        for p in doc.all_pages():
-            cmd += p.get_absolute_path() + " "
-        cmd += output_abs
-        if os.path.exists(output_abs):
-            os.system("rm " + output_abs)
-        p1 = Popen(cmd, shell=True)
-        p1.wait()
-        sleep(1)
+        build_pdf.delay(doc_id, output_abs)
         results['url'] = output_rel
         results['valid'] = True
+        # TODO 1.verifier que ça marche pour plusieurs fichiers
+        # TODO 2. créer le popup : click ici avec le lien pdf
     return HttpResponse(json.dumps(results))
 
 
