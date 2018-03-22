@@ -35,7 +35,7 @@ def view_category(request, category_id):
     trimester_current = category_current.refer_trimester
     year_current = trimester_current.refer_year
     company_current = year_current.refer_company
-    companies = request.user.userprofile.companies.all().order_by('name')
+    companies = request.user.userprofile.get_companies()
     years = company_current.get_years()
     trimesters = year_current.get_trimesters()
     categories = trimester_current.get_categories()
@@ -156,11 +156,11 @@ def view_form(request, category_id, field, sens, n):
     trimester_current = category_current.refer_trimester
     year_current = trimester_current.refer_year
     company_current = year_current.refer_company
-    companies = request.user.userprofile.companies.all().order_by('name')
-    years = company_current.years.all().order_by('fiscal_year__priority')
-    trimesters = year_current.trimesters.all().order_by('template__number')
-    categories = trimester_current.categories.all().order_by('cat__priority')
-    docs_all = category_current.documents.all()
+    companies = request.user.userprofile.get_companies()
+    years = company_current.get_years()
+    trimesters = year_current.get_trimesters()
+    categories = trimester_current.get_categories()
+    docs_all = category_current.get_docs()
     if company_current not in request.user.userprofile.companies.all():
         raise PermissionDenied
     arg = ''
