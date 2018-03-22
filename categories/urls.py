@@ -12,10 +12,10 @@ from django.contrib.auth.decorators import login_required
 from categories.views import add_documents, list_documents, view_form, view_category
 
 urlpatterns = (
-    url(r'^(?P<category_id>[0-9]+)/add_documents/$', login_required(add_documents), name='add_documents'),
-    url(r'^(?P<category_id>[0-9]+)/list/(?P<n>[0-9]+)/$', login_required(list_documents), name='list_documents'),
+    url(r'^(?P<cat_id>[0-9]+)/add_documents/$', login_required(add_documents), name='add_documents'),
+    url(r'^(?P<cat_id>[0-9]+)/list/(?P<n>[0-9]+)/$', login_required(list_documents), name='list_documents'),
 
-    url(r'^(?P<category_id>[0-9]+)/form/(?P<field>[0-9]+)/(?P<sens>[a-z]+)/(?P<n>[0-9]+)/$', login_required(view_form),
+    url(r'^(?P<cat_id>[0-9]+)/form/(?P<field>[0-9]+)/(?P<sens>[a-z]+)/(?P<n>[0-9]+)/$', login_required(view_form),
         name='view_forms'),
-    url(r'^(?P<category_id>[0-9]+)/$', login_required(view_category), name='view_category'),
+    url(r'^(?P<cat_id>[0-9]+)/$', login_required(view_category), name='view_category'),
 )
