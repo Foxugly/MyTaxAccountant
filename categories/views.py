@@ -26,7 +26,7 @@ import logging
 
 
 logger = logging.getLogger(__name__)
-logger.setLevel(settings.logger)
+logger.setLevel(settings.LOGGER)
 
 
 def view_category(request, category_id):
