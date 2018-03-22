@@ -7,15 +7,15 @@
 # the Free Software Foundation, either version 3 of the License, or (at
 # your option) any later version.
 
-from django.conf.urls import url
+from django.urls import path
 from django.contrib.auth.decorators import login_required
 from companies.views import *
 
 urlpatterns = (
-    url(r'^(?P<company_id>[0-9]+)/forward/$', login_required(forward_year), name='forward_year'),
-    url(r'^(?P<company_id>[0-9]+)/list/$', login_required(list_year), name='list_year'),
-    url(r'^(?P<company_id>[0-9]+)/$', login_required(company_view), name='company_view'),
-    url(r'^$', login_required(admin_companies), name='companies'),
-    url(r'^add/$', login_required(add_company), name='add_company'),
-    url(r'^ajax/update/(?P<company_id>[0-9]+)/$', login_required(update_company), name='update_company'),
+    path('<int:company_id>/forward/', login_required(forward_year), name='forward_year'),
+    path('<int:company_id>/list/', login_required(list_year), name='list_year'),
+    path('<int:company_id>/', login_required(company_view), name='company_view'),
+    path('', login_required(admin_companies), name='companies'),
+    path('add/', login_required(add_company), name='add_company'),
+    path('ajax/update/<int:company_id>/', login_required(update_company), name='update_company'),
 )
