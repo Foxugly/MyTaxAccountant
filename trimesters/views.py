@@ -9,34 +9,35 @@
 
 
 from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from trimesters.models import Trimester
 import json
 from django.conf import settings
+import logging
 
 
-def view_trimester(request, trimester_id):
-    if settings.DEBUG:
-        print("view_trimester | id = %d" % trimester_id)
-    t = Trimester.objects.get(id=trimester_id)
-    cat = t.categories.filter(active=True).order_by('cat__priority')[0].id
-    return redirect('/category/%s/' % cat)
+logger = logging.getLogger(__name__)
+logger.setLevel(settings.LOGGER)
+
+
+def view_trimester(request, tri_id):
+    logger.debug("view_trimester | id = %d" % tri_id)
+    t = get_object_or_404(Trimester, id=tri_id)
+    return redirect('/category/%s/' % t.categories.filter(active=True).order_by('cat__priority')[0].id)
 
 
 def favorite_trimester(year):
-    if settings.DEBUG:
-        print("favorite_trimester")
+    logger.debug("favorite_trimester | year = %s" % year)
     t = year.trimesters.filter(active=True, favorite=True)
     if not t:
         t = [year.trimesters.filter(active=True)[0]]
     return t[0]
 
 
-def list_categories(request, trimester_id):
-    if settings.DEBUG:
-        print("list_categories")
+def list_categories(request, tri_id):
+    logger.debug("list_categories | tri_id = %d" % tri_id)
     if request.is_ajax():
-        t = Trimester.objects.get(id=trimester_id)
+        t = get_object_or_404(Trimester, id=tri_id)
         result = {}
         nav_list = []
         for c in t.categories.filter(active=True).order_by('cat__priority'):
@@ -46,10 +47,8 @@ def list_categories(request, trimester_id):
         return HttpResponse(json.dumps(result))
 
 
-def forward_categorie(request, trimester_id):
-    if settings.DEBUG:
-        print("forward_categorie")
+def forward_category(request, tri_id):
+    logger.debug("forward_category | tri_id =  %d" % tri_id)
     if request.is_ajax():
-        t = Trimester.objects.get(id=trimester_id)
-        url_cat = t.get_favorite_category_url()
-        return HttpResponse(json.dumps({'forward': url_cat}))
+        t = get_object_or_404(Trimester, id=tri_id)
+        return HttpResponse(json.dumps({'forward': t.get_favorite_category_url()}))
