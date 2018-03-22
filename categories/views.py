@@ -9,7 +9,7 @@
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.http import HttpResponse, Http404
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 from categories.models import Category
@@ -22,18 +22,16 @@ import datetime
 import os
 import shutil
 import json
+import logging
+
+
+logger = logging.getLogger(__name__)
+logger.setLevel(settings.logger)
 
 
 def view_category(request, category_id):
-    if settings.DEBUG:
-        print("view_category | id = "+str(category_id))
-    try:
-        category_current = Category.objects.get(id=category_id)
-    except ObjectDoesNotExist:
-        e = Error(user=request.user, detail='[view_category] Category id : %s does not exists' % category_id)
-        e.save()
-        raise Http404('Category id : %s does not exists' % category_id)
-
+    logger.debug("view_category | id = %d" % category_id)
+    category_current = get_object_or_404(Category, id=category_id)
     trimester_current = category_current.refer_trimester
     year_current = trimester_current.refer_year
     company_current = year_current.refer_company
@@ -45,7 +43,6 @@ def view_category(request, category_id):
     c = dict(companies=companies, company_current=company_current, years=years, year_current=year_current,
              trimesters=trimesters, trimester_current=trimester_current, categories=categories,
              category_current=category_current, docs=docs, view='list')
-
     if trimester_current.refer_year.refer_company in request.user.userprofile.companies.all():
         # il faut continuer et envoyer au template
         if request.user.is_authenticated:
@@ -55,6 +52,7 @@ def view_category(request, category_id):
 
 
 def create_document(name, owner, cat, i):
+    logger.debug("create_document | filename = %s " % name)
     d = Document(name=name, owner=owner, refer_category=cat, date=timezone.now() + datetime.timedelta(seconds=i))
     d.save()
     cat.add_doc(d)
@@ -62,14 +60,10 @@ def create_document(name, owner, cat, i):
 
 
 def add_documents(request, category_id):
+    logger.debug("add_documents | category_id = %d " % category_id)
     if request.is_ajax():
         files = request.GET.getlist('files', False)
-        try:
-            cat = Category.objects.get(id=category_id)
-        except ObjectDoesNotExist:
-            e = Error(user=request.user, detail='[add_documents] Category id : %s does not exists' % category_id)
-            e.save()
-            return HttpResponse(json.dumps({}))
+        get_object_or_404(Category, id=category_id)
         error_list = []
         i = 0
         for f in list(files):
@@ -85,6 +79,7 @@ def add_documents(request, category_id):
                 e = Error(user=request.user, detail='[add_documents] FileUpload id error : %s ' % f)
                 e.save()
                 return 0
+                # TODO gestion des erreurs
             pathname = os.path.basename(fu.file.name)
             k = pathname.rfind(".")
             pathname_new = '%s.%s' % (slugify(pathname[0:k]), pathname[k + 1:])
@@ -115,8 +110,7 @@ def add_documents(request, category_id):
 
 
 def list_documents(request, category_id, n):
-    if settings.DEBUG:
-        print("list_documents %s %s" % (category_id, n))
+    logger.debug("list_documents | category_id = %d | n = %s" % (category_id, n))
     if request.is_ajax():
         try:
             cat = Category.objects.get(id=category_id)
