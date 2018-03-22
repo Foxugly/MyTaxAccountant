@@ -13,8 +13,7 @@ Installation
 ============
 
 To install:
-
-        sudo apt-get update
+	sudo apt-get update
 	sudo apt-get upgrade
 	sudo apt-get install -y python3-dev python3-setuptools python-celery-common libjpeg-dev zlib1g-dev libtiff5-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk imagemagick redis-server
 	sudo pip install --upgrade pip
@@ -28,7 +27,6 @@ To add a test set:
 	python manage.py shell < data.py
 
 To run on dev:
-
 	python3 manage.py runserver
 	service redis-server start
 	redis-cli ping
@@ -39,7 +37,6 @@ To run on dev:
 	python3 manage.py shell_plus --notebook &
 	
 To run on docker
-
 	docker run -p 443:443 -p 8888:8888 -p 6379:6379 -it --privileged mydocker /bin/bash
 	mount -a
 	service redis-server start
