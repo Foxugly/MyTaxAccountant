@@ -29,9 +29,9 @@ logger = logging.getLogger(__name__)
 logger.setLevel(settings.LOGGER)
 
 
-def view_category(request, category_id):
-    logger.debug("view_category | id = %d" % category_id)
-    category_current = get_object_or_404(Category, id=category_id)
+def view_category(request, cat_id):
+    logger.debug("view_category | id = %d" % cat_id)
+    category_current = get_object_or_404(Category, id=cat_id)
     trimester_current = category_current.refer_trimester
     year_current = trimester_current.refer_year
     company_current = year_current.refer_company
@@ -59,11 +59,11 @@ def create_document(name, owner, cat, i):
     return d
 
 
-def add_documents(request, category_id):
-    logger.debug("add_documents | category_id = %d " % category_id)
+def add_documents(request, cat_id):
+    logger.debug("add_documents | cat_id = %d " % cat_id)
     if request.is_ajax():
         files = request.GET.getlist('files', False)
-        cat = get_object_or_404(Category, id=category_id)
+        cat = get_object_or_404(Category, id=cat_id)
         error_list = []
         i = 0
         for f in list(files):
@@ -109,10 +109,10 @@ def add_documents(request, category_id):
         return HttpResponse(json.dumps(results))
 
 
-def list_documents(request, category_id, n):
-    logger.debug("list_documents | category_id = %d | n = %d" % (category_id, n))
+def list_documents(request, cat_id, n):
+    logger.debug("list_documents | cat_id = %d | n = %d" % (cat_id, n))
     if request.is_ajax():
-        cat = get_object_or_404(Category, id=category_id)
+        cat = get_object_or_404(Category, id=cat_id)
         if cat.count_docs() == 0:
             docjson = None
             form = None
@@ -131,10 +131,10 @@ def list_documents(request, category_id, n):
         return HttpResponse(json.dumps(results))
 
 
-def form_document(request, category_id, n):
-    logger.debug("form_document | cat_id = %d | n = %d" % (category_id, n))
+def form_document(request, cat_id, n):
+    logger.debug("form_document | cat_id = %d | n = %d" % (cat_id, n))
     if request.is_ajax():
-        cat = get_object_or_404(Category, id=category_id)
+        cat = get_object_or_404(Category, id=cat_id)
         if cat.count_docs() > 0:
             doc = get_object_or_404(Document, pk=n)
             if request.user.is_superuser:
@@ -150,9 +150,9 @@ def form_document(request, category_id, n):
         return HttpResponse(json.dumps(results))
 
 
-def view_form(request, category_id, field, sens, n):
-    logger.debug("view_form | cat_id = %d | field = %d | sens = %s | n = %d" % (category_id, field, sens, n))
-    category_current = get_object_or_404(Category, id=category_id)
+def view_form(request, cat_id, field, sens, n):
+    logger.debug("view_form | cat_id = %d | field = %d | sens = %s | n = %d" % (cat_id, field, sens, n))
+    category_current = get_object_or_404(Category, id=cat_id)
     trimester_current = category_current.refer_trimester
     year_current = trimester_current.refer_year
     company_current = year_current.refer_company
@@ -173,9 +173,9 @@ def view_form(request, category_id, field, sens, n):
     try:
         doc = docs[indice]
     except IndexError:
-        e = Error(user=request.user, detail='[view_form] doc[%s] of category %s out of range' % (indice, category_id))
+        e = Error(user=request.user, detail='[view_form] doc[%s] of category %s out of range' % (indice, cat_id))
         e.save()
-        raise Http404('doc[%s] of category %s out of range' % (indice, category_id))
+        raise Http404('doc[%s] of category %s out of range' % (indice, cat_id))
     if request.user.is_superuser:
         form = DocumentAdminForm(instance=doc)
     elif doc.lock:
