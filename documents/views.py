@@ -7,7 +7,7 @@
 # your option) any later version.
 
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from documents.models import Document, DocumentAdminForm, DocumentForm
 from categories.models import Category
 from django.utils.translation import ugettext_lazy as _
