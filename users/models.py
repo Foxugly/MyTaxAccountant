@@ -57,6 +57,9 @@ class UserProfile(models.Model):
     def add_company(self, company):
         self.companies.add(company)
 
+    def get_companies(self):
+        return self.companies.all().order_by('name')
+
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u, language=settings.LANGUAGES[0])[0])
 
