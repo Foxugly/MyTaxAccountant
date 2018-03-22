@@ -63,7 +63,7 @@ def add_documents(request, category_id):
     logger.debug("add_documents | category_id = %d " % category_id)
     if request.is_ajax():
         files = request.GET.getlist('files', False)
-        get_object_or_404(Category, id=category_id)
+        cat = get_object_or_404(Category, id=category_id)
         error_list = []
         i = 0
         for f in list(files):
@@ -110,14 +110,9 @@ def add_documents(request, category_id):
 
 
 def list_documents(request, category_id, n):
-    logger.debug("list_documents | category_id = %d | n = %s" % (category_id, n))
+    logger.debug("list_documents | category_id = %d | n = %d" % (category_id, n))
     if request.is_ajax():
-        try:
-            cat = Category.objects.get(id=category_id)
-        except ObjectDoesNotExist:
-            e = Error(user=request.user, detail='[list_documents] Category id : %s does not exists' % category_id)
-            e.save()
-            return HttpResponse(json.dumps({}))
+        cat = get_object_or_404(Category, id=category_id)
         if cat.count_docs() == 0:
             docjson = None
             form = None
@@ -137,22 +132,11 @@ def list_documents(request, category_id, n):
 
 
 def form_document(request, category_id, n):
-    if settings.DEBUG:
-        print("form_document %s %s" % (category_id, n))
+    logger.debug("form_document | cat_id = %d | n = %d" % (category_id, n))
     if request.is_ajax():
-        try:
-            cat = Category.objects.get(id=category_id)
-        except ObjectDoesNotExist:
-            e = Error(user=request.user, detail='[form_document] Category id : %s does not exists' % category_id)
-            e.save()
-            return HttpResponse(json.dumps({}))
+        cat = get_object_or_404(Category, id=category_id)
         if cat.count_docs() > 0:
-            try:
-                doc = Document.objects.get(pk=n)
-            except ObjectDoesNotExist:
-                e = Error(user=request.user, detail='[form_document] doc id : %s does not exists' % n)
-                e.save()
-                return HttpResponse(json.dumps({}))
+            doc = get_object_or_404(Document, pk=n)
             if request.user.is_superuser:
                 form = DocumentAdminForm(instance=doc).as_div()
             else:
@@ -167,23 +151,15 @@ def form_document(request, category_id, n):
 
 
 def view_form(request, category_id, field, sens, n):
-    if settings.DEBUG:
-        print("view_form")
-    if not request.user.is_authenticated:
-        raise PermissionDenied
-    try:
-            category_current = Category.objects.get(id=category_id)
-    except ObjectDoesNotExist:
-        e = Error(user=request.user, detail='[view_form] Category id : %s does not exists' % category_id)
-        e.save()
-        raise Http404('Category id : %s does not exists' % category_id)
+    logger.debug("view_form | cat_id = %d | field = %d | sens = %s | n = %d" % (category_id, field, sens, n))
+    category_current = get_object_or_404(Category, id=category_id)
     trimester_current = category_current.refer_trimester
     year_current = trimester_current.refer_year
     company_current = year_current.refer_company
-    companies = request.user.userprofile.companies.all()
-    years = company_current.years.all()
-    trimesters = year_current.trimesters.all()
-    categories = trimester_current.categories.all()
+    companies = request.user.userprofile.companies.all().order_by('name')
+    years = company_current.years.all().order_by('fiscal_year__priority')
+    trimesters = year_current.trimesters.all().order_by('template__number')
+    categories = trimester_current.categories.all().order_by('cat__priority')
     docs_all = category_current.documents.all()
     if company_current not in request.user.userprofile.companies.all():
         raise PermissionDenied
@@ -202,13 +178,12 @@ def view_form(request, category_id, field, sens, n):
         raise Http404('doc[%s] of category %s out of range' % (indice, category_id))
     if request.user.is_superuser:
         form = DocumentAdminForm(instance=doc)
+    elif doc.lock:
+        form = DocumentReadOnlyForm(instance=doc)
     else:
-        if doc.lock:
-            form = DocumentReadOnlyForm(instance=doc)
-        else:
-            form = DocumentForm(instance=doc)
+        form = DocumentForm(instance=doc)
     c = dict(companies=companies, company_current=company_current, years=years, year_current=year_current,
              trimesters=trimesters, trimester_current=trimester_current, categories=categories, view='form',
              category_current=category_current, doc_form=form, doc_id=doc.id, n_max=len(docs), n_cur=int(n),
-             img=doc.as_img)
+             img=doc.as_img())
     return render(request, 'folder_form.tpl', c)
