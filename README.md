@@ -17,7 +17,7 @@ To install:
         sudo apt-get update
 	sudo apt-get upgrade
 	sudo apt-get install -y python3-dev python3-setuptools python-celery-common libjpeg-dev zlib1g-dev libtiff5-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk imagemagick redis-server
-        sudo pip install --upgrade pip
+	sudo pip install --upgrade pip
 	sudo pip install -r requirements.txt
 	python3 manage.py makemigrations
 	python3 manage.py migrate
