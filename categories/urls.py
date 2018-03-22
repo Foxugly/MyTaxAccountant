@@ -7,15 +7,13 @@
 # the Free Software Foundation, either version 3 of the License, or (at
 # your option) any later version.
 
-from django.conf.urls import url
+from django.urls import path
 from django.contrib.auth.decorators import login_required
 from categories.views import add_documents, list_documents, view_form, view_category
 
 urlpatterns = (
-    url(r'^(?P<cat_id>[0-9]+)/add_documents/$', login_required(add_documents), name='add_documents'),
-    url(r'^(?P<cat_id>[0-9]+)/list/(?P<n>[0-9]+)/$', login_required(list_documents), name='list_documents'),
-
-    url(r'^(?P<cat_id>[0-9]+)/form/(?P<field>[0-9]+)/(?P<sens>[a-z]+)/(?P<n>[0-9]+)/$', login_required(view_form),
-        name='view_forms'),
-    url(r'^(?P<cat_id>[0-9]+)/$', login_required(view_category), name='view_category'),
+    path('<int:cat_id>/add_documents/$', login_required(add_documents), name='add_documents'),
+    path('<int:cat_id>/list/<int:n>/$', login_required(list_documents), name='list_documents'),
+    path('<int:cat_id>/form/<int:field>/<sens>/<int:n>/$', login_required(view_form), name='view_forms'),
+    path('<int:cat_id>+)/$', login_required(view_category), name='view_category'),
 )
