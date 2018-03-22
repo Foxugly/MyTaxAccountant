@@ -12,7 +12,7 @@ from django.db import models
 from documents.models import Document
 import os
 import uuid
-import json
+
 
 class TypeCategory(models.Model):
     name = models.CharField(_("Type of documents"), max_length=128)

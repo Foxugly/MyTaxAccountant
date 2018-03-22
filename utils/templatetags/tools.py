@@ -8,6 +8,7 @@
 # your option) any later version.
 
 from django import template
+
 register = template.Library()
 
 

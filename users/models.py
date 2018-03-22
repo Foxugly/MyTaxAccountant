@@ -15,7 +15,6 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.forms import ModelForm
 from django.core.validators import RegexValidator
-from fileupload.models import FileUpload
 from categories.models import Category
 from django.utils import timezone
 
@@ -78,7 +77,7 @@ class UserProfileForm(ModelForm):
         fields = ['phone_number', 'birth_date', 'language']
         help_texts = {
             'phone_number': _(
-        "Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."),
+                "Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."),
         }
 
     def __init__(self, *args, **kw):
@@ -95,7 +94,7 @@ class UserProfileCreateForm(ModelForm):
         fields = ['phone_number', 'birth_date', 'language']
         help_texts = {
             'phone_number': _(
-        "Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."),
+                "Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."),
         }
 
     def __init__(self, *args, **kw):

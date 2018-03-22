@@ -11,7 +11,7 @@
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.forms import ModelForm
-from utils.models import Country, TemplateTrimester
+from utils.models import Country
 from years.models import Year
 from categories.models import TypeCategory
 from django.conf import settings
@@ -131,18 +131,17 @@ class Company(models.Model):
     def get_favorite_year(self):
         y = self.years.filter(favorite=True)[0]
         if not y:
-            t = self.years.filter(active=True).order_by('fiscal_year__priority')[0]
+            y = self.years.filter(active=True).order_by('fiscal_year__priority')[0]
         return y
 
-class CompanyForm(ModelForm):
 
+class CompanyForm(ModelForm):
     class Meta:
         model = Company
         fields = ['name', 'description', 'vat_number', 'creation_date', 'sales_revenue', 'number_employees',
                   'address_1', 'address_2', 'zip_code', 'city', 'country']
         help_texts = {
-            'vat_number': _(
-        "10 digits."),
+            'vat_number': _("10 digits."),
         }
 
     def __init__(self, *args, **kw):
@@ -168,8 +167,7 @@ class CompanyCreateForm(ModelForm):
         fields = ['name', 'description', 'vat_number', 'creation_date', 'sales_revenue', 'number_employees',
                   'address_1', 'address_2', 'zip_code', 'city', 'country', 'model_trimester']
         help_texts = {
-            'vat_number': _(
-        "10 digits."),
+            'vat_number': _("10 digits."),
         }
 
     def __init__(self, *args, **kw):

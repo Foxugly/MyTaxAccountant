@@ -7,7 +7,7 @@
 # the Free Software Foundation, either version 3 of the License, or (at
 # your option) any later version.
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404
 from django.template.defaultfilters import slugify

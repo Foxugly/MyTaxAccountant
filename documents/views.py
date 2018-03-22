@@ -3,6 +3,7 @@
 # Copyright 2015, Foxugly. All rights reserved.
 #
 # This program is free software: you can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or (at
 # your option) any later version.
 
@@ -13,18 +14,18 @@ from categories.models import Category
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 import json
-import os
-from subprocess import Popen
 from django.core.exceptions import PermissionDenied
 import logging
 import shutil
+from .tasks import build_pdf
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(settings.LOGGER)
 
 
 def view(request, doc_id):
-    logger.debug("viewy | doc_id = %d" % doc_id)
+    logger.debug("view | doc_id = %d" % doc_id)
     d = get_object_or_404(Document, id=doc_id)
     if d.refer_category.refer_trimester.refer_year.refer_company in request.user.userprofile.companies.all().order_by('name'):
         img = ''
@@ -145,7 +146,7 @@ def delete_document(doc_id):
     logger.debug('delete_document | doc_id = %d' % doc_id)
     doc = get_object_or_404(Document, pk=doc_id)
     doc.refer_category.documents.remove(doc)
-    doc.delete()
+    return doc.delete()
 
 
 def ajax_delete(request, doc_id):
@@ -199,8 +200,7 @@ def merge_doc(request):
     results = {}
     if request.is_ajax():
         doc = get_object_or_404(Document, pk=int(request.GET['modal_merge_doc_id']))
-        l = request.GET['doc_ids'].split(',')
-        for add_doc in l:
+        for add_doc in request.GET['doc_ids'].split(','):
             old_doc = get_object_or_404(Document, pk=int(add_doc))
             for p in old_doc.all_pages():
                 doc.pages.add(p)
@@ -220,7 +220,7 @@ def ajax_download(request, doc_id):
     results = {}
     if request.is_ajax():
         doc = get_object_or_404(Document, pk=doc_id)
-        # name = doc.name.replace(' ', '_')
+        name = doc.name
         if ".pdf" != doc.name[-4:]:
             name += ".pdf"
         output_abs = settings.TMP_ROOT + name
@@ -259,6 +259,6 @@ def ajax_multiple_download(request):
     if request.is_ajax():
         for key, val in dict(request.GET).items():
             print('%s : %s' % (key, val))
-        #TODO finish multiple download broker
+        # TODO finish multiple download broker
         results['valid'] = True
     return HttpResponse(json.dumps(results))

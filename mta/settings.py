@@ -32,7 +32,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = 'changeme'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 LOGGER = logging.DEBUG
 ALLOWED_HOSTS = ['*']
 DATABASES = database.db
@@ -71,7 +71,7 @@ MIDDLEWARE = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    #'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    # 'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -106,13 +106,13 @@ MEDIA_URL = '/media/'
 UPLOAD_DIR = 'upload'
 STOCK_DIR = 'folders'
 # ACTIVE TO PROD / COMMENT TO TEST
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 TMP_ROOT = MEDIA_ROOT + '/tmp/'
 TMP_URL = MEDIA_URL + 'tmp/'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 # COMMENT TO PROD / ACTIVE TO TEST
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
 
 TEMPLATES = [
     {

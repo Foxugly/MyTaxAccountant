@@ -32,9 +32,8 @@ class Page(models.Model):
         return os.path.join(self.refer_document.refer_category.get_relative_path(), self.filename)
 
     def as_img(self, size=100):
-        #return '<img style="max-width: ' + str(size) + '%;" data-original="' + self.get_relative_path() + \
-        #       '" src="' + self.get_relative_path() + '" />'
-        return "<img style=""max-width: %d %%;"" data-original=""%s"" src=""%s"" />" % (size, self.get_relative_path(), self.get_relative_path())
+        return "<img style=""max-width: %d %%;"" data-original=""%s"" src=""%s"" />" % (size, self.get_relative_path(),
+                                                                                        self.get_relative_path())
 
     def get_size(self):
         s = os.path.getsize(self.get_absolute_path())
@@ -94,8 +93,8 @@ class Document(models.Model):
         return self.name
 
     def as_json(self):
-        return dict(id=self.id, name=self.name, date=self.date.strftime('%d/%m/%Y %H:%M:%S'), description=self.description,
-                    complete=self.complete, fiscal_id=self.fiscal_id, lock=self.lock, img=self.as_img())
+        return dict(id=self.id, name=self.name, date=self.date.strftime('%d/%m/%Y %H:%M:%S'), complete=self.complete,
+                    description=self.description, fiscal_id=self.fiscal_id, lock=self.lock, img=self.as_img())
 
     def delete(self, **kwargs):
         for p in self.pages.all():

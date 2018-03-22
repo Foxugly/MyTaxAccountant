@@ -16,7 +16,6 @@ from django.utils.translation import ugettext_lazy as _
 from utils.models import TemplateTrimester
 import os
 import uuid
-import json
 
 
 class Trimester(models.Model):
@@ -25,7 +24,8 @@ class Trimester(models.Model):
     end_date = models.DateField(_('end_date'), null=True, blank=True)
     active = models.BooleanField(_('active'), default=False)
     categories = models.ManyToManyField(Category, verbose_name=_('categories'), blank=True)
-    refer_year = models.ForeignKey('years.Year', verbose_name=_('year'), related_name="back_year", null=True, on_delete=models.CASCADE)
+    refer_year = models.ForeignKey('years.Year', verbose_name=_('year'), related_name="back_year", null=True,
+                                   on_delete=models.CASCADE)
     favorite = models.BooleanField(_('favorite'), default=False)
     random = models.CharField(max_length=16, blank=True, null=True)
 
@@ -95,7 +95,8 @@ class Trimester(models.Model):
             if n:
                 sum_n += n
                 sum_json.append(json)
-        return sum_n, dict(text=str(self.get_name_short()), href=str('#%d' % self.id), tags=["%d" % sum_n], nodes=sum_json)
+        return sum_n, dict(text=str(self.get_name_short()), href=str('#%d' % self.id), tags=["%d" % sum_n],
+                           nodes=sum_json)
 
     def get_favorite_category(self):
         c = self.categories.all().order_by('cat__priority')[0]

@@ -8,11 +8,9 @@
 # your option) any later version.
 
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.http import HttpResponse
-from django.core import serializers
 from users.models import UserForm, UserProfileForm
 from companies.models import CompanyForm, Company
 import json
@@ -40,7 +38,6 @@ def home(request):
     return render(request, "layout.tpl", c)
 
 
-@login_required
 def treeview(request):
     context = {}
     sum_json = []
@@ -52,7 +49,7 @@ def treeview(request):
 
     return render(request, "treeview.tpl", context)
 
-@login_required
+
 def user_settings(request):
     companies = request.user.userprofile.companies.all()
     companiesform = [(c.id, CompanyForm(instance=c)) for c in companies]
@@ -64,7 +61,6 @@ def user_settings(request):
     return render(request, 'config.tpl', c)
 
 
-@login_required
 def personal_data(request):
     results = {}
     if request.is_ajax():
@@ -84,7 +80,6 @@ def personal_data(request):
     return HttpResponse(json.dumps(results))
 
 
-@login_required
 def password(request):
     results = {}
     if request.is_ajax():

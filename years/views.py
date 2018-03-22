@@ -26,10 +26,6 @@ def favorite_trimester(year):
     return t[0]
 
 
-#def year_view(request, year_id):
-#    return HttpResponse("year_view")
-
-
 def list_trimesters(request, year_id):
     logger.debug("list_trimesters | year_id = %d" % year_id)
     if request.is_ajax():

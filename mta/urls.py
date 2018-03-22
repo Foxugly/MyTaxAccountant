@@ -42,15 +42,10 @@ def test(request):
     return render(request, "test.tpl")
 
 
-def addition(request, a , b):
-    return HttpResponse("Result = %s" % add.delay(a, b))
-
-
 urlpatterns = [
     path('', login_required(home)),
     path('lang/', lang),
     path('test/', test),
-    path('celery/<int:a>/<int:b>/', addition),
     path('admin/webshell/', include('webshell.urls')),
     path('admin/', admin.site.urls),
     path('category/', include('categories.urls')),
