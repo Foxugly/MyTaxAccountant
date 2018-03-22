@@ -142,18 +142,24 @@ LOGGING = {
         },
     },
     'handlers': {
-        'mail_admins': {
-            'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler'
-        }
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'core.handlers': {
+        'level': 'DEBUG',
+        'handlers': ['console']
+    },
+    'root': {
+        'level': 'DEBUG',
+        'handlers': ['console']
     },
     'loggers': {
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': True,
-        }
-    }
+        'django': {
+            'level': 'INFO',
+            'handlers': ['console']
+        },
+    },
 }
 
 HIJACK_LOGIN_REDIRECT_URL = '/'
