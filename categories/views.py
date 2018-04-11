@@ -17,7 +17,7 @@ from mimetypes import MimeTypes
 from documents.models import Document, DocumentForm, DocumentAdminForm, DocumentReadOnlyForm
 from fileupload.models import FileUpload
 from error.models import Error
-from .tasks import add_pdf_document, add_img_document, add_doc_document, add_xls_document
+from .tasks import add_pdf_document, add_img_document, add_doc_document, add_xls_document, backup_document
 import datetime
 import os
 import shutil
@@ -90,6 +90,7 @@ def add_documents(request, cat_id):
             mime = MimeTypes()
             m = mime.guess_type(os.path.join(settings.MEDIA_ROOT, fu.file.name))[0]
             d = create_document(os.path.basename(fu.file.name), request.user, cat, i)
+            backup_document.delay(fu.id, d.id)
             i += 1
             if m == 'application/pdf':
                 add_pdf_document.delay(cat.id, d.id, fu.id)
