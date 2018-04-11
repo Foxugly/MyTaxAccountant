@@ -144,3 +144,18 @@ def add_doc_document(cat_id, d_id, fu_id):
 def add_xls_document(cat_id, d_id, fu_id):
     logger.debug("add_xls_document | cat_id = %d | d_id = %d | fu_id = %d" % (cat_id, d_id, fu_id))
     return add_spec_document(cat_id, d_id, fu_id, r'.[Xx][Ll][Ss][xX]?$')
+
+@app.task
+def backup_document(fu_id, d_id):
+    logger.debug("backup_document | fu_id = %d | d_id = %d" % (fu_id, d_id))
+    fu = FileUpload.objects.get(id=fu_id)
+    if not fu:
+        logger.error("backup_document | FileUpload (id = %d) does not exist" % fu_id)
+    d = Document.objects.get(id=d_id)
+    if not d:
+        logger.error("add_pdf_document | Document (id = %d) does not exist" % d_id)
+    path = os.path.join(settings.MEDIA_ROOT, fu.file.name)
+    new_filename = "%d_%s" % (d_id, os.path.basename(path))
+    new_path = os.path.join(settings.MEDIA_ROOT, settings.BACKUP_DIR, new_filename)
+    cmd = 'cp %s %s' % (path, new_path)
+    os.system(cmd)
