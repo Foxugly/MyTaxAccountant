@@ -104,6 +104,7 @@ DEFAULT_LANGUAGE = 1
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 UPLOAD_DIR = 'upload'
+BACKUP_DIR = 'saved'
 STOCK_DIR = 'folders'
 # ACTIVE TO PROD / COMMENT TO TEST
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
